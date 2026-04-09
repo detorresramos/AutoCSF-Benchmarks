@@ -139,7 +139,7 @@ def train_and_export(data_dir, dataset_name, X_train, X_test, y_train, y_test,
     model.fit(
         X_train, y_train,
         epochs=100,
-        batch_size=min(4096, len(X_train)),
+        batch_size=128,
         verbose=2,
         validation_split=0.1,
         callbacks=[early_stop],

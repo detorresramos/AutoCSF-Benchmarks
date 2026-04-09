@@ -214,9 +214,9 @@
     },
     {
       "method": "lsf_ours_filtered-huffman_opt",
-      "construction_time_s": 21.12722070999045,
+      "construction_time_s": 20.972598749092484,
       "inference_ns": {
-        "mean": 23734
+        "mean": 22313.963333
       },
       "memory": {
         "serialized": 25171,
@@ -226,9 +226,55 @@
       "filter_params": {
         "competitor": "ours",
         "storage": "Filtered-Huffman_Opt",
-        "cross_entropy_bits_per_key": 0.9178,
+        "tokenizer": "md5",
         "best_model": "L0_H0_float16",
-        "num_models_evaluated": 12
+        "num_models_evaluated": 4,
+        "all_models": [
+          {
+            "arch": "L2_H50",
+            "quant": "float16",
+            "storage_bpk": 1.71008,
+            "model_bpk": 5.83392,
+            "total_bpk": 7.5440000000000005,
+            "cross_entropy_bpk": 0.9159712791442871,
+            "query_nanos": 24027.77,
+            "construct_ms": 4738.81,
+            "training_seconds": 2.879857416031882
+          },
+          {
+            "arch": "L1_H50",
+            "quant": "float16",
+            "storage_bpk": 1.71008,
+            "model_bpk": 5.42592,
+            "total_bpk": 7.135999999999999,
+            "cross_entropy_bpk": 0.9085516333580017,
+            "query_nanos": 24004.073333,
+            "construct_ms": 4751.008,
+            "training_seconds": 3.0604517080355436
+          },
+          {
+            "arch": "L0_H0",
+            "quant": "float16",
+            "storage_bpk": 1.69592,
+            "model_bpk": 0.31776,
+            "total_bpk": 2.01368,
+            "cross_entropy_bpk": 0.9178001284599304,
+            "query_nanos": 22313.963333,
+            "construct_ms": 4386.016,
+            "training_seconds": 7.575982834037859
+          },
+          {
+            "arch": "L1_H100",
+            "quant": "float16",
+            "storage_bpk": 1.69592,
+            "model_bpk": 10.74592,
+            "total_bpk": 12.44184,
+            "cross_entropy_bpk": 0.9084718227386475,
+            "query_nanos": 25476.43,
+            "construct_ms": 5017.502,
+            "training_seconds": 3.070290790987201
+          }
+        ]
       },
       "filter_type": null
     }
