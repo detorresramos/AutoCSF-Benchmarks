@@ -99,8 +99,6 @@ def plot_alpha_sweep(data, filter_label, ax=None):
 
     alphas = []
     lb_vals = []
-    ub_at_lb_eps = []
-    ub_at_emp_eps = []
     best_empirical = []
 
     for r in data["results"]:
@@ -111,23 +109,10 @@ def plot_alpha_sweep(data, filter_label, ax=None):
         best_param, _ = compute_theory_best(filter_label, alpha, n_over_N, n_filter)
         b_eps, eps = compute_params(filter_label, best_param, n_filter)
 
-        best_emp_param = r["best_empirical_params"][pk]
-        b_eps_emp, eps_emp = compute_params(filter_label, best_emp_param, n_filter)
-
         alphas.append(alpha)
         lb_vals.append(theory.lower_bound(alpha, eps, b_eps, n_over_N))
-        ub_at_lb_eps.append(theory.upper_bound(alpha, eps, b_eps, n_over_N))
-        ub_at_emp_eps.append(theory.upper_bound(alpha, eps_emp, b_eps_emp, n_over_N))
         best_empirical.append(r["best_empirical_bpk_saved"])
 
-    ax.plot(
-        alphas, ub_at_lb_eps, "b-", linewidth=1, alpha=0.7,
-        label=r"UB at $\varepsilon_{\mathrm{LB}}$",
-    )
-    ax.plot(
-        alphas, ub_at_emp_eps, "b-", linewidth=1.5,
-        label=r"UB at $\varepsilon_{\mathrm{emp}}$",
-    )
     ax.plot(alphas, lb_vals, "b--", linewidth=1.5, label="Lower bound")
     ax.plot(
         alphas,
@@ -229,17 +214,13 @@ def plot_epsilon_sweep(data, filter_label, ax=None, show_legend=True):
     eps_max = min(max(eps_discrete) * 2, 0.999)
     eps_cont = np.logspace(np.log10(eps_min), np.log10(eps_max), 500)
     lb_cont = []
-    ub_cont = []
     for e in eps_cont:
         try:
             b = compute_b_eps(filter_label, e, n_filter)
         except (ValueError, ZeroDivisionError):
             b = float("inf")
         lb_cont.append(theory.lower_bound(alpha, e, b, n_over_N))
-        ub_cont.append(theory.upper_bound(alpha, e, b, n_over_N))
 
-    ax.fill_between(eps_cont, lb_cont, ub_cont, alpha=0.15, color="blue")
-    ax.plot(eps_cont, ub_cont, "b-", linewidth=1, label="Upper bound")
     ax.plot(eps_cont, lb_cont, "b--", linewidth=1.5, label="Lower bound")
     ax.plot(
         eps_discrete, bpk_saved, "ro-", linewidth=2, markersize=6, label="Empirical"
@@ -335,7 +316,7 @@ def plot_epsilon_sweep_combined(dist, alpha):
 
     # Shared legend: collect common entries from first visible subplot
     # (skip per-subplot entries like "Theory opt (fp=X)" which differ)
-    common_labels = {"Upper bound", "Lower bound", "Empirical"}
+    common_labels = {"Lower bound", "Empirical"}
     handles, labels = [], []
     for ax_i in axes:
         if not ax_i.get_visible():
