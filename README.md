@@ -52,13 +52,51 @@ python baselines/make_plots.py          # generate figures and tables
 
 ### Shibuya Comparison
 
-Head-to-head of theory-guided Bloom filter parameter selection vs Shibuya et
-al.'s empirical entropy-based approach.
+Head-to-head of Bloom filter parameter selection across methods: AutoCSF
+(ours), BCSF (Shibuya et al.'s empirical entropy-based approach), and HKP
+(filter iff α > 0.63 with target FPR = 1 − α, mapped to a Bloom filter via the
+canonical BCSF formula).
 
 ```bash
 python shibuya_comparison/run_experiments.py   # generate data
 python shibuya_comparison/make_plots.py        # generate figures
 ```
+
+`run_experiments.py` accepts:
+
+- `--n N` — number of keys (default `100000`)
+- `--dists d1,d2,...` — distributions to run (default `unique,zipfian,uniform_100`)
+- `--output FILE.json` — output filename under `figures/data/`
+- `--skip-lsf` — skip the (deprecated) LSF builds for faster runs
+
+#### Two-panel VL-BuRR comparison
+
+`make_plots.py` also renders `figures/bloom_bits_per_key_saved_vlburr.png`, a
+two-panel (Uniform-100 and Zipfian) "bits/key saved vs no filter" plot that
+overlays AutoCSF, BCSF, HKP, and an external **VL-BuRR** method read from CSV.
+
+VL-BuRR data was collected at N = 1,000,000, so the panels prefer matching
+N=1M experiment data. Generate that first, then the CSV-driven plot:
+
+```bash
+# N=1M experiment data, one file per distribution (skip-lsf keeps it fast)
+python shibuya_comparison/run_experiments.py --n 1000000 --dists uniform_100 \
+    --skip-lsf --output prior_methods_comparison_n1m_uniform.json
+python shibuya_comparison/run_experiments.py --n 1000000 --dists zipfian \
+    --skip-lsf --output prior_methods_comparison_n1m_zipfian.json
+
+# Render plots (picks up the N=1M JSON + VL-BuRR CSVs automatically)
+python shibuya_comparison/make_plots.py
+```
+
+The VL-BuRR CSVs default to `~/Downloads/sweep_raw.csv` (Uniform-100) and
+`~/Downloads/sweep_zipfian_raw.csv` (Zipfian); override with the
+`VLBURR_CSV_UNIFORM` / `VLBURR_CSV_ZIPFIAN` environment variables. Each CSV
+has columns `distribution,alpha,seed,method,entropy_bits,storage_bits,query_ns,construct_ms`
+with `nofilter` and `vlburr` methods; VL-BuRR savings are computed against its
+own no-filter rows (mean over seeds). If a CSV or the N=1M JSON is missing, the
+panel falls back to the default N=100K data and the plot is skipped if no CSV
+is present at all.
 
 ### Run Everything
 

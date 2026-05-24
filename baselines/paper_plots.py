@@ -46,7 +46,6 @@ METHODS = [
     "csf_filter_shibuya_bloom",
     "cpp_hash_table",
     "java_mph",
-    "lsf_ours_filtered-huffman_opt",
 ]
 
 STYLES = {
@@ -61,9 +60,6 @@ STYLES = {
     ),
     "java_mph": dict(
         label="MPH Table", color="#762a83", marker="P", lw=1.5, ms=6
-    ),
-    "lsf_ours_filtered-huffman_opt": dict(
-        label="Learned CSF", color="#e08214", marker="X", lw=1.5, ms=6
     ),
 }
 
