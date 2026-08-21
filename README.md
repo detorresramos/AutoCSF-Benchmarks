@@ -70,10 +70,9 @@ Until the public repository is created, the default is the proposed
 The camera-ready table compares four decision frameworks:
 
 VL-BuRR is built with a documented integer frequency-counter correction for
-classes larger than `2^24`. C. elegans was rerun successfully with that fix.
-Rice exceeded the reproducibility machine's 8.2 GB Docker limit even after an
-O(N) temporary buffer was released early, so its VL-BuRR cell is reported as
-OOM rather than carrying forward the invalid pre-fix measurement.
+classes larger than `2^24`. C. elegans and rice were rerun with that fix. Rice
+requires roughly 16 GB or more for the container; the recorded run used a
+21.2 GB Docker memory allocation.
 
 - **HKP** — idealized Bloom-filter cost model from Hreinsson et al.
 - **BCSF** — Shibuya et al.'s entropy-based heuristic.

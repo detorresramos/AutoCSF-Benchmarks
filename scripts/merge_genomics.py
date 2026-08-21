@@ -16,8 +16,6 @@ def correct_vlburr(row):
     """Recompute VL-BuRR savings against its own no-filter construction."""
     if row["method"] != "vlburr":
         return
-    if row.get("status") == "OOM (8.2 GB limit)":
-        return
     log = ROOT / "data" / "cache" / "vlburr" / row["dataset"] / "benchmark.log"
     with log.open() as handle:
         measured = parse_vlburr(handle, row["n"])
