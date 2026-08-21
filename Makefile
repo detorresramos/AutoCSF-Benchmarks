@@ -28,6 +28,7 @@ repro-small:
 	./scripts/repro_small.sh
 
 verify:
+	.venv/bin/python scripts/test_frequency_counter.py
 	.venv/bin/python datasets/manage.py validate
 	.venv/bin/python scripts/completion_check.py --mark-complete
 

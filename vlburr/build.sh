@@ -11,6 +11,14 @@ if [[ ! -d "$source_dir/.git" ]]; then
   git -C "$source_dir" submodule update --init --recursive
   patch -d "$source_dir" -p0 < "$ROOT/vlburr/patches/nofilter.patch"
 fi
+if [[ ! -f "$source_dir/.autocsf-integer-frequency-counts" ]]; then
+  patch -d "$source_dir" -p0 < "$ROOT/vlburr/patches/integer-frequency-counts.patch"
+  touch "$source_dir/.autocsf-integer-frequency-counts"
+fi
+if [[ ! -f "$source_dir/.autocsf-release-filter-input" ]]; then
+  patch -d "$source_dir" -p0 < "$ROOT/vlburr/patches/release-filter-input.patch"
+  touch "$source_dir/.autocsf-release-filter-input"
+fi
 if [[ "$(uname -s)" == Darwin && ! -f "$source_dir/.autocsf-macos-patched" ]]; then
   patch -d "$source_dir" -p0 < "$ROOT/vlburr/patches/macos-cstdint.patch"
   touch "$source_dir/.autocsf-macos-patched"

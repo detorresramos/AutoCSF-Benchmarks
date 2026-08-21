@@ -69,9 +69,11 @@ Until the public repository is created, the default is the proposed
 
 The camera-ready table compares four decision frameworks:
 
-> **Checkpoint warning:** the current VL-BuRR rows for C. elegans and rice are
-> provisional because of a single-precision frequency-counter bug in the
-> `autocsf-eval` checkout. See [results/KNOWN_ISSUES.md](results/KNOWN_ISSUES.md).
+VL-BuRR is built with a documented integer frequency-counter correction for
+classes larger than `2^24`. C. elegans was rerun successfully with that fix.
+Rice exceeded the reproducibility machine's 8.2 GB Docker limit even after an
+O(N) temporary buffer was released early, so its VL-BuRR cell is reported as
+OOM rather than carrying forward the invalid pre-fix measurement.
 
 - **HKP** — idealized Bloom-filter cost model from Hreinsson et al.
 - **BCSF** — Shibuya et al.'s entropy-based heuristic.

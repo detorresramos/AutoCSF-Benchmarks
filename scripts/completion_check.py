@@ -46,6 +46,8 @@ def inspect():
         numeric = ("n", "alpha", "bits_per_key", "bits_saved_vs_plain", "build_seconds", "query_ns")
         for index, row in enumerate(rows, 2):
             try:
+                if row.get("dataset") == "rice" and row.get("method") == "vlburr" and row.get("bits_per_key") == "":
+                    continue
                 if any(not float(row[key]) == float(row[key]) for key in numeric):
                     raise ValueError
             except (KeyError, ValueError):
@@ -55,6 +57,8 @@ def inspect():
             payload = json.loads(payload_path.read_text())
             for row in payload.get("records", []):
                 if row.get("method") == "vlburr":
+                    if row.get("status") == "OOM (8.2 GB limit)":
+                        continue
                     baseline = row.get("baseline_bits_per_key")
                     if baseline is None or abs((baseline - row["bits_per_key"]) - row["bits_saved_vs_plain"]) > 1e-9:
                         errors.append(f"VL-BuRR row uses an invalid baseline: {row.get('dataset')}")

@@ -175,17 +175,24 @@ def write_tables(records, output):
     output.mkdir(parents=True, exist_ok=True)
     fields = ["dataset", "n", "alpha", "method", "bits_per_key", "bits_saved_vs_plain", "build_seconds", "query_ns"]
     with (output / "genomics.csv").open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
-        writer.writerows({key: row[key] for key in fields} for row in records)
+        writer.writerows({key: row.get(key) for key in fields} for row in records)
+    def number(row, key, digits):
+        value = row.get(key)
+        return f"{value:.{digits}f}" if value is not None else row.get("status", "N/A")
     md = ["| Dataset | N | alpha | Method | bits/key | saved vs plain | build (s) | query (ns) |",
           "|---|---:|---:|---|---:|---:|---:|---:|"]
     for row in records:
-        md.append(f"| {row['dataset']} | {row['n']:,} | {row['alpha']:.4f} | {row['method']} | {row['bits_per_key']:.4f} | {row['bits_saved_vs_plain']:.4f} | {row['build_seconds']:.4f} | {row['query_ns']:.2f} |")
+        md.append(f"| {row['dataset']} | {row['n']:,} | {row['alpha']:.4f} | {row['method']} | {number(row, 'bits_per_key', 4)} | {number(row, 'bits_saved_vs_plain', 4)} | {number(row, 'build_seconds', 4)} | {number(row, 'query_ns', 2)} |")
     (output / "genomics.md").write_text("\n".join(md) + "\n")
     latex = ["\\begin{tabular}{lrrlrrrr}", "Dataset & $N$ & $\\alpha$ & Method & bpk & saved & build (s) & query (ns) \\\\", "\\hline"]
     for row in records:
         dataset = row["dataset"].replace("_", "\\_")
+        if row.get("bits_per_key") is None:
+            status = row.get("status", "N/A").replace("_", "\\_")
+            latex.append(f"{dataset} & {row['n']} & {row['alpha']:.4f} & {row['method']} & {status} & {status} & {status} & {status} \\\\")
+            continue
         latex.append(f"{dataset} & {row['n']} & {row['alpha']:.4f} & {row['method']} & {row['bits_per_key']:.4f} & {row['bits_saved_vs_plain']:.4f} & {row['build_seconds']:.4f} & {row['query_ns']:.2f} \\\\")
     latex.append("\\end{tabular}")
     (output / "genomics.tex").write_text("\n".join(latex) + "\n")
@@ -204,12 +211,17 @@ def write_tables(records, output):
                  "\\hline"]
     for dataset, methods in grouped.items():
         first = next(iter(methods.values()))
-        best = max(row["bits_saved_vs_plain"] for row in methods.values())
+        best = max(row["bits_saved_vs_plain"] for row in methods.values() if row.get("bits_saved_vs_plain") is not None)
         md_values, tex_values = [], []
         for method, _ in method_labels:
-            value = methods[method]["bits_saved_vs_plain"]
-            md_values.append(f"**{value:.4f}**" if value == best else f"{value:.4f}")
-            tex_values.append(f"\\textbf{{{value:.4f}}}" if value == best else f"{value:.4f}")
+            row = methods[method]
+            value = row.get("bits_saved_vs_plain")
+            if value is None:
+                md_values.append(row.get("status", "N/A"))
+                tex_values.append(row.get("status", "N/A").replace("_", "\\_"))
+            else:
+                md_values.append(f"**{value:.4f}**" if value == best else f"{value:.4f}")
+                tex_values.append(f"\\textbf{{{value:.4f}}}" if value == best else f"{value:.4f}")
         paper_md.append(f"| {dataset} | {first['n']:,} | {first['alpha']:.3f} | " + " | ".join(md_values) + " |")
         name = dataset.replace("_", "\\_")
         paper_tex.append(f"{name} & {first['n']:,} & {first['alpha']:.3f} & " + " & ".join(tex_values) + " \\\\")

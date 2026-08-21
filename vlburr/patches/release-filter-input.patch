@@ -1,0 +1,14 @@
+diff --git include/lsf/learned_static_function.hpp include/lsf/learned_static_function.hpp
+index d0c849f..484bd0a 100644
+--- include/lsf/learned_static_function.hpp
++++ include/lsf/learned_static_function.hpp
+@@ -56,6 +56,10 @@ namespace lsf {
+             filterVLSF.AddRange(inputFilter.get(), inputFilter.get() + n, true);
+             filterVLSF.BackSubst();
+ 
++            // The constructed filter owns its data. Release the O(N) build
++            // input before allocating the O(N) correction input below.
++            inputFilter.reset();
++
+             size_t maxlen = 0;
+             auto input = std::make_unique<std::pair<Key, ResultRowVLR>[]>(n);

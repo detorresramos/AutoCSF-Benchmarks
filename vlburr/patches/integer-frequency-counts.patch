@@ -1,0 +1,25 @@
+diff --git include/lsf/model_freq.hpp include/lsf/model_freq.hpp
+index faef276..d353344 100644
+--- include/lsf/model_freq.hpp
++++ include/lsf/model_freq.hpp
+@@ -10,13 +10,14 @@ namespace lsf {
+     public:
+ 
+         ModelFreq(const std::vector<uint16_t> &trainY, size_t classes_count) {
++            // A float counter stops changing after 2^24 unit increments.
++            // Count exactly, then convert the normalized probabilities.
++            std::vector<uint64_t> counts(classes_count, 0);
++            for (auto label: trainY)
++                counts[label]++;
+             output.resize(classes_count);
+-            for (auto i: trainY) {
+-                output[i] += 1.0f;
+-            }
+-            for (auto &v: output) {
+-                v /= trainY.size();
+-            }
++            for (size_t i = 0; i < classes_count; ++i)
++                output[i] = static_cast<float>(static_cast<double>(counts[i]) / trainY.size());
+         }
+ 
+         size_t model_bytes() const { return sizeof(float) * output.size(); }
