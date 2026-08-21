@@ -1,152 +1,117 @@
 # AutoCSF Benchmarks
 
-Experiments and baseline comparisons for [CaramelDB](https://github.com/detorresramos/CaramelDB).
+Reproduction artifact for **AutoCSF: A Provably Safe Indexing Framework for
+Filter-Augmented Compressed Static Functions**.
 
-## Quick Start
+This repository contains the AutoCSF implementation used in the experiments,
+the HKP and BCSF decision rules, the VL-BuRR baseline, dataset preparation
+tools, and scripts that generate the paper's figures and tables.
 
-Clone, build CaramelDB, and install Python dependencies. This is all you need
-to run the core experiments (theory validation, hash table baselines, shibuya
-comparison).
+## Reproduce the paper
+
+An AI coding agent should read [`AGENTS.md`](AGENTS.md) first. On Ubuntu
+24.04 x86-64, the intended human workflow is:
 
 ```bash
 git clone --recursive https://github.com/detorresramos/AutoCSF-Benchmarks.git
 cd AutoCSF-Benchmarks
+./setup.sh
 
-# Build CaramelDB and install Python bindings
-deps/CaramelDB/bin/build.py
+# Download the published, processed genomics tables.
+python datasets/manage.py download
+python datasets/manage.py validate
 
-# Install Python experiment dependencies
-pip install -r requirements.txt
+# Reproduce synthetic experiments and existing figures.
+make experiments plots
+
+# Re-run the camera-ready genomics comparison.
+./run_genomics.sh
 ```
 
-### Requirements
+`run_genomics.sh` writes raw JSON results and generated Markdown/LaTeX tables
+under `results/`. One run is the default; pass `--repetitions 3` only when the
+machine has enough time and memory. It never edits paper source files.
 
-- Python 3.10+
-- CMake 3.14+
-- C++17 compiler
+On Apple Silicon, use the checked-in `linux/amd64` Dockerfile for VL-BuRR,
+whose upstream implementation uses x86 intrinsics. The bounded verification
+command is `make repro-small`: E. coli on all four methods plus all ten plots.
+Rice needs about 14 GB for VL-BuRR; a memory failure should be reported rather
+than replaced with a downsampled result.
 
-## Running Experiments
+## Genomics data
 
-### Theory Validation
+The public dataset artifact contains both original source files and processed
+count tables. Processed files use one transparent format:
 
-Validates theoretical lower/upper bounds on bits/key saved against empirical
-measurements across filter types (XOR, BinaryFuse, Bloom) and value
-distributions (unique, Zipfian, uniform-100).
+```text
+AAAAAAAAAAAAAAA\t3
+AAAAAAAAAAAAAAC\t1
+```
+
+They are UTF-8 TSV files without a header, sorted by k-mer and compressed as
+`.tsv.zst`. Each row is a distinct forward-strand (non-canonical) 15-mer and
+its exact occurrence count. ASCII `acgt` is normalized to uppercase; windows
+containing other characters are omitted. See [`datasets/README.md`](datasets/README.md).
+
+By default, experiments download the processed files. Regenerating them from
+the original FASTA/FASTQ files is optional:
 
 ```bash
-python theory_validation/run_experiments.py   # generate data
-python theory_validation/make_plots.py        # generate figures
+python datasets/manage.py generate --dataset celegans
+python datasets/manage.py validate --dataset celegans
 ```
 
-### Baselines
+Set `AUTOCSF_DATASET_REPO` to the Hugging Face dataset repository identifier.
+Until the public repository is created, the default is the proposed
+`detorresramos/autocsf-genomics`.
 
-Compares CSF+filter memory and query performance against hash tables (Python
-and C++). With optional dependencies installed (see below), also compares
-against Java and learned CSF implementations. Missing baselines are
-automatically skipped.
+## Methods
+
+The camera-ready table compares four decision frameworks:
+
+> **Checkpoint warning:** the current VL-BuRR rows for C. elegans and rice are
+> provisional because of a single-precision frequency-counter bug in the
+> `autocsf-eval` checkout. See [results/KNOWN_ISSUES.md](results/KNOWN_ISSUES.md).
+
+- **HKP** — idealized Bloom-filter cost model from Hreinsson et al.
+- **BCSF** — Shibuya et al.'s entropy-based heuristic.
+- **VL-BuRR** — generalized filter trick using its native implementation.
+- **AutoCSF** — the provably safe lower-bound criterion.
+
+HKP, BCSF, and AutoCSF use the same CaramelDB CSF and Bloom-filter
+implementation; only their parameter-selection rule differs. VL-BuRR is built
+from a pristine, commit-pinned LearnedStaticFunction/BuRR checkout by
+`vlburr/build.sh`. The separate `autocsf-bench` evaluation repository is not a
+dependency; only its small evaluation patch was vendored here.
+
+## Repository layout
+
+```text
+datasets/              download, generation, validation, and provenance
+shared/                AutoCSF, HKP, and BCSF decision rules
+theory_validation/     bound-validation experiments
+shibuya_comparison/    BCSF comparison experiments
+baselines/             end-to-end benchmark runner
+deps/CaramelDB/        pinned C++ implementation
+deps/LearnedStaticFunction/ upstream VL-BuRR/LSF implementation
+results/               generated raw results and tables (ignored)
+```
+
+## Development setup
+
+For a quick local build without installing system packages:
 
 ```bash
-python baselines/run_baselines.py       # generate data
-python baselines/make_plots.py          # generate figures and tables
+./setup.sh --no-system
+source .venv/bin/activate
+python -m unittest discover
 ```
 
-### Shibuya Comparison
-
-Head-to-head of theory-guided Bloom filter parameter selection vs Shibuya et
-al.'s empirical entropy-based approach.
-
-```bash
-python shibuya_comparison/run_experiments.py   # generate data
-python shibuya_comparison/make_plots.py        # generate figures
-```
-
-### Run Everything
-
-```bash
-bash run_all.sh
-```
-
-## Optional Baselines
-
-### Java (Sux4J CSF, MPH Table)
-
-Requires JDK 21+ and Maven.
-
-```bash
-cd deps/java/java-caramel && mvn package -q && cd ../../..
-cd deps/java/java-mph && mvn package -q && cd ../../..
-```
-
-Once built, `run_baselines.py` will automatically include the Java methods.
-
-### Learned Static Function
-
-The [LearnedStaticFunction](https://github.com/gvinciguerra/LearnedStaticFunction)
-baseline requires a native C++ build and TensorFlow Lite for model training.
-
-```bash
-cd deps/LearnedStaticFunction && mkdir -p build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release -DTFLITE_ENABLE_XNNPACK=OFF
-cmake --build . --target ribbon_learned_bench
-pip install -r requirements-lsf.txt
-```
-
-On macOS, Apple Clang works — omit the `-DCMAKE_C_COMPILER=clang-17` flags.
-On Linux, you may need `clang-17` and `libc++-17-dev`.
-
-## Datasets
-
-**Synthetic**: Auto-generated by `shared/data_gen.py` — no downloads needed.
-
-**Genomics**: Download from [Google Drive](https://drive.google.com/drive/folders/1-RVKVPw3bTJ2WXqnbQjJFLeyyEnOBh2f).
-Expected format: CSV with `kmer` and `count` columns (k=15). Place files in `data/`
-or pass the path via `--dataset`:
-
-```bash
-python baselines/run_baselines.py --dataset data/ecoli_sakai_k15.csv
-```
-
-## macOS Setup Notes
-
-```bash
-brew install cmake maven openjdk
-```
-
-CaramelDB builds with Apple Clang (no `clang-17` needed). For LSF, omit the
-`-DCMAKE_C_COMPILER` and `-DCMAKE_CXX_COMPILER` flags.
-
-## Reproduce Paper Results
-
-```bash
-# 1. Clone and set up
-git clone --recursive https://github.com/detorresramos/AutoCSF-Benchmarks.git
-cd AutoCSF-Benchmarks
-./setup.sh --no-system   # or sudo ./setup.sh on Ubuntu
-
-# 2. Run all synthetic benchmarks
-python baselines/run_baselines.py
-
-# 3. Run genomics benchmarks (requires downloaded datasets in data/)
-for csv in data/*_k15.csv; do
-    [ -f "$csv" ] && python baselines/run_baselines.py --dataset "$csv"
-done
-
-# 4. Generate paper figures and tables
-python baselines/make_plots.py
-python baselines/paper_plots.py
-```
-
-Output goes to `baselines/figures/`.
-
-## Structure
-
-```
-deps/
-  CaramelDB/                # submodule — core library
-  LearnedStaticFunction/    # submodule — learned CSF baseline
-  java/                     # Java baseline implementations
-shared/                     # shared utilities (data_gen, theory, measure, shibuya)
-theory_validation/          # theory validation experiments
-baselines/                  # baseline comparisons
-shibuya_comparison/         # epsilon selection comparison
-```
+The canonical performance environment is Ubuntu x86-64. The committed camera-
+ready table uses native Apple Silicon for the three Caramel methods and the
+linux/amd64 container for x86-only VL-BuRR. The primary comparison is bits per
+key saved relative to each method's own plain CSF: HKP, BCSF, and AutoCSF use
+the Caramel/GOV plain CSF, while VL-BuRR uses `Filtered-HuffmanCSF_No`. Absolute
+sizes from unlike CSF implementations do not share a baseline. Structure size
+is platform-independent; those mixed-host timings are diagnostic,
+not a fair cross-method speed comparison. The JSON records both environments.

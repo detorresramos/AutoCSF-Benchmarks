@@ -1,0 +1,9 @@
+.git
+.venv
+data
+results
+artifacts
+**/__pycache__
+**/.DS_Store
+**/build
+reference

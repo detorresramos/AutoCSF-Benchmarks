@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 scripts/completion_check.py --hook"
+          }
+        ]
+      }
+    ]
+  }
+}

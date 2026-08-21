@@ -1,0 +1,313 @@
+{
+  "schema_version": 1,
+  "environments": [
+    {
+      "platform": "macOS-15.6.1-arm64-arm-64bit-Mach-O",
+      "python": "3.14.4",
+      "git_commit": "a3bc701911a9946a12e55ea00cd63e54a11bfb33",
+      "carameldb_commit": "121aa3fe658a1ea0a784ba110ead15b8f4bf6a09",
+      "lsf_commit": "1781876d3aaaf532e5a732cd841ab966734d0c67",
+      "docker": "not recorded",
+      "source_result": "results/full-local/genomics.json"
+    },
+    {
+      "platform": "Linux-6.12.54-linuxkit-x86_64-with-glibc2.39",
+      "python": "3.12.3",
+      "git_commit": "unavailable",
+      "carameldb_commit": "unavailable",
+      "lsf_commit": "unavailable",
+      "docker": "Docker Desktop linux/amd64",
+      "source_result": "results/full-vlburr/genomics.json"
+    },
+    {
+      "platform": "Linux-6.12.54-linuxkit-x86_64-with-glibc2.39",
+      "python": "3.12.3",
+      "git_commit": "unavailable",
+      "carameldb_commit": "unavailable",
+      "lsf_commit": "unavailable",
+      "docker": "Docker Desktop linux/amd64",
+      "source_result": "results/rice-vlburr/genomics.json"
+    }
+  ],
+  "records": [
+    {
+      "dataset": "ecoli_sakai",
+      "n": 5326526,
+      "alpha": 0.9696087093163537,
+      "method": "hkp",
+      "bits_per_key": 0.3743122628144498,
+      "bits_saved_vs_plain": 0.9531826184646428,
+      "build_seconds": 0.337674,
+      "query_ns": 172.363,
+      "serialized_bytes": 249223,
+      "plain_serialized_bytes": 883867,
+      "parameters": {
+        "bloom_bits_per_element": 8,
+        "bloom_num_hashes": 3
+      },
+      "environment_index": 0
+    },
+    {
+      "dataset": "ecoli_sakai",
+      "n": 5326526,
+      "alpha": 0.9696087093163537,
+      "method": "bcsf",
+      "bits_per_key": 0.3489553979460534,
+      "bits_saved_vs_plain": 0.9785394833330392,
+      "build_seconds": 0.46532,
+      "query_ns": 195.55,
+      "serialized_bytes": 232340,
+      "plain_serialized_bytes": 883867,
+      "parameters": {
+        "bloom_bits_per_element": 7,
+        "bloom_num_hashes": 5
+      },
+      "environment_index": 0
+    },
+    {
+      "dataset": "ecoli_sakai",
+      "n": 5326526,
+      "alpha": 0.9696087093163537,
+      "method": "vlburr",
+      "bits_per_key": 0.266473,
+      "bits_saved_vs_plain": 0.799293,
+      "build_seconds": 1.037494251,
+      "query_ns": 117.141331,
+      "serialized_bytes": 177422,
+      "plain_serialized_bytes": 709604,
+      "parameters": {
+        "implementation": "Filtered-HuffmanCSF_Opt",
+        "baseline_implementation": "Filtered-HuffmanCSF_No",
+        "reported_storage_bits": 0.266473,
+        "baseline_storage_bits": 1.065766
+      },
+      "baseline_bits_per_key": 1.065766,
+      "repetitions": 1,
+      "environment_index": 1
+    },
+    {
+      "dataset": "ecoli_sakai",
+      "n": 5326526,
+      "alpha": 0.9696087093163537,
+      "method": "autocsf",
+      "bits_per_key": 0.34463888846125973,
+      "bits_saved_vs_plain": 0.9828559928178329,
+      "build_seconds": 0.414317,
+      "query_ns": 191.658,
+      "serialized_bytes": 229466,
+      "plain_serialized_bytes": 883867,
+      "parameters": {
+        "bloom_bits_per_element": 6,
+        "bloom_num_hashes": 4
+      },
+      "environment_index": 0
+    },
+    {
+      "dataset": "srr10211353",
+      "n": 9762863,
+      "alpha": 0.20372999190913568,
+      "method": "hkp",
+      "bits_per_key": 3.652275362257977,
+      "bits_saved_vs_plain": 0.0,
+      "build_seconds": 3.16518,
+      "query_ns": 128.217,
+      "serialized_bytes": 4457083,
+      "plain_serialized_bytes": 4457083,
+      "parameters": null,
+      "environment_index": 0
+    },
+    {
+      "dataset": "srr10211353",
+      "n": 9762863,
+      "alpha": 0.20372999190913568,
+      "method": "bcsf",
+      "bits_per_key": 3.652275362257977,
+      "bits_saved_vs_plain": 0.0,
+      "build_seconds": 3.23693,
+      "query_ns": 117.45,
+      "serialized_bytes": 4457083,
+      "plain_serialized_bytes": 4457083,
+      "parameters": null,
+      "environment_index": 0
+    },
+    {
+      "dataset": "srr10211353",
+      "n": 9762863,
+      "alpha": 0.20372999190913568,
+      "method": "vlburr",
+      "bits_per_key": 3.22668,
+      "bits_saved_vs_plain": 0.0,
+      "build_seconds": 6.195270961,
+      "query_ns": 140.31251,
+      "serialized_bytes": 3937704,
+      "plain_serialized_bytes": 3937704,
+      "parameters": {
+        "implementation": "Filtered-HuffmanCSF_Opt",
+        "baseline_implementation": "Filtered-HuffmanCSF_No",
+        "reported_storage_bits": 3.22668,
+        "baseline_storage_bits": 3.22668
+      },
+      "baseline_bits_per_key": 3.22668,
+      "repetitions": 1,
+      "environment_index": 1
+    },
+    {
+      "dataset": "srr10211353",
+      "n": 9762863,
+      "alpha": 0.20372999190913568,
+      "method": "autocsf",
+      "bits_per_key": 3.652275362257977,
+      "bits_saved_vs_plain": 0.0,
+      "build_seconds": 3.17754,
+      "query_ns": 119.271,
+      "serialized_bytes": 4457083,
+      "plain_serialized_bytes": 4457083,
+      "parameters": null,
+      "environment_index": 0
+    },
+    {
+      "dataset": "celegans",
+      "n": 69680812,
+      "alpha": 0.8245268726202559,
+      "method": "hkp",
+      "bits_per_key": 1.686220992947097,
+      "bits_saved_vs_plain": -0.012400199928783839,
+      "build_seconds": 7.33622,
+      "query_ns": 254.708,
+      "serialized_bytes": 14687156,
+      "plain_serialized_bytes": 14579149,
+      "parameters": {
+        "bloom_bits_per_element": 5,
+        "bloom_num_hashes": 1
+      },
+      "environment_index": 0
+    },
+    {
+      "dataset": "celegans",
+      "n": 69680812,
+      "alpha": 0.8245268726202559,
+      "method": "bcsf",
+      "bits_per_key": 1.3939358800813055,
+      "bits_saved_vs_plain": 0.2798849129370077,
+      "build_seconds": 9.28338,
+      "query_ns": 671.067,
+      "serialized_bytes": 12141323,
+      "plain_serialized_bytes": 14579149,
+      "parameters": {
+        "bloom_bits_per_element": 3,
+        "bloom_num_hashes": 2
+      },
+      "environment_index": 0
+    },
+    {
+      "dataset": "celegans",
+      "n": 69680812,
+      "alpha": 0.8245268726202559,
+      "method": "vlburr",
+      "bits_per_key": 1.383993,
+      "bits_saved_vs_plain": 0.0,
+      "build_seconds": 22.485078885,
+      "query_ns": 135.797836,
+      "serialized_bytes": 12054720,
+      "plain_serialized_bytes": 12054720,
+      "parameters": {
+        "implementation": "Filtered-HuffmanCSF_Opt",
+        "baseline_implementation": "Filtered-HuffmanCSF_No",
+        "reported_storage_bits": 1.383993,
+        "baseline_storage_bits": 1.383993
+      },
+      "baseline_bits_per_key": 1.383993,
+      "repetitions": 1,
+      "environment_index": 1
+    },
+    {
+      "dataset": "celegans",
+      "n": 69680812,
+      "alpha": 0.8245268726202559,
+      "method": "autocsf",
+      "bits_per_key": 1.3839425407384747,
+      "bits_saved_vs_plain": 0.28987825227983854,
+      "build_seconds": 8.68823,
+      "query_ns": 848.325,
+      "serialized_bytes": 12054280,
+      "plain_serialized_bytes": 14579149,
+      "parameters": {
+        "bloom_bits_per_element": 2,
+        "bloom_num_hashes": 1
+      },
+      "environment_index": 0
+    },
+    {
+      "dataset": "rice",
+      "n": 198010360,
+      "alpha": 0.7271307117465975,
+      "method": "hkp",
+      "bits_per_key": 2.3550891377602667,
+      "bits_saved_vs_plain": -0.40320148905340103,
+      "build_seconds": 68.6049,
+      "query_ns": 686.112,
+      "serialized_bytes": 58291506,
+      "plain_serialized_bytes": 48311747,
+      "parameters": {
+        "bloom_bits_per_element": 4,
+        "bloom_num_hashes": 7
+      },
+      "environment_index": 0
+    },
+    {
+      "dataset": "rice",
+      "n": 198010360,
+      "alpha": 0.7271307117465975,
+      "method": "bcsf",
+      "bits_per_key": 1.9313101799319996,
+      "bits_saved_vs_plain": 0.020577468774866124,
+      "build_seconds": 34.9249,
+      "query_ns": 1414.05,
+      "serialized_bytes": 47802428,
+      "plain_serialized_bytes": 48311747,
+      "parameters": {
+        "bloom_bits_per_element": 2,
+        "bloom_num_hashes": 1
+      },
+      "environment_index": 0
+    },
+    {
+      "dataset": "rice",
+      "n": 198010360,
+      "alpha": 0.7271307117465975,
+      "method": "vlburr",
+      "bits_per_key": 2.266399,
+      "bits_saved_vs_plain": 0.0,
+      "build_seconds": 98.70207975400001,
+      "query_ns": 438.442506,
+      "serialized_bytes": 56096310,
+      "plain_serialized_bytes": 56096310,
+      "parameters": {
+        "implementation": "Filtered-HuffmanCSF_Opt",
+        "baseline_implementation": "Filtered-HuffmanCSF_No",
+        "reported_storage_bits": 2.266399,
+        "baseline_storage_bits": 2.266399
+      },
+      "baseline_bits_per_key": 2.266399,
+      "repetitions": 3,
+      "environment_index": 2
+    },
+    {
+      "dataset": "rice",
+      "n": 198010360,
+      "alpha": 0.7271307117465975,
+      "method": "autocsf",
+      "bits_per_key": 1.8811223412754767,
+      "bits_saved_vs_plain": 0.07076530743138894,
+      "build_seconds": 37.382,
+      "query_ns": 2964.45,
+      "serialized_bytes": 46560214,
+      "plain_serialized_bytes": 48311747,
+      "parameters": {
+        "bloom_bits_per_element": 1,
+        "bloom_num_hashes": 1
+      },
+      "environment_index": 0
+    }
+  ]
+}

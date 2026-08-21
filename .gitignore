@@ -5,10 +5,23 @@ __pycache__/
 dist/
 build/
 .DS_Store
+.venv/
+data/
+results/*
+!results/genomics.csv
+!results/genomics.json
+!results/genomics.md
+!results/genomics.tex
+!results/genomics-paper.md
+!results/genomics-paper.tex
+!results/KNOWN_ISSUES.md
+!results/figures/
+!results/figures/*.png
+!results/reproduction/
+!results/reproduction/receipt.json
 
-# Raw experiment data (regenerate with run scripts)
-*/figures/data/
+# Numerical inputs for accepted-paper plots are deliberately versioned. Fresh
+# experiment outputs belong under results/.
 
 # Cached trained models for LSF
 deps/lsf/model_cache/
-

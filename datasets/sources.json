@@ -1,0 +1,34 @@
+{
+  "dataset_repo": "detorresramos/autocsf-genomics",
+  "datasets": {
+    "ecoli_sakai": {
+      "accession": "GCF_000008865.2",
+      "legacy_name": "B000007",
+      "raw": ["raw/GCF_000008865.2_ASM886v2_genomic.fna.gz"],
+      "format": "fasta",
+      "urls": ["https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/008/865/GCF_000008865.2_ASM886v2/GCF_000008865.2_ASM886v2_genomic.fna.gz"],
+      "expected": {"k": 15, "records": 5326526, "alpha": 0.9696, "distinct_values": 42}
+    },
+    "srr10211353": {
+      "accession": "SRR10211353",
+      "raw": ["raw/SRR10211353_1.fastq.gz", "raw/SRR10211353_2.fastq.gz"],
+      "format": "fastq",
+      "urls": ["https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR102/053/SRR10211353/SRR10211353_1.fastq.gz", "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR102/053/SRR10211353/SRR10211353_2.fastq.gz"],
+      "expected": {"k": 15, "records": 9762863, "alpha": 0.20373, "distinct_values": 228}
+    },
+    "celegans": {
+      "accession": "GCF_000002985.6",
+      "raw": ["raw/GCF_000002985.6_WBcel235_genomic.fna.gz"],
+      "format": "fasta",
+      "urls": ["https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/002/985/GCF_000002985.6_WBcel235/GCF_000002985.6_WBcel235_genomic.fna.gz"],
+      "expected": {"k": 15, "records": 69680812, "alpha": 0.8245, "distinct_values": 760}
+    },
+    "rice": {
+      "accession": "GCF_001433935.1",
+      "raw": ["raw/GCF_001433935.1_IRGSP-1.0_genomic.fna.gz"],
+      "format": "fasta",
+      "urls": ["https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/433/935/GCF_001433935.1_IRGSP-1.0/GCF_001433935.1_IRGSP-1.0_genomic.fna.gz"],
+      "expected": {"k": 15, "records": 198010360, "alpha": 0.727, "distinct_values": 1578}
+    }
+  }
+}

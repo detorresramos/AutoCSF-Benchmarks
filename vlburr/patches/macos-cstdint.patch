@@ -1,0 +1,24 @@
+diff --git lib/burr-vl/minimal_hasher.hpp lib/burr-vl/minimal_hasher.hpp
+--- lib/burr-vl/minimal_hasher.hpp
++++ lib/burr-vl/minimal_hasher.hpp
+@@ -6,7 +6,7 @@
+ 
+ #include "rocksdb/fastrange.h"
+ 
+-#include <bits/stdint-uintn.h>
++#include <cstdint>
+ 
+ #include <utility>
+ #include <tuple>
+diff --git lib/burr-vl/sorter.cpp lib/burr-vl/sorter.cpp
+--- lib/burr-vl/sorter.cpp
++++ lib/burr-vl/sorter.cpp
+@@ -10,7 +10,7 @@
+ #include <ips2ra.hpp>
+ #endif
+ 
+-#include <bits/stdint-uintn.h>
++#include <cstdint>
+ 
+ #include <algorithm>
+ #include <functional>

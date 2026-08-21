@@ -103,7 +103,23 @@ class CppHashTable:
         return None
 
 
-EPSILON_STRATEGIES = ("optimal", "shibuya")
+EPSILON_STRATEGIES = ("optimal", "shibuya", "hkp")
+
+
+def _find_hkp_params(keys, values):
+    """Realize HKP's epsilon=1-alpha rule with the nearest Bloom config."""
+    _, compute_actual_alpha, _, _, _ = _import_shared()
+    alpha = compute_actual_alpha(values)
+    if alpha <= 0.63:
+        return None
+    target = max(1e-12, 1.0 - alpha)
+    candidates = []
+    for bits_per_element in range(1, 17):
+        for num_hashes in range(1, 9):
+            epsilon = (1.0 - np.exp(-num_hashes / bits_per_element)) ** num_hashes
+            candidates.append((abs(np.log(epsilon) - np.log(target)), bits_per_element, num_hashes))
+    _, bits_per_element, num_hashes = min(candidates)
+    return {"bloom_bits_per_element": bits_per_element, "bloom_num_hashes": num_hashes}
 
 
 def _find_optimal_params(filter_type, keys, values):
@@ -114,14 +130,14 @@ def _find_optimal_params(filter_type, keys, values):
     n_filter = int(n * (1 - alpha))
 
     if filter_type == "xor":
-        bits, _ = theory.best_discrete_xor(alpha, n_over_N)
-        return {"fingerprint_bits": bits}
+        bits, bound = theory.best_discrete_xor(alpha, n_over_N)
+        return {"fingerprint_bits": bits} if bound > 0 else None
     elif filter_type == "binary_fuse":
-        bits, _ = theory.best_discrete_binary_fuse(alpha, n_over_N, n_filter)
-        return {"fingerprint_bits": bits}
+        bits, bound = theory.best_discrete_binary_fuse(alpha, n_over_N, n_filter)
+        return {"fingerprint_bits": bits} if bound > 0 else None
     elif filter_type == "bloom":
-        bpe, k, _ = theory.best_discrete_bloom_all_k(alpha, n_over_N)
-        return {"bloom_bits_per_element": bpe, "bloom_num_hashes": k}
+        bpe, k, bound = theory.best_discrete_bloom_all_k(alpha, n_over_N)
+        return {"bloom_bits_per_element": bpe, "bloom_num_hashes": k} if bound > 0 else None
     else:
         raise ValueError(f"Unknown filter type: {filter_type}")
 
@@ -132,9 +148,8 @@ def _find_shibuya_params(keys, values):
     H0 = empirical_entropy(values)
     result = shibuya_bloom_params(alpha, H0)
     if result is None:
-        bits_per_element, num_hashes = 1, 1
-    else:
-        bits_per_element, num_hashes = result
+        return None
+    bits_per_element, num_hashes = result
     return {"bloom_bits_per_element": bits_per_element, "bloom_num_hashes": num_hashes}
 
 
@@ -158,9 +173,11 @@ class CSFFilter:
         _, _, create_filter_config, _, _ = _import_shared()
         if self.epsilon_strategy == "optimal":
             self._params = _find_optimal_params(self.filter_type, keys, values)
-        else:
+        elif self.epsilon_strategy == "shibuya":
             self._params = _find_shibuya_params(keys, values)
-        config = create_filter_config(self.filter_type, **self._params)
+        else:
+            self._params = _find_hkp_params(keys, values)
+        config = None if self._params is None else create_filter_config(self.filter_type, **self._params)
         return carameldb.Caramel(keys, values, prefilter=config, verbose=False)
 
     @staticmethod

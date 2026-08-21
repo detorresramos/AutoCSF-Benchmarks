@@ -1,0 +1,16 @@
+diff --git ribbon_learned_bench.cpp ribbon_learned_bench.cpp
+index 1bd4afa..a79e9ec 100644
+--- ribbon_learned_bench.cpp
++++ ribbon_learned_bench.cpp
+@@ -374,6 +374,11 @@ void dispatchModel(const DataSet &dataset, const std::string &datasetName, std::
+                 model,
+                 benchOutputCopy,
+                 "ourCSF");
++        benchmark<DataSet, lsf::FilteredLSFStorage<lsf::BitWiseFilterCoding<lsf::FilterHuffmanCoderCSF, lsf::FilterLengthStrategyNoFilter>>, lsf::ModelFreq, true>(
++                dataset,
++                model,
++                benchOutputCopy,
++                "ourCSF_NoFilter");
+     }
+ 
+     // model
