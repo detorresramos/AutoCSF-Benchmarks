@@ -148,8 +148,9 @@ All four methods live under `methods/`:
   single build definition — it patches CaramelDB, builds the static library that
   the genomics harness links, installs the `carameldb` Python module that every
   other experiment imports, and builds VL-BuRR. The Dockerfile just calls it.
-- `reference/accepted-paper/`: immutable historical PNGs used as visual
-  references, protected by checksums.
+- `reference/`: the figures and genomics table as they appear in the accepted
+  paper, for side-by-side comparison with a fresh run. Nothing verifies their
+  contents, so treat them as a record rather than as ground truth.
 - `results/reproduction/`: reproduction receipts.
 
 ### Checking a run against the accepted results
@@ -158,7 +159,7 @@ All four methods live under `methods/`:
 consistent: dataset checksums and profiles, the VL-BuRR integer-frequency
 regression, the expected 45 bound-validation datasets and their figures, the
 four-method synthetic table, the 4x4 genomics matrix, the ten paper plots, the
-accepted-paper reference checksums, and the receipts.
+presence of the `reference/` copies, and the receipts.
 
 `make repro-clean` goes further. It builds a fresh Linux container that never
 sees `results/`, recomputes all 45 bound-validation datasets and all 88
