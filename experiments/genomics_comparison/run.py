@@ -92,7 +92,7 @@ def run_local(name, keys, values, repeats):
 
 
 def run_vlburr(dataset, repeats):
-    command = ROOT / "vlburr" / "run_genomics.sh"
+    command = ROOT / "methods" / "vlburr" / "run_genomics.sh"
     result = subprocess.run(
         [str(command), dataset, str(repeats)], capture_output=True, text=True, check=True
     )
@@ -166,7 +166,7 @@ def environment():
         "python": platform.python_version(),
         "git_commit": output(["git", "rev-parse", "HEAD"]),
         "carameldb_commit": output(["git", "-C", "deps/CaramelDB", "rev-parse", "HEAD"]),
-        "vlburr_commit": (ROOT / "vlburr/UPSTREAM_COMMIT").read_text().strip(),
+        "vlburr_commit": (ROOT / "methods/vlburr/UPSTREAM_COMMIT").read_text().strip(),
         "docker": os.environ.get("AUTOCSF_DOCKER_DESCRIPTION", "not recorded"),
     }
 

@@ -11,11 +11,8 @@ COPY requirements.txt ./
 RUN python3 -m venv .venv && .venv/bin/pip install --upgrade pip && \
     .venv/bin/pip install -r requirements.txt
 COPY . .
-RUN patch -d deps/CaramelDB -p0 < patches/carameldb/cstdint.patch && \
-    patch -d deps/CaramelDB -p0 < patches/carameldb/python-build-jobs.patch && \
-    CARAMEL_BUILD_JOBS=4 \
-    CMAKE_ARGS="-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF" \
-    .venv/bin/pip install ./deps/CaramelDB/pybind
-RUN ./setup.sh --no-system --skip-python
+# setup.sh is the single build definition: patch and install CaramelDB, then
+# build VL-BuRR. JOBS is capped so parallel C++ compiles do not exhaust the VM.
+RUN JOBS=4 ./setup.sh --no-system --skip-python
 ENV AUTOCSF_DOCKER_DESCRIPTION="Docker Desktop linux/amd64"
 ENTRYPOINT ["/bin/bash"]

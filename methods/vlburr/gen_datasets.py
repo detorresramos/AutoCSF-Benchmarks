@@ -24,9 +24,13 @@ File format (matches include/lsf/dataset_reader.hpp):
   <dataset>_X.lrbin: uint64 N, uint64 num_features, then N*num_features float32
   <dataset>_y.lrbin: uint16 n_classes, then N uint16 labels
 """
-import argparse, struct
+import argparse, struct, sys
 from pathlib import Path
 import numpy as np
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from common.data_generation import gen_alpha_values
 
 UINT16_MAX_CLASSES = 65535
 
@@ -38,41 +42,6 @@ MINORITY_DISTRIBUTIONS = [
     "uniform_100",
     "two_value",
 ]
-
-
-def _generate_minority_values(num_minority: int, minority_dist: str,
-                              rng: np.random.Generator) -> np.ndarray:
-    # Values start at 1 to avoid collision with majority_value=2^32-1.
-    if minority_dist == "unique":
-        return np.arange(1, num_minority + 1, dtype=np.uint32)
-    elif minority_dist == "zipfian":
-        return rng.zipf(1.5, size=num_minority).astype(np.uint32)
-    elif minority_dist == "geometric":
-        return rng.geometric(0.3, size=num_minority).astype(np.uint32)
-    elif minority_dist == "uniform_10":
-        return rng.integers(1, 11, size=num_minority, dtype=np.uint32)
-    elif minority_dist == "uniform_100":
-        return rng.integers(1, 101, size=num_minority, dtype=np.uint32)
-    elif minority_dist == "two_value":
-        return np.ones(num_minority, dtype=np.uint32)
-    else:
-        raise ValueError(f"Unknown minority distribution: {minority_dist}")
-
-
-def gen_alpha_values(n: int, alpha: float, seed: int,
-                     minority_dist: str) -> np.ndarray:
-    """Faithful port of the companion code's gen_alpha_values: the most common
-    value (2^32-1) has frequency exactly floor(n*alpha); the rest follow
-    minority_dist. Values are shuffled."""
-    rng = np.random.default_rng(seed)
-    num_most_common = int(n * alpha)
-    num_minority = n - num_most_common
-    majority_value = np.uint32(2**32 - 1)
-    values = np.full(n, majority_value, dtype=np.uint32)
-    if num_minority > 0:
-        values[num_most_common:] = _generate_minority_values(num_minority, minority_dist, rng)
-    rng.shuffle(values)
-    return values
 
 
 def remap_to_uint16(values: np.ndarray) -> tuple[np.ndarray, int]:
@@ -127,13 +96,14 @@ def main() -> None:
     for dist in args.minority_dist:
         for alpha in args.p_max:
             for seed in args.seeds:
-                # Match the original per-dataset seeding so runs are reproducible.
-                ds_seed = seed * 100 + int(alpha * 100)
+                # run_local uses the seed for s0. Importing the shared generator
+                # ensures both backends receive the exact same value sequence.
+                ds_seed = seed * 100 + round(alpha * 100)
                 values = gen_alpha_values(args.n, alpha, ds_seed, dist)
                 labels, n_classes = remap_to_uint16(values)
                 # Single dummy feature: ModelFreq ignores features but the reader expects them.
                 features = np.random.default_rng(ds_seed).standard_normal((args.n, 1)).astype(np.float32)
-                name = f"acsf_{dist_token(dist)}_p{int(alpha*100):02d}_s{seed}"
+                name = f"acsf_{dist_token(dist)}_p{round(alpha*100):02d}_s{seed}"
                 write_dataset(args.out, name, labels, n_classes, features)
                 count += 1
     print(f"Wrote {count} datasets to {args.out} "

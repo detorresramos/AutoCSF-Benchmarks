@@ -50,27 +50,28 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Build CaramelDB (expected as sibling directory)
+# Build CaramelDB: both the static library (linked by the genomics harness)
+# and the carameldb Python module (imported by every other experiment).
 # ---------------------------------------------------------------------------
 CARAMEL_DIR="$SCRIPT_DIR/deps/CaramelDB"
-if [ -d "$CARAMEL_DIR" ]; then
-    echo "=== Building CaramelDB ==="
-    # The genomics harness links the C++ library directly. Building only that
-    # target avoids pulling the unrelated legacy Python bindings into the
-    # camera-ready artifact.
-    cmake -S "$CARAMEL_DIR" -B "$CARAMEL_DIR/pybind/build" \
-      -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5
-    cmake --build "$CARAMEL_DIR/pybind/build" --target caramel_lib -j "${JOBS:-4}"
-else
-    echo "WARNING: CaramelDB not found at $CARAMEL_DIR"
-    echo "  Initialize the submodule: git submodule update --init deps/CaramelDB"
+if [ ! -d "$CARAMEL_DIR" ]; then
+    echo "ERROR: CaramelDB not found at $CARAMEL_DIR" >&2
+    echo "  Initialize the submodule: git submodule update --init deps/CaramelDB" >&2
+    exit 1
 fi
+
+# This also builds deps/CaramelDB/build/libcaramel_lib.a as a side effect, which
+# is the static library the genomics harness links; no separate cmake step.
+echo "=== Installing the carameldb Python module ==="
+CARAMEL_BUILD_JOBS="${JOBS:-4}" \
+CMAKE_ARGS="-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF -DCMAKE_POLICY_VERSION_MINIMUM=3.5" \
+  .venv/bin/pip install "$CARAMEL_DIR/cython"
 
 # ---------------------------------------------------------------------------
 # VL-BuRR from its pinned pristine upstream checkout.
 # ---------------------------------------------------------------------------
 echo "=== Building LSF (ribbon_learned_bench) ==="
-./vlburr/build.sh
+./methods/vlburr/build.sh
 
 echo ""
 echo "=== Setup complete ==="

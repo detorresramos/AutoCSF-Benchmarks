@@ -2,7 +2,7 @@
 # Camera-ready real-genomics entry point.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
 
 if [[ ! -x .venv/bin/python ]]; then
@@ -11,7 +11,7 @@ if [[ ! -x .venv/bin/python ]]; then
 fi
 
 # Benchmark startup checks manifests and file presence. Full byte-for-byte
-# validation remains available as `make validate` and is intentionally not
+# validation remains available as `make verify` and is intentionally not
 # repeated before every timed subset run.
 .venv/bin/python datasets/manage.py validate --manifest-only
 .venv/bin/python experiments/genomics_comparison/run.py "$@"

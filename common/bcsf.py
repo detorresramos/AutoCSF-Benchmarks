@@ -1,10 +1,14 @@
 """Shibuya's cost model for CSF+Bloom filter epsilon derivation.
 
-Implements the epsilon selection from Shibuya et al. (WABI 2021):
+Implements the epsilon selection from Shibuya et al., "Space-efficient
+representation of genomic k-mer count tables" (shibuya2022space):
     epsilon* = C_BF * (1 - alpha) / (C_CSF * alpha * ln2)
 
-where C_BF = 1.44 (idealized Bloom constant) and C_CSF is a heuristic
-function of the empirical entropy H0.
+where C_BF = 1.44 (idealized Bloom constant) and C_CSF is their data-driven
+estimate of CSF cost as a function of the empirical entropy H0. Both the
+constant and the piecewise C_CSF fit below are taken from that paper; they are
+reproduced here so BCSF's decisions can be compared against AutoCSF's on
+identical inputs, not because this repository endorses the model.
 
 The canonical Bloom filter construction for a target epsilon is:
     bits_per_element = ceil(log2(1/eps) * log2(e))
@@ -28,8 +32,14 @@ def empirical_entropy(values):
 def shibuya_csf_cost(H0):
     """Piecewise C_CSF cost function from Shibuya's model.
 
-    For low-entropy distributions (H0 < 2), the CSF cost per symbol is
-    quadratic in H0. For higher entropy, it's approximately linear.
+    Reproduced verbatim from shibuya2022space:
+
+        C_CSF = 0.22 H0^2 + 0.18 H0 + 1.16   if H0 < 2
+                1.1 H0 + 0.2                 otherwise
+
+    These coefficients are an empirical fit reported in that paper, not a
+    derivation; that they are a heuristic rather than a principled model is
+    precisely what AutoCSF sets out to improve on.
     """
     if H0 < 2:
         return 0.22 * H0**2 + 0.18 * H0 + 1.16

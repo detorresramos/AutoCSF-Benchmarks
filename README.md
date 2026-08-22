@@ -25,37 +25,35 @@ cd AutoCSF-Benchmarks
 ./setup.sh
 ```
 
-Run an experiment with one plainly named command:
+Run an experiment:
 
 ```bash
 make bound-validation
 make synthetic-comparison
-make genomics-comparison
 ```
 
-The genomics experiment first needs the processed datasets:
+The genomics experiment first needs the processed datasets, which `make
+datasets` downloads and validates:
 
 ```bash
 make datasets
-make validate
 make genomics-comparison
 ```
 
 The four processed tables occupy about 500 MB. Allow roughly 10 GB of working
 space for downloaded assemblies, build products, and processed data.
 
-`make reproduce` runs all three experiments, verifies their outputs, and marks
-the repository's completion hook satisfied. The
+`make reproduce` runs all three experiments and verifies their outputs. The
 synthetic comparison uses one million keys and the genomics comparison includes
 rice with 198 million distinct 15-mers, so the complete run is not a quick
-smoke test. Use `make repro-small` for E. coli on all four methods plus the nine
-bound-validation plots and the synthetic-comparison plot.
+smoke test.
 
 On Apple Silicon, the checked-in Dockerfile provides the required
-`linux/amd64` environment for VL-BuRR:
+`linux/amd64` environment for VL-BuRR. `scripts/docker_run.sh` is the only
+container entry point; it builds the image and runs any target inside it:
 
 ```bash
-./scripts/docker_run.sh make repro-small
+./scripts/docker_run.sh make bound-validation
 ```
 
 ## 1. Bound validation
@@ -138,20 +136,38 @@ generation, validation, and Hugging Face staging.
 
 ## Implementations and reproducibility
 
+All four methods live under `methods/`:
+
 - `methods/decision_rules.py`: AutoCSF, HKP, and BCSF selection rules over the
-  same Caramel implementation.
-- `vlburr/`: pinned upstream commit, small correctness/memory patches, build,
-  and runners for VL-BuRR.
-- `deps/CaramelDB/`: the pinned CSF/filter implementation.
-- `reference/accepted-paper/`: immutable historical PNGs used as visual
-  references, protected by checksums.
-- `results/reproduction/`: bounded and full synthetic reproduction receipts.
+  same Caramel implementation. They differ only in how they pick a filter.
+- `methods/vlburr/`: VL-BuRR is an external tool rather than a decision rule, so
+  it gets a subtree: a pinned upstream commit, small correctness/memory patches,
+  a build script, and the adapters that convert data into its input format and
+  parse its reported metrics.
+- `deps/CaramelDB/`: the pinned CSF/filter implementation. `setup.sh` is the
+  single build definition — it patches CaramelDB, builds the static library that
+  the genomics harness links, installs the `carameldb` Python module that every
+  other experiment imports, and builds VL-BuRR. The Dockerfile just calls it.
+- `reference/`: the figures and genomics table as they appear in the accepted
+  paper, for side-by-side comparison with a fresh run. Nothing verifies their
+  contents, so treat them as a record rather than as ground truth.
+- `results/reproduction/`: reproduction receipts.
 
-`make synthetic-clean` builds a fresh Linux container, removes bundled
-synthetic results inside it, recomputes all 45 bound-validation datasets and
-all 88 comparison rows, renders the ten plots, and validates the fresh numbers
-before promoting them.
+### Checking a run against the accepted results
 
-`make verify` validates dataset checksums and profiles, checks the VL-BuRR
-integer-frequency regression, verifies the expected tables/figures/receipts,
-and marks the Codex stop hook complete.
+`make verify` checks that the committed results are complete and internally
+consistent: dataset checksums and profiles, the VL-BuRR integer-frequency
+regression, the expected 45 bound-validation datasets and their figures, the
+four-method synthetic table, the 4x4 genomics matrix, the ten paper plots, the
+presence of the `reference/` copies, and the receipts.
+
+`make repro-clean` goes further. It builds a fresh Linux container that never
+sees `results/`, recomputes all 45 bound-validation datasets and all 88
+synthetic-comparison rows, renders the ten plots, and compares the fresh numbers
+against the committed ones before promoting anything. `SCOPE=small make
+repro-clean` adds E. coli genomics on all four methods.
+
+Comparison is numeric with a 0.02 bits/key tolerance rather than exact. Most
+measurements are bit-stable, but binary-fuse CSF construction is randomized:
+repeated builds of the same input differ by a few thousandths of a bit per key,
+which is why the nine `binary_fuse` datasets never reproduce exactly.

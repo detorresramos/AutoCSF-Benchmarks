@@ -10,6 +10,9 @@ data/
 results/*
 !results/bound_validation/
 !results/bound_validation/**
+# 39k lines of pretty-printed per-run detail; baseline.csv is the
+# committed record that verify.py compares fresh runs against.
+results/bound_validation/data/
 !results/synthetic_comparison/
 !results/synthetic_comparison/**
 !results/genomics_comparison/
