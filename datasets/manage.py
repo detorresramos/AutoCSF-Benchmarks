@@ -106,7 +106,7 @@ def stage(args, cfg):
 def publish(args, cfg):
     """Upload a staged directory to the Hugging Face dataset repository."""
     try:
-        from huggingface_hub import HfApi
+        from huggingface_hub import HfApi, get_token
     except ImportError as exc:
         raise SystemExit("install requirements.txt before publishing") from exc
 
@@ -123,9 +123,9 @@ def publish(args, cfg):
             print(f"  {path.relative_to(staged)}  {path.stat().st_size / 1e6:.1f} MB")
         return
 
-    api = HfApi()
-    if api.token is None:
+    if get_token() is None:
         raise SystemExit("not logged in to Hugging Face; run `hf auth login` first")
+    api = HfApi()
     api.create_repo(repo_id=repo, repo_type="dataset", private=args.private, exist_ok=True)
     api.upload_folder(
         repo_id=repo,
