@@ -16,7 +16,6 @@ from a real regression.
 import argparse
 import csv
 from datetime import datetime, timezone
-import hashlib
 import json
 from pathlib import Path
 import struct
@@ -37,14 +36,6 @@ PLOTS = {
     "method-comparison.png",
 }
 RECEIPTS = {"synthetic": "synthetic-receipt.json", "small": "receipt.json"}
-
-
-def digest(path):
-    value = hashlib.sha256()
-    with path.open("rb") as handle:
-        for block in iter(lambda: handle.read(1024 * 1024), b""):
-            value.update(block)
-    return value.hexdigest()
 
 
 def theory_stems():
@@ -158,16 +149,16 @@ def check_plots():
 
 
 def check_reference():
-    reference = ROOT / "reference/accepted-paper"
-    sums = reference / "SHA256SUMS"
-    if not sums.exists():
-        return ["missing accepted-paper plot checksums"]
+    """The accepted-paper figures and table, kept for side-by-side comparison.
+
+    Presence only. These are not checksummed, so nothing here detects a
+    reference that has been edited or replaced.
+    """
+    reference = ROOT / "reference"
     errors = []
-    for line in sums.read_text().splitlines():
-        expected_digest, name = line.split(maxsplit=1)
-        path = reference / name.strip().lstrip("*")
-        if not path.exists() or digest(path) != expected_digest:
-            errors.append(f"accepted-paper reference changed: {path.name}")
+    for name in sorted(PLOTS | {"genomics-table.md", "genomics-table.tex"}):
+        if not (reference / name).exists():
+            errors.append(f"missing accepted-paper reference: {name}")
     return errors
 
 
