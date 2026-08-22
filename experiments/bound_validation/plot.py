@@ -99,10 +99,11 @@ def plot_alpha_sweep(data, filter_label, ax=None):
     N = data["N"]
     pk = PARAM_KEY[filter_label]
 
+    pk = PARAM_KEY[filter_label]
     alphas = []
     lb_vals = []
-    ub_vals = []
-    theory_guided = []
+    ub_at_lb = []
+    ub_at_emp = []
     best_empirical = []
 
     for r in data["results"]:
@@ -110,20 +111,26 @@ def plot_alpha_sweep(data, filter_label, ax=None):
         n_over_N = r["n_over_N"]
         n_filter = r.get("n_filter", int(N * (1 - alpha)))
 
+        # The lower bound is evaluated at the epsilon AutoCSF selects. The upper
+        # bound is shown twice: at that same epsilon, and at the epsilon that
+        # turned out to be empirically best, so the gap between the two says how
+        # much the bound moves under a different parameter choice.
         best_param, _ = compute_theory_best(filter_label, alpha, n_over_N, n_filter)
         b_eps, eps = compute_params(filter_label, best_param, n_filter)
+        emp_param = r.get("best_empirical_params", {}).get(pk, best_param)
+        b_eps_emp, eps_emp = compute_params(filter_label, emp_param, n_filter)
 
         alphas.append(alpha)
         lb_vals.append(theory.lower_bound(alpha, eps, b_eps, n_over_N))
-        ub_vals.append(theory.upper_bound(alpha, eps, b_eps, n_over_N))
-        theory_guided.append(r["theory_guided_bpk_saved"])
+        ub_at_lb.append(theory.upper_bound(alpha, eps, b_eps, n_over_N))
+        ub_at_emp.append(theory.upper_bound(alpha, eps_emp, b_eps_emp, n_over_N))
         best_empirical.append(r["best_empirical_bpk_saved"])
 
-    ax.fill_between(alphas, lb_vals, ub_vals, alpha=0.2, color="blue")
-    ax.plot(alphas, ub_vals, "b-", linewidth=1.5, label="Upper bound")
+    ax.plot(alphas, ub_at_lb, "-", color="#7a9cc6", linewidth=1.2,
+            label=r"UB at $\varepsilon_{\mathrm{LB}}$")
+    ax.plot(alphas, ub_at_emp, "b-", linewidth=1.5,
+            label=r"UB at $\varepsilon_{\mathrm{emp}}$")
     ax.plot(alphas, lb_vals, "b--", linewidth=1.5, label="Lower bound")
-    ax.plot(alphas, theory_guided, "g.-", linewidth=1.5, markersize=4,
-            label="Theory-guided")
     ax.plot(
         alphas,
         best_empirical,

@@ -60,12 +60,21 @@ def _csf_stats_to_dict(stats):
 
 EPSILON_STRATEGIES = ("optimal", "shibuya", "hkp")
 
+# Hreinsson, Kroyer and Pagh, "Storing a compressed function with constant time
+# access" (2009), bound the redundancy of the filtered construction by
+#     r < min(alpha + 0.086, 1.82 * (1 - alpha))
+# where the first term is Gallager's Huffman bound (the no-filter regime) and the
+# second is the filtered regime. HKP's decision criterion is to filter beyond the
+# crossover of the two. Solving alpha + 0.086 == 1.82 * (1 - alpha) gives 0.6149;
+# the paper rounds this to "roughly 0.63".
+HKP_CROSSOVER_ALPHA = (1.82 - 0.086) / (1.0 + 1.82)
+
 
 def _find_hkp_params(keys, values):
     """Realize HKP's epsilon=1-alpha rule with the nearest Bloom config."""
     _, compute_actual_alpha, _, _, _ = _import_shared()
     alpha = compute_actual_alpha(values)
-    if alpha <= 0.63:
+    if alpha <= HKP_CROSSOVER_ALPHA:
         return None
     target = max(1e-12, 1.0 - alpha)
     candidates = []
