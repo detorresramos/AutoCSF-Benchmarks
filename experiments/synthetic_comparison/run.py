@@ -36,8 +36,10 @@ def run_local(n):
     for dist in DISTS:
         for alpha in ALPHAS:
             # Keep this seed convention synchronized with gen_datasets.py so
-            # every method receives the exact same value sequence.
-            values = gen_alpha_values(n, alpha, seed=int(alpha * 100), minority_dist=dist)
+            # every method receives the exact same value sequence. round(), not
+            # int(): 0.57 * 100 is 56.999... so truncation collides 0.57 onto
+            # 0.56's seed and silently drops a row from the sweep.
+            values = gen_alpha_values(n, alpha, seed=round(alpha * 100), minority_dist=dist)
             baseline = CSFFilter("bloom", "hkp")
             baseline.construct = lambda k, v: __import__("carameldb").Caramel(k, v, prefilter=None, verbose=False)
             baseline_bpk = serialized_bpk(baseline, keys, values)
