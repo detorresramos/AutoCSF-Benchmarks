@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-build="$ROOT/deps/CaramelDB/pybind/build"
+build="$ROOT/deps/CaramelDB/build"
 library="$build/libcaramel_lib.a"
 [[ -f "$library" ]] || { echo "CaramelDB native library is missing; run ./setup.sh" >&2; exit 1; }
 mkdir -p "$ROOT/data/cache/bin"
