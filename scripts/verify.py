@@ -76,17 +76,25 @@ def frequency_counter_regression():
 # ---------------------------------------------------------------------------
 
 def check_bound_validation():
+    """The per-run JSON is not tracked; baseline.csv is the committed record."""
     errors = []
-    data_dir = ROOT / "results/bound_validation/data"
     alpha_dir = ROOT / "results/bound_validation/figures/alpha_sweep"
     epsilon_dir = ROOT / "results/bound_validation/figures/epsilon_sweep"
     alpha_stems, epsilon_stems = theory_stems()
     for stem in sorted(alpha_stems):
-        if not (data_dir / f"{stem}.json").exists() or not (alpha_dir / f"{stem}.png").exists():
-            errors.append(f"missing alpha-sweep artifact: {stem}")
+        if not (alpha_dir / f"{stem}.png").exists():
+            errors.append(f"missing alpha-sweep figure: {stem}")
     for stem in sorted(epsilon_stems):
-        if not (data_dir / f"{stem}.json").exists() or not (epsilon_dir / f"{stem}.png").exists():
-            errors.append(f"missing epsilon-sweep artifact: {stem}")
+        if not (epsilon_dir / f"{stem}.png").exists():
+            errors.append(f"missing epsilon-sweep figure: {stem}")
+
+    baseline_path = ROOT / "results/bound_validation/baseline.csv"
+    if not baseline_path.exists():
+        errors.append("missing results/bound_validation/baseline.csv")
+        return errors
+    covered = {key[0] for key in baseline_measurements(baseline_path)}
+    for stem in sorted((alpha_stems | epsilon_stems) - covered):
+        errors.append(f"baseline.csv has no measurements for {stem}")
     return errors
 
 
@@ -231,56 +239,58 @@ def genomics_rows(path):
     }
 
 
+def baseline_measurements(path):
+    """Read the committed bound-validation baseline into {key: value}."""
+    with path.open() as handle:
+        return {
+            (row["sweep"], int(row["index"]), row["metric"], row["param"]): float(row["value"])
+            for row in csv.DictReader(handle)
+        }
+
+
+def fresh_measurements(data_dir):
+    """Read a fresh run's JSON into the same shape the baseline uses."""
+    out = {}
+    for path in sorted(data_dir.glob("*.json")):
+        data = json.loads(path.read_text())
+        for index, record in enumerate(data.get("results", [data])):
+            for metric in ("baseline_bpk", "theory_guided_bpk_saved",
+                           "best_empirical_bpk_saved"):
+                if metric in record:
+                    out[(path.stem, index, metric, "")] = float(record[metric])
+            for entry in record.get("empirical_per_param", []):
+                param = next(v for k, v in entry.items() if k != "bpk_saved")
+                out[(path.stem, index, "bpk_saved", str(param))] = float(entry["bpk_saved"])
+    return out
+
+
 def compare_bound_validation(fresh_dir, errors):
-    accepted_dir = ROOT / "results/bound_validation/data"
     fresh_data = fresh_dir / "bound_validation/data"
+    baseline_path = ROOT / "results/bound_validation/baseline.csv"
     if not fresh_data.is_dir():
         return 0.0, 0
-    accepted_files = sorted(accepted_dir.glob("*.json"))
-    fresh_files = sorted(fresh_data.glob("*.json"))
-    if {p.name for p in accepted_files} != {p.name for p in fresh_files}:
-        errors.append("the fresh and accepted bound-validation file sets differ")
+    if not baseline_path.exists():
+        errors.append("missing results/bound_validation/baseline.csv")
+        return 0.0, 0
+
+    accepted = baseline_measurements(baseline_path)
+    fresh = fresh_measurements(fresh_data)
+    missing = sorted(accepted.keys() - fresh.keys())
+    extra = sorted(fresh.keys() - accepted.keys())
+    if missing:
+        errors.append(f"bound validation is missing accepted measurements: {missing[:3]}")
+    if extra:
+        errors.append(f"bound validation produced unexpected measurements: {extra[:3]}")
 
     max_delta = 0.0
-    for accepted_path in accepted_files:
-        fresh_path = fresh_data / accepted_path.name
-        if not fresh_path.exists():
-            continue
-        accepted = json.loads(accepted_path.read_text())
-        fresh = json.loads(fresh_path.read_text())
-        accepted_results = accepted.get("results", [accepted])
-        fresh_results = fresh.get("results", [fresh])
-        if len(accepted_results) != len(fresh_results):
-            errors.append(f"result count differs for {accepted_path.name}")
-            continue
-        for index, (old, new) in enumerate(zip(accepted_results, fresh_results)):
-            for key in ("alpha", "requested_alpha", "n_filter"):
-                if old[key] != new[key]:
-                    errors.append(f"{accepted_path.name} result {index} differs in {key}")
-            if old.get("theory_optimal_params") != new.get("theory_optimal_params"):
-                errors.append(
-                    f"{accepted_path.name} result {index} selects a different optimal parameter"
-                )
-            for key in ("baseline_bpk", "theory_guided_bpk_saved", "best_empirical_bpk_saved"):
-                if key not in old or key not in new:
-                    continue
-                delta = abs(float(old[key]) - float(new[key]))
-                max_delta = max(max_delta, delta)
-                if delta > TOLERANCE_BPK:
-                    errors.append(f"{accepted_path.name} result {index} {key} delta={delta:.6g}")
-            old_params = old.get("empirical_per_param", [])
-            new_params = new.get("empirical_per_param", [])
-            if len(old_params) != len(new_params):
-                errors.append(f"parameter count differs for {accepted_path.name} result {index}")
-                continue
-            for old_param, new_param in zip(old_params, new_params):
-                delta = abs(float(old_param["bpk_saved"]) - float(new_param["bpk_saved"]))
-                max_delta = max(max_delta, delta)
-                if delta > TOLERANCE_BPK:
-                    errors.append(
-                        f"{accepted_path.name} result {index} parameter delta={delta:.6g}"
-                    )
-    return max_delta, len(fresh_files)
+    for key in accepted.keys() & fresh.keys():
+        delta = abs(accepted[key] - fresh[key])
+        max_delta = max(max_delta, delta)
+        if delta > TOLERANCE_BPK:
+            sweep, index, metric, param = key
+            label = f"{sweep} result {index} {metric}" + (f" param={param}" if param else "")
+            errors.append(f"{label} delta={delta:.6g}")
+    return max_delta, len(list(fresh_data.glob("*.json")))
 
 
 def compare_table(accepted_path, fresh_path, reader, label, errors, allow_subset=False):
