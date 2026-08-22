@@ -14,6 +14,10 @@ results/*
 !results/genomics.tex
 !results/genomics-paper.md
 !results/genomics-paper.tex
+!results/genomics-audit.md
+!results/genomics-audit.tex
+!results/genomics-total.md
+!results/genomics-total.tex
 !results/KNOWN_ISSUES.md
 !results/figures/
 !results/figures/*.png

@@ -116,3 +116,12 @@ the Caramel/GOV plain CSF, while VL-BuRR uses `Filtered-HuffmanCSF_No`. Absolute
 sizes from unlike CSF implementations do not share a baseline. Structure size
 is platform-independent; those mixed-host timings are diagnostic,
 not a fair cross-method speed comparison. The JSON records both environments.
+
+The generated genomics outputs separate these two questions:
+
+- `results/genomics-paper.md` reports bits/key saved relative to each method's
+  own plain CSF and isolates the filter-selection decision.
+- `results/genomics-total.md` reports final end-to-end bits/key, including the
+  different underlying CSF implementations.
+- `results/genomics-audit.md` shows plain size, filtered size, savings, and the
+  selected filter parameters for every dataset/method pair.

@@ -229,6 +229,79 @@ def write_tables(records, output):
     (output / "genomics-paper.md").write_text("\n".join(paper_md) + "\n")
     (output / "genomics-paper.tex").write_text("\n".join(paper_tex) + "\n")
 
+    # Transparent audit table: baseline arithmetic and chosen filter.
+    def baseline_bpk(row):
+        return row.get("baseline_bits_per_key",
+                       row["bits_per_key"] + row["bits_saved_vs_plain"])
+
+    def parameters(row):
+        params = row.get("parameters")
+        if not params:
+            return "no filter"
+        if row["method"] == "vlburr" and row["bits_saved_vs_plain"] == 0:
+            return "no filter (Opt chose empty)"
+        if "bloom_bits_per_element" in params:
+            return f"Bloom b={params['bloom_bits_per_element']}, k={params['bloom_num_hashes']}"
+        return "VL-BuRR optimized filter"
+
+    def baseline_name(row):
+        return "VL-BuRR Huffman CSF" if row["method"] == "vlburr" else "Caramel/GOV CSF"
+
+    audit_md = [
+        "| Dataset | Method | Plain CSF | Plain bpk | Filtered bpk | Saved bpk | Selected filter |",
+        "|---|---|---|---:|---:|---:|---|",
+    ]
+    audit_tex = [
+        "\\begin{tabular}{lllrrrl}",
+        "Dataset & Method & Plain CSF & Plain bpk & Filtered bpk & Saved bpk & Selected filter \\\\",
+        "\\hline",
+    ]
+    for row in records:
+        plain = baseline_bpk(row)
+        backend = baseline_name(row)
+        selected = parameters(row)
+        audit_md.append(
+            f"| {row['dataset']} | {row['method']} | {backend} | {plain:.4f} | "
+            f"{row['bits_per_key']:.4f} | {row['bits_saved_vs_plain']:.4f} | {selected} |"
+        )
+        dataset = row["dataset"].replace("_", "\\_")
+        method = row["method"].replace("_", "\\_")
+        selected_tex = selected.replace("_", "\\_")
+        backend_tex = backend.replace("_", "\\_")
+        audit_tex.append(
+            f"{dataset} & {method} & {backend_tex} & {plain:.4f} & {row['bits_per_key']:.4f} & "
+            f"{row['bits_saved_vs_plain']:.4f} & {selected_tex} \\\\"
+        )
+    audit_tex.append("\\end{tabular}")
+    (output / "genomics-audit.md").write_text("\n".join(audit_md) + "\n")
+    (output / "genomics-audit.tex").write_text("\n".join(audit_tex) + "\n")
+
+    # End-to-end footprint, including each method's underlying CSF.
+    total_md = [
+        "Final end-to-end structure size in bits per key.",
+        "VL-BuRR uses its Huffman CSF; the other methods use Caramel/GOV.",
+        "",
+        "| Dataset | HKP | BCSF | VL-BuRR | AutoCSF |",
+        "|---|---:|---:|---:|---:|",
+    ]
+    total_tex = [
+        "\\begin{tabular}{lrrrr}",
+        "Dataset & HKP & BCSF & VL-BuRR & AutoCSF \\\\",
+        "\\hline",
+    ]
+    for dataset, methods in grouped.items():
+        best = min(row["bits_per_key"] for row in methods.values())
+        md_values, tex_values = [], []
+        for method, _ in method_labels:
+            value = methods[method]["bits_per_key"]
+            md_values.append(f"**{value:.4f}**" if value == best else f"{value:.4f}")
+            tex_values.append(f"\\textbf{{{value:.4f}}}" if value == best else f"{value:.4f}")
+        total_md.append(f"| {dataset} | " + " | ".join(md_values) + " |")
+        total_tex.append(dataset.replace("_", "\\_") + " & " + " & ".join(tex_values) + " \\\\")
+    total_tex.append("\\end{tabular}")
+    (output / "genomics-total.md").write_text("\n".join(total_md) + "\n")
+    (output / "genomics-total.tex").write_text("\n".join(total_tex) + "\n")
+
 
 def main():
     parser = argparse.ArgumentParser()

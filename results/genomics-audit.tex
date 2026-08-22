@@ -1,0 +1,20 @@
+\begin{tabular}{lllrrrl}
+Dataset & Method & Plain CSF & Plain bpk & Filtered bpk & Saved bpk & Selected filter \\
+\hline
+ecoli\_sakai & hkp & Caramel/GOV CSF & 1.3275 & 0.3743 & 0.9532 & Bloom b=8, k=3 \\
+ecoli\_sakai & bcsf & Caramel/GOV CSF & 1.3275 & 0.3490 & 0.9785 & Bloom b=7, k=5 \\
+ecoli\_sakai & vlburr & VL-BuRR Huffman CSF & 1.0658 & 0.2665 & 0.7993 & VL-BuRR optimized filter \\
+ecoli\_sakai & autocsf & Caramel/GOV CSF & 1.3275 & 0.3446 & 0.9829 & Bloom b=6, k=4 \\
+srr10211353 & hkp & Caramel/GOV CSF & 3.6523 & 3.6523 & 0.0000 & no filter \\
+srr10211353 & bcsf & Caramel/GOV CSF & 3.6523 & 3.6523 & 0.0000 & no filter \\
+srr10211353 & vlburr & VL-BuRR Huffman CSF & 3.2267 & 3.2267 & 0.0000 & no filter (Opt chose empty) \\
+srr10211353 & autocsf & Caramel/GOV CSF & 3.6523 & 3.6523 & 0.0000 & no filter \\
+celegans & hkp & Caramel/GOV CSF & 1.6738 & 1.6862 & -0.0124 & Bloom b=5, k=1 \\
+celegans & bcsf & Caramel/GOV CSF & 1.6738 & 1.3939 & 0.2799 & Bloom b=3, k=2 \\
+celegans & vlburr & VL-BuRR Huffman CSF & 1.3840 & 1.1079 & 0.2761 & VL-BuRR optimized filter \\
+celegans & autocsf & Caramel/GOV CSF & 1.6738 & 1.3839 & 0.2899 & Bloom b=2, k=1 \\
+rice & hkp & Caramel/GOV CSF & 1.9519 & 2.3551 & -0.4032 & Bloom b=4, k=7 \\
+rice & bcsf & Caramel/GOV CSF & 1.9519 & 1.9313 & 0.0206 & Bloom b=2, k=1 \\
+rice & vlburr & VL-BuRR Huffman CSF & 1.6409 & 1.9180 & -0.2772 & VL-BuRR optimized filter \\
+rice & autocsf & Caramel/GOV CSF & 1.9519 & 1.8811 & 0.0708 & Bloom b=1, k=1 \\
+\end{tabular}

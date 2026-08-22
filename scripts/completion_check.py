@@ -61,6 +61,11 @@ def inspect():
     for suffix in ("json", "md", "tex"):
         if not (ROOT / "results" / f"genomics.{suffix}").exists():
             errors.append(f"missing results/genomics.{suffix}")
+    for name in ("genomics-paper.md", "genomics-paper.tex",
+                 "genomics-audit.md", "genomics-audit.tex",
+                 "genomics-total.md", "genomics-total.tex"):
+        if not (ROOT / "results" / name).exists():
+            errors.append(f"missing results/{name}")
     actual_plots = {path.name for path in (ROOT / "results" / "figures").glob("*.png")}
     for name in sorted(PLOTS - actual_plots):
         errors.append(f"missing plot: {name}")
