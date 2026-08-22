@@ -1,7 +1,7 @@
 PYTHON := .venv/bin/python
 
 .PHONY: datasets bound-validation synthetic-comparison genomics-comparison \
-        verify reproduce repro-clean
+        verify reproduce repro-clean publish-datasets
 
 # Genomics inputs: ~500 MB processed, ~10 GB working space. Not needed by the
 # two synthetic experiments.
@@ -32,3 +32,9 @@ verify:
 # and only promotes them if they match. SCOPE=synthetic (default) or SCOPE=small.
 repro-clean:
 	./scripts/repro_clean.sh
+
+# Stage the genomics tables into an upload folder and push them to the
+# Hugging Face dataset repo named in datasets/sources.json.
+publish-datasets:
+	$(PYTHON) datasets/manage.py stage
+	$(PYTHON) datasets/manage.py publish
