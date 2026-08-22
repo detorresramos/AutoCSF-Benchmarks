@@ -60,14 +60,11 @@ if [ ! -d "$CARAMEL_DIR" ]; then
     exit 1
 fi
 
-echo "=== Building CaramelDB ==="
-cmake -S "$CARAMEL_DIR" -B "$CARAMEL_DIR/build" \
-  -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5
-cmake --build "$CARAMEL_DIR/build" --target caramel_lib -j "${JOBS:-4}"
-
+# This also builds deps/CaramelDB/build/libcaramel_lib.a as a side effect, which
+# is the static library the genomics harness links; no separate cmake step.
 echo "=== Installing the carameldb Python module ==="
 CARAMEL_BUILD_JOBS="${JOBS:-4}" \
-CMAKE_ARGS="-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF" \
+CMAKE_ARGS="-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF -DCMAKE_POLICY_VERSION_MINIMUM=3.5" \
   .venv/bin/pip install "$CARAMEL_DIR/cython"
 
 # ---------------------------------------------------------------------------
