@@ -35,7 +35,9 @@ def run_local(n):
     keys = gen_keys(n)
     for dist in DISTS:
         for alpha in ALPHAS:
-            values = gen_alpha_values(n, alpha, seed=42, minority_dist=dist)
+            # Keep this seed convention synchronized with gen_datasets.py so
+            # every method receives the exact same value sequence.
+            values = gen_alpha_values(n, alpha, seed=int(alpha * 100), minority_dist=dist)
             baseline = CSFFilter("bloom", "hkp")
             baseline.construct = lambda k, v: __import__("carameldb").Caramel(k, v, prefilter=None, verbose=False)
             baseline_bpk = serialized_bpk(baseline, keys, values)
@@ -48,9 +50,9 @@ def run_local(n):
 def run_vlburr(n, work):
     binary = ROOT / "data" / "cache" / "bin" / "ribbon_learned_bench"
     if not binary.exists():
-        subprocess.run([str(ROOT / "vlburr" / "build.sh")], check=True)
+        subprocess.run([str(ROOT / "methods" / "vlburr" / "build.sh")], check=True)
     lrdata = work / "lrdata"
-    subprocess.run([sys.executable, str(ROOT / "vlburr/scripts/gen_datasets.py"), "--out", str(lrdata), "--n", str(n), "--minority-dist", *DISTS, "--p-max", *map(str, ALPHAS), "--seeds", "0"], check=True)
+    subprocess.run([sys.executable, str(ROOT / "methods/vlburr/gen_datasets.py"), "--out", str(lrdata), "--n", str(n), "--minority-dist", *DISTS, "--p-max", *map(str, ALPHAS), "--seeds", "0"], check=True)
     records = []
     for labels in sorted(lrdata.glob("*_y.lrbin")):
         name = labels.name.removesuffix("_y.lrbin")

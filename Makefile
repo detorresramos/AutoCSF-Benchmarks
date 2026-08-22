@@ -1,42 +1,34 @@
-.PHONY: setup datasets validate bound-validation synthetic-comparison genomics-comparison plots synthetic-clean stage repro-small verify reproduce all
+PYTHON := .venv/bin/python
 
-setup:
-	./setup.sh
+.PHONY: datasets bound-validation synthetic-comparison genomics-comparison \
+        verify reproduce repro-clean
 
+# Genomics inputs: ~500 MB processed, ~10 GB working space. Not needed by the
+# two synthetic experiments.
 datasets:
-	.venv/bin/python datasets/manage.py download
-
-validate:
-	.venv/bin/python datasets/manage.py validate
+	$(PYTHON) datasets/manage.py download
+	$(PYTHON) datasets/manage.py validate
 
 bound-validation:
-	.venv/bin/python experiments/bound_validation/run.py
-	.venv/bin/python experiments/bound_validation/plot.py
+	$(PYTHON) experiments/bound_validation/run.py
+	$(PYTHON) experiments/bound_validation/plot.py
 
 synthetic-comparison:
-	.venv/bin/python experiments/synthetic_comparison/run.py
-	.venv/bin/python experiments/synthetic_comparison/plot.py
+	$(PYTHON) experiments/synthetic_comparison/run.py
+	$(PYTHON) experiments/synthetic_comparison/plot.py
 
 genomics-comparison:
 	./experiments/genomics_comparison/run.sh
 
-plots:
-	.venv/bin/python scripts/reproduce_plots.py
-
-synthetic-clean:
-	./scripts/repro_synthetic_clean.sh
-
-stage:
-	.venv/bin/python datasets/manage.py stage
-
-repro-small:
-	./scripts/repro_small.sh
-
-verify:
-	.venv/bin/python scripts/test_frequency_counter.py
-	.venv/bin/python datasets/manage.py validate
-	.venv/bin/python scripts/completion_check.py --mark-complete
-
 reproduce: bound-validation synthetic-comparison genomics-comparison verify
 
-all: reproduce
+# Is what is in results/ complete and self-consistent?
+verify:
+	$(PYTHON) datasets/manage.py validate
+	$(PYTHON) scripts/verify.py
+
+# Does it still come out the same? Recomputes everything in a clean container
+# that never sees results/, diffs the fresh numbers against the committed ones,
+# and only promotes them if they match. SCOPE=synthetic (default) or SCOPE=small.
+repro-clean:
+	./scripts/repro_clean.sh

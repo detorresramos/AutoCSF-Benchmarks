@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 dataset="${1:?dataset name required}"
 repeats="${2:-1}"
 table="$ROOT/data/processed/${dataset}_k15.tsv.zst"
@@ -11,7 +11,7 @@ binary="${VLBURR_BINARY:-$ROOT/data/cache/bin/ribbon_learned_bench}"
 mkdir -p "$cache"
 prefix="$cache/$dataset"
 if [[ ! -f "${prefix}_y.lrbin" ]]; then
-  python3 "$ROOT/vlburr/table_to_lrbin.py" "$table" "$prefix" \
+  python3 "$ROOT/methods/vlburr/table_to_lrbin.py" "$table" "$prefix" \
     --manifest "$ROOT/data/manifests/${dataset}_k15.json"
 fi
 n="$(python3 - "$ROOT/data/manifests/${dataset}_k15.json" <<'PY'
@@ -27,4 +27,4 @@ for ((i=0; i<repeats; i++)); do
     DYLD_LIBRARY_PATH="$binary_dir${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}" \
     "$binary" -r "$cache/" -c CSF -d "$dataset" >> "$log"
 done
-python3 "$ROOT/vlburr/parse_genomics.py" "$n" < "$log"
+python3 "$ROOT/methods/vlburr/parse_genomics.py" "$n" < "$log"
