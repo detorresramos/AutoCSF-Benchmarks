@@ -103,6 +103,39 @@ def stage(args, cfg):
     print(destination)
 
 
+def publish(args, cfg):
+    """Upload a staged directory to the Hugging Face dataset repository."""
+    try:
+        from huggingface_hub import HfApi
+    except ImportError as exc:
+        raise SystemExit("install requirements.txt before publishing") from exc
+
+    staged = args.staged.resolve()
+    if not (staged / "README.md").exists() or not (staged / "SHA256SUMS").exists():
+        raise SystemExit(f"{staged} is not a staged directory; run `manage.py stage` first")
+
+    repo = args.repo or os.environ.get("AUTOCSF_DATASET_REPO", cfg["dataset_repo"])
+    uploaded = sorted(p for p in staged.rglob("*") if p.is_file())
+    total = sum(p.stat().st_size for p in uploaded)
+    print(f"publishing {len(uploaded)} files ({total / 1e9:.2f} GB) to {repo}")
+    if args.dry_run:
+        for path in uploaded:
+            print(f"  {path.relative_to(staged)}  {path.stat().st_size / 1e6:.1f} MB")
+        return
+
+    api = HfApi()
+    if api.token is None:
+        raise SystemExit("not logged in to Hugging Face; run `hf auth login` first")
+    api.create_repo(repo_id=repo, repo_type="dataset", private=args.private, exist_ok=True)
+    api.upload_folder(
+        repo_id=repo,
+        repo_type="dataset",
+        folder_path=str(staged),
+        commit_message=args.message,
+    )
+    print(f"https://huggingface.co/datasets/{repo}")
+
+
 def generate(args, cfg):
     name = names(args, cfg)[0]
     entry = cfg["datasets"][name]
@@ -259,6 +292,12 @@ def main():
     validate_parser.add_argument("--manifest-only", action="store_true")
     stage_parser = sub.add_parser("stage")
     stage_parser.add_argument("--output", type=Path, default=ROOT / "results" / "huggingface" / "autocsf-genomics")
+    publish_parser = sub.add_parser("publish")
+    publish_parser.add_argument("--staged", type=Path, default=ROOT / "results" / "huggingface" / "autocsf-genomics")
+    publish_parser.add_argument("--repo", help="override the dataset repo from sources.json")
+    publish_parser.add_argument("--private", action="store_true")
+    publish_parser.add_argument("--dry-run", action="store_true", help="list what would be uploaded")
+    publish_parser.add_argument("--message", default="Upload AutoCSF genomics k-mer count tables")
     profile_parser = sub.add_parser("profile")
     profile_parser.add_argument("--dataset")
     args = parser.parse_args()
@@ -277,6 +316,8 @@ def main():
             validate_one(name, cfg["datasets"][name], args.manifest_only)
     elif args.command == "stage":
         stage(args, cfg)
+    elif args.command == "publish":
+        publish(args, cfg)
     elif args.command == "profile":
         for name in names(args, cfg):
             profile_one(name)
