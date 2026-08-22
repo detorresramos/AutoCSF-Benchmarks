@@ -11,27 +11,27 @@
   "empirical_per_param": [
     {
       "fingerprint_bits": 1,
-      "bpk_saved": 0.04687999999999981
+      "bpk_saved": 0.04368000000000016
     },
     {
       "fingerprint_bits": 2,
-      "bpk_saved": -0.10695999999999906
+      "bpk_saved": -0.10824000000000034
     },
     {
       "fingerprint_bits": 3,
-      "bpk_saved": -0.2729599999999994
+      "bpk_saved": -0.27360000000000007
     },
     {
       "fingerprint_bits": 4,
-      "bpk_saved": -0.48904000000000103
+      "bpk_saved": -0.48775999999999975
     },
     {
       "fingerprint_bits": 5,
-      "bpk_saved": -0.7483199999999979
+      "bpk_saved": -0.7438400000000005
     },
     {
       "fingerprint_bits": 6,
-      "bpk_saved": -1.0445599999999988
+      "bpk_saved": -1.0522399999999994
     },
     {
       "fingerprint_bits": 7,
