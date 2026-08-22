@@ -125,6 +125,22 @@ def inspect():
                 errors.append("independent receipt uses an invalid VL-BuRR baseline")
         except (OSError, json.JSONDecodeError):
             errors.append("independent reproduction receipt is invalid JSON")
+    synthetic_receipt = ROOT / "results" / "reproduction" / "synthetic-receipt.json"
+    if not synthetic_receipt.exists():
+        errors.append("missing clean synthetic reproduction receipt")
+    else:
+        try:
+            synthetic = json.loads(synthetic_receipt.read_text())
+            expected = {"data_files": 45, "method_rows": 88, "plots": 10}
+            observed = synthetic.get("fresh_artifacts", {})
+            if synthetic.get("status") != "passed" or any(
+                observed.get(key) != value for key, value in expected.items()
+            ):
+                errors.append("clean synthetic reproduction receipt did not pass")
+            if synthetic.get("comparison", {}).get("status") != "passed":
+                errors.append("fresh synthetic results were not validated against accepted results")
+        except (OSError, json.JSONDecodeError):
+            errors.append("clean synthetic reproduction receipt is invalid JSON")
     known_issue = ROOT / "results" / "KNOWN_ISSUES.md"
     if known_issue.exists():
         errors.append("unresolved benchmark correctness issue; see results/KNOWN_ISSUES.md")

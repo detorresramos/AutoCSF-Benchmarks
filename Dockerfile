@@ -11,6 +11,11 @@ COPY requirements.txt requirements-lsf.txt ./
 RUN python3 -m venv .venv && .venv/bin/pip install --upgrade pip && \
     .venv/bin/pip install -r requirements.txt -r requirements-lsf.txt
 COPY . .
+RUN patch -d deps/CaramelDB -p0 < genomics/patches/cstdint.patch && \
+    patch -d deps/CaramelDB -p0 < genomics/patches/python-build-jobs.patch && \
+    CARAMEL_BUILD_JOBS=4 \
+    CMAKE_ARGS="-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF" \
+    .venv/bin/pip install ./deps/CaramelDB/pybind
 RUN ./setup.sh --no-system --skip-python
 ENV AUTOCSF_DOCKER_DESCRIPTION="Docker Desktop linux/amd64"
 ENTRYPOINT ["/bin/bash"]

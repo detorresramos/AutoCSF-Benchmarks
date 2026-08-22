@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "kind": "full-clean-synthetic-reproduction",
+  "checked_at": "2026-08-22T01:00:02.550693+00:00",
+  "container_image_id": "sha256:db72b25153530f66af001438af69428d0593a82dee018b0b2154cff4e89f6ac4",
+  "started_at": "2026-08-22T00:43:56Z",
+  "completed_at": "2026-08-22T00:59:31Z",
+  "fresh_artifacts": {
+    "data_files": 45,
+    "method_rows": 88,
+    "plots": 10
+  },
+  "comparison": {
+    "status": "passed",
+    "bits_per_key_absolute_tolerance": 0.02,
+    "max_theory_delta": 0.013119999999999798,
+    "max_method_comparison_delta": 0.0,
+    "errors": []
+  },
+  "scope": {
+    "theory": "all 15 alpha sweeps and all 30 epsilon sweeps, freshly measured",
+    "methods": "all 88 accepted-paper method-comparison rows, freshly measured",
+    "plots": "all ten accepted-paper aggregate plots, rendered from the fresh measurements"
+  }
+}

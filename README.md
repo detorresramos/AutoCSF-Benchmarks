@@ -24,6 +24,9 @@ python datasets/manage.py validate
 # Reproduce synthetic experiments and existing figures.
 make experiments plots
 
+# Or force a clean linux/amd64 Docker rebuild and validate fresh numbers.
+make synthetic-clean
+
 # Re-run the camera-ready genomics comparison.
 ./run_genomics.sh
 ```
@@ -37,6 +40,13 @@ whose upstream implementation uses x86 intrinsics. The bounded verification
 command is `make repro-small`: E. coli on all four methods plus all ten plots.
 Rice needs about 14 GB for VL-BuRR; a memory failure should be reported rather
 than replaced with a downsampled result.
+
+`make synthetic-clean` deletes every bundled synthetic result inside a fresh
+container before measurement, reruns all 45 theory experiments and all 88
+four-method comparison rows, renders the ten paper plots from those fresh
+numbers, and writes `results/reproduction/synthetic-receipt.json`. The command
+only promotes the fresh artifacts into the checkout after the numerical
+comparison passes.
 
 ## Genomics data
 

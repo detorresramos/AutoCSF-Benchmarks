@@ -1,4 +1,4 @@
-.PHONY: setup data datasets validate experiments plots genomics table stage repro-small verify all
+.PHONY: setup data datasets validate experiments plots synthetic-clean genomics table stage repro-small verify all
 
 setup:
 	./setup.sh
@@ -15,6 +15,9 @@ experiments:
 
 plots:
 	.venv/bin/python scripts/reproduce_plots.py
+
+synthetic-clean:
+	./scripts/repro_synthetic_clean.sh
 
 genomics:
 	./run_genomics.sh

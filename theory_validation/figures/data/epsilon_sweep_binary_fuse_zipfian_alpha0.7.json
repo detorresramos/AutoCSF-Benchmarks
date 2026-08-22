@@ -1,0 +1,45 @@
+{
+  "filter_type": "binary_fuse",
+  "distribution": "zipfian",
+  "alpha": 0.7,
+  "requested_alpha": 0.7,
+  "N": 100000,
+  "seed": 42,
+  "n_over_N": 0.01376,
+  "n_filter": 30000,
+  "baseline_bpk": 3.1988,
+  "empirical_per_param": [
+    {
+      "fingerprint_bits": 1,
+      "bpk_saved": 0.09247999999999967
+    },
+    {
+      "fingerprint_bits": 2,
+      "bpk_saved": -0.035439999999999916
+    },
+    {
+      "fingerprint_bits": 3,
+      "bpk_saved": -0.19056000000000006
+    },
+    {
+      "fingerprint_bits": 4,
+      "bpk_saved": -0.4264800000000002
+    },
+    {
+      "fingerprint_bits": 5,
+      "bpk_saved": -0.7008800000000002
+    },
+    {
+      "fingerprint_bits": 6,
+      "bpk_saved": -1.00088
+    },
+    {
+      "fingerprint_bits": 7,
+      "bpk_saved": -1.32152
+    },
+    {
+      "fingerprint_bits": 8,
+      "bpk_saved": -1.6510400000000005
+    }
+  ]
+}

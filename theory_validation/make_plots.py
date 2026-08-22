@@ -5,6 +5,7 @@ import os
 import sys
 
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FixedFormatter, FixedLocator, NullFormatter, NullLocator
 import numpy as np
 
 _dir = os.path.dirname(os.path.abspath(__file__))
@@ -99,6 +100,8 @@ def plot_alpha_sweep(data, filter_label, ax=None):
 
     alphas = []
     lb_vals = []
+    ub_vals = []
+    theory_guided = []
     best_empirical = []
 
     for r in data["results"]:
@@ -111,9 +114,15 @@ def plot_alpha_sweep(data, filter_label, ax=None):
 
         alphas.append(alpha)
         lb_vals.append(theory.lower_bound(alpha, eps, b_eps, n_over_N))
+        ub_vals.append(theory.upper_bound(alpha, eps, b_eps, n_over_N))
+        theory_guided.append(r["theory_guided_bpk_saved"])
         best_empirical.append(r["best_empirical_bpk_saved"])
 
+    ax.fill_between(alphas, lb_vals, ub_vals, alpha=0.2, color="blue")
+    ax.plot(alphas, ub_vals, "b-", linewidth=1.5, label="Upper bound")
     ax.plot(alphas, lb_vals, "b--", linewidth=1.5, label="Lower bound")
+    ax.plot(alphas, theory_guided, "g.-", linewidth=1.5, markersize=4,
+            label="Theory-guided")
     ax.plot(
         alphas,
         best_empirical,
@@ -214,13 +223,17 @@ def plot_epsilon_sweep(data, filter_label, ax=None, show_legend=True):
     eps_max = min(max(eps_discrete) * 2, 0.999)
     eps_cont = np.logspace(np.log10(eps_min), np.log10(eps_max), 500)
     lb_cont = []
+    ub_cont = []
     for e in eps_cont:
         try:
             b = compute_b_eps(filter_label, e, n_filter)
         except (ValueError, ZeroDivisionError):
             b = float("inf")
         lb_cont.append(theory.lower_bound(alpha, e, b, n_over_N))
+        ub_cont.append(theory.upper_bound(alpha, e, b, n_over_N))
 
+    ax.fill_between(eps_cont, lb_cont, ub_cont, alpha=0.2, color="blue")
+    ax.plot(eps_cont, ub_cont, "b-", linewidth=1.5, label="Upper bound")
     ax.plot(eps_cont, lb_cont, "b--", linewidth=1.5, label="Lower bound")
     ax.plot(
         eps_discrete, bpk_saved, "ro-", linewidth=2, markersize=6, label="Empirical"
@@ -252,6 +265,7 @@ def plot_epsilon_sweep(data, filter_label, ax=None, show_legend=True):
     )
 
     ax.set_xscale("log")
+    ax.xaxis.set_minor_formatter(NullFormatter())
     ax.set_xlabel(r"$\varepsilon$ (false positive rate)")
     ax.set_ylabel("Bits per key saved")
     ax.set_xlim(eps_min, eps_max)
@@ -259,8 +273,10 @@ def plot_epsilon_sweep(data, filter_label, ax=None, show_legend=True):
     ax2 = ax.twiny()
     ax2.set_xscale("log")
     ax2.set_xlim(ax.get_xlim())
-    ax2.set_xticks(eps_discrete)
-    ax2.set_xticklabels([str(p) for p in param_vals], fontsize=7)
+    ax2.xaxis.set_major_locator(FixedLocator(eps_discrete))
+    ax2.xaxis.set_major_formatter(FixedFormatter([str(p) for p in param_vals]))
+    ax2.xaxis.set_minor_locator(NullLocator())
+    ax2.tick_params(axis="x", labelsize=7)
     ax2.set_xlabel(PARAM_AXIS_LABEL[filter_label], fontsize=9)
 
     ax.set_title(
@@ -316,7 +332,7 @@ def plot_epsilon_sweep_combined(dist, alpha):
 
     # Shared legend: collect common entries from first visible subplot
     # (skip per-subplot entries like "Theory opt (fp=X)" which differ)
-    common_labels = {"Lower bound", "Empirical"}
+    common_labels = {"Upper bound", "Lower bound", "Empirical"}
     handles, labels = [], []
     for ax_i in axes:
         if not ax_i.get_visible():
