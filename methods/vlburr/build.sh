@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 # Build from pristine upstream sources; never trust or modify a dirty submodule checkout.
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-commit="$(cat "$ROOT/vlburr/UPSTREAM_COMMIT")"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+commit="$(cat "$ROOT/methods/vlburr/UPSTREAM_COMMIT")"
 source_dir="$ROOT/data/cache/lsf-source-$commit"
 if [[ ! -d "$source_dir/.git" ]]; then
   mkdir -p "$ROOT/data/cache"
   git clone --recursive https://github.com/gvinciguerra/LearnedStaticFunction.git "$source_dir"
   git -C "$source_dir" checkout "$commit"
   git -C "$source_dir" submodule update --init --recursive
-  patch -d "$source_dir" -p0 < "$ROOT/vlburr/patches/nofilter.patch"
+  patch -d "$source_dir" -p0 < "$ROOT/methods/vlburr/patches/nofilter.patch"
 fi
 if [[ ! -f "$source_dir/.autocsf-integer-frequency-counts" ]]; then
-  patch -d "$source_dir" -p0 < "$ROOT/vlburr/patches/integer-frequency-counts.patch"
+  patch -d "$source_dir" -p0 < "$ROOT/methods/vlburr/patches/integer-frequency-counts.patch"
   touch "$source_dir/.autocsf-integer-frequency-counts"
 fi
 if [[ ! -f "$source_dir/.autocsf-release-filter-input" ]]; then
-  patch -d "$source_dir" -p0 < "$ROOT/vlburr/patches/release-filter-input.patch"
+  patch -d "$source_dir" -p0 < "$ROOT/methods/vlburr/patches/release-filter-input.patch"
   touch "$source_dir/.autocsf-release-filter-input"
 fi
 if [[ "$(uname -s)" == Darwin && ! -f "$source_dir/.autocsf-macos-patched" ]]; then
-  patch -d "$source_dir" -p0 < "$ROOT/vlburr/patches/macos-cstdint.patch"
+  patch -d "$source_dir" -p0 < "$ROOT/methods/vlburr/patches/macos-cstdint.patch"
   touch "$source_dir/.autocsf-macos-patched"
 fi
 compiler_flags="${CMAKE_CXX_FLAGS:-}"
