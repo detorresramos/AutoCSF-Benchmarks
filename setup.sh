@@ -30,7 +30,6 @@ if $INSTALL_SYSTEM; then
     echo "=== Installing system packages ==="
     apt-get update && apt-get install -y \
         build-essential cmake git python3 python3-dev python3-pip python3-venv \
-        openjdk-17-jdk maven \
         zstd zlib1g-dev \
         llvm-17 clang-17 libc++-17-dev libc++abi-17-dev libtbb-dev
 fi
@@ -46,7 +45,6 @@ if $INSTALL_PYTHON; then
     source .venv/bin/activate
     pip install --upgrade pip
     pip install -r requirements.txt
-    pip install -r requirements-lsf.txt
 else
     source .venv/bin/activate
 fi
@@ -69,15 +67,7 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Java JARs
-# ---------------------------------------------------------------------------
-echo "=== Building Java dependencies ==="
-(cd deps/java/java-caramel && mvn -q package -DskipTests)
-(cd deps/java/java-mph && mvn -q package -DskipTests)
-
-# ---------------------------------------------------------------------------
-# VL-BuRR from a pristine upstream checkout. This intentionally does not build
-# from deps/LearnedStaticFunction's possibly dirty working tree.
+# VL-BuRR from its pinned pristine upstream checkout.
 # ---------------------------------------------------------------------------
 echo "=== Building LSF (ribbon_learned_bench) ==="
 ./vlburr/build.sh

@@ -33,9 +33,10 @@ def digest(path):
 
 def inspect():
     errors = []
-    table = ROOT / "results" / "genomics.csv"
+    genomics_dir = ROOT / "results" / "genomics_comparison"
+    table = genomics_dir / "genomics.csv"
     if not table.exists():
-        errors.append("missing results/genomics.csv")
+        errors.append("missing results/genomics_comparison/genomics.csv")
     else:
         with table.open() as handle:
             rows = list(csv.DictReader(handle))
@@ -50,7 +51,7 @@ def inspect():
                     raise ValueError
             except (KeyError, ValueError):
                 errors.append(f"invalid numeric value in genomics.csv row {index}")
-        payload_path = ROOT / "results" / "genomics.json"
+        payload_path = genomics_dir / "genomics.json"
         if payload_path.exists():
             payload = json.loads(payload_path.read_text())
             for row in payload.get("records", []):
@@ -59,14 +60,19 @@ def inspect():
                     if baseline is None or abs((baseline - row["bits_per_key"]) - row["bits_saved_vs_plain"]) > 1e-9:
                         errors.append(f"VL-BuRR row uses an invalid baseline: {row.get('dataset')}")
     for suffix in ("json", "md", "tex"):
-        if not (ROOT / "results" / f"genomics.{suffix}").exists():
-            errors.append(f"missing results/genomics.{suffix}")
+        if not (genomics_dir / f"genomics.{suffix}").exists():
+            errors.append(f"missing results/genomics_comparison/genomics.{suffix}")
     for name in ("genomics-paper.md", "genomics-paper.tex",
                  "genomics-audit.md", "genomics-audit.tex",
                  "genomics-total.md", "genomics-total.tex"):
-        if not (ROOT / "results" / name).exists():
-            errors.append(f"missing results/{name}")
-    actual_plots = {path.name for path in (ROOT / "results" / "figures").glob("*.png")}
+        if not (genomics_dir / name).exists():
+            errors.append(f"missing results/genomics_comparison/{name}")
+    actual_plots = {
+        path.name for path in (ROOT / "results/bound_validation/figures/paper").glob("*.png")
+    }
+    method_plot = ROOT / "results/synthetic_comparison/method-comparison.png"
+    if method_plot.exists():
+        actual_plots.add(method_plot.name)
     for name in sorted(PLOTS - actual_plots):
         errors.append(f"missing plot: {name}")
     reference = ROOT / "reference" / "accepted-paper"
@@ -88,9 +94,9 @@ def inspect():
         for filter_name in THEORY_FILTERS for distribution in THEORY_DISTRIBUTIONS
         for alpha in ("0.7", "0.9")
     }
-    data_dir = ROOT / "theory_validation" / "figures" / "data"
-    alpha_dir = ROOT / "theory_validation" / "figures" / "alpha_sweep"
-    epsilon_dir = ROOT / "theory_validation" / "figures" / "epsilon_sweep"
+    data_dir = ROOT / "results" / "bound_validation" / "data"
+    alpha_dir = ROOT / "results" / "bound_validation" / "figures" / "alpha_sweep"
+    epsilon_dir = ROOT / "results" / "bound_validation" / "figures" / "epsilon_sweep"
     for stem in sorted(expected_alpha):
         if not (data_dir / f"{stem}.json").exists() or not (alpha_dir / f"{stem}.png").exists():
             errors.append(f"missing original alpha-sweep artifact: {stem}")

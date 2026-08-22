@@ -7,27 +7,17 @@ build/
 .DS_Store
 .venv/
 data/
-!theory_validation/figures/data/
-!theory_validation/figures/data/*.json
 results/*
-!results/genomics.csv
-!results/genomics.json
-!results/genomics.md
-!results/genomics.tex
-!results/genomics-paper.md
-!results/genomics-paper.tex
-!results/genomics-audit.md
-!results/genomics-audit.tex
-!results/genomics-total.md
-!results/genomics-total.tex
+!results/bound_validation/
+!results/bound_validation/**
+!results/synthetic_comparison/
+!results/synthetic_comparison/**
+!results/genomics_comparison/
+!results/genomics_comparison/**
 !results/KNOWN_ISSUES.md
-!results/figures/
-!results/figures/*.png
 !results/reproduction/
 !results/reproduction/receipt.json
+!results/reproduction/synthetic-receipt.json
 
 # Numerical inputs for accepted-paper plots are deliberately versioned. Fresh
 # experiment outputs belong under results/.
-
-# Cached trained models for LSF
-deps/lsf/model_cache/

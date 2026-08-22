@@ -12,7 +12,7 @@ fi
 .venv/bin/python datasets/manage.py generate --dataset ecoli_sakai
 .venv/bin/python datasets/manage.py profile --dataset ecoli_sakai
 .venv/bin/python datasets/manage.py validate --dataset ecoli_sakai
-.venv/bin/python baselines/run_genomics.py --dataset ecoli_sakai \
+.venv/bin/python experiments/genomics_comparison/run.py --dataset ecoli_sakai \
   --repetitions "$repetitions" --output results/reproduction/ecoli
 .venv/bin/python scripts/reproduce_plots.py
 
@@ -22,6 +22,8 @@ from pathlib import Path
 root = Path.cwd()
 rows = list(csv.DictReader((root / "results/reproduction/ecoli/genomics.csv").open()))
 assert {row["method"] for row in rows} == {"hkp", "bcsf", "vlburr", "autocsf"}
-assert len(list((root / "results/figures").glob("*.png"))) == 10
+plots = list((root / "results/bound_validation/figures/paper").glob("*.png"))
+plots += list((root / "results/synthetic_comparison").glob("method-comparison.png"))
+assert len(plots) == 10
 print("Bounded reproduction passed: E. coli 4 methods and 10 plots")
 PY

@@ -1,28 +1,30 @@
-.PHONY: setup data datasets validate experiments plots synthetic-clean genomics table stage repro-small verify all
+.PHONY: setup datasets validate bound-validation synthetic-comparison genomics-comparison plots synthetic-clean stage repro-small verify reproduce all
 
 setup:
 	./setup.sh
 
-data datasets:
+datasets:
 	.venv/bin/python datasets/manage.py download
 
 validate:
 	.venv/bin/python datasets/manage.py validate
 
-experiments:
-	.venv/bin/python theory_validation/run_experiments.py
-	.venv/bin/python method_comparison/run_experiments.py
+bound-validation:
+	.venv/bin/python experiments/bound_validation/run.py
+	.venv/bin/python experiments/bound_validation/plot.py
+
+synthetic-comparison:
+	.venv/bin/python experiments/synthetic_comparison/run.py
+	.venv/bin/python experiments/synthetic_comparison/plot.py
+
+genomics-comparison:
+	./experiments/genomics_comparison/run.sh
 
 plots:
 	.venv/bin/python scripts/reproduce_plots.py
 
 synthetic-clean:
 	./scripts/repro_synthetic_clean.sh
-
-genomics:
-	./run_genomics.sh
-
-table: genomics
 
 stage:
 	.venv/bin/python datasets/manage.py stage
@@ -35,4 +37,6 @@ verify:
 	.venv/bin/python datasets/manage.py validate
 	.venv/bin/python scripts/completion_check.py --mark-complete
 
-all: experiments plots genomics stage repro-small verify
+reproduce: bound-validation synthetic-comparison genomics-comparison verify
+
+all: reproduce

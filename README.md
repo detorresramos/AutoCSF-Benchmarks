@@ -3,135 +3,155 @@
 Reproduction artifact for **AutoCSF: A Provably Safe Indexing Framework for
 Filter-Augmented Compressed Static Functions**.
 
-This repository contains the AutoCSF implementation used in the experiments,
-the HKP and BCSF decision rules, the VL-BuRR baseline, dataset preparation
-tools, and scripts that generate the paper's figures and tables.
+The paper contains three experiments:
 
-## Reproduce the paper
+| Experiment | Question | Main output |
+|---|---|---|
+| Bound validation | Do the theoretical bounds match measured savings as $\alpha$ and $\varepsilon$ vary? | Nine alpha/epsilon sweep plots |
+| Synthetic comparison | Do HKP, BCSF, or VL-BuRR recommend filters that increase space? | The four-method comparison plot |
+| Genomics comparison | Does the same behavior occur on real 15-mer count tables? | The four-dataset savings table |
 
-An AI coding agent should read [`AGENTS.md`](AGENTS.md) first. On Ubuntu
-24.04 x86-64, the intended human workflow is:
+Everything else in this repository supports those experiments: `methods/`
+contains the four decision frameworks, `common/` contains shared math and data
+generation, and `datasets/` prepares and validates genomics inputs.
+
+## Quick start
+
+On Ubuntu 24.04 x86-64:
 
 ```bash
 git clone --recursive https://github.com/detorresramos/AutoCSF-Benchmarks.git
 cd AutoCSF-Benchmarks
 ./setup.sh
-
-# Download the published, processed genomics tables.
-python datasets/manage.py download
-python datasets/manage.py validate
-
-# Reproduce synthetic experiments and existing figures.
-make experiments plots
-
-# Or force a clean linux/amd64 Docker rebuild and validate fresh numbers.
-make synthetic-clean
-
-# Re-run the camera-ready genomics comparison.
-./run_genomics.sh
 ```
 
-`run_genomics.sh` writes raw JSON results and generated Markdown/LaTeX tables
-under `results/`. One run is the default; pass `--repetitions 3` only when the
-machine has enough time and memory. It never edits paper source files.
+Run an experiment with one plainly named command:
 
-On Apple Silicon, use the checked-in `linux/amd64` Dockerfile for VL-BuRR,
-whose upstream implementation uses x86 intrinsics. The bounded verification
-command is `make repro-small`: E. coli on all four methods plus all ten plots.
-Rice needs about 14 GB for VL-BuRR; a memory failure should be reported rather
-than replaced with a downsampled result.
+```bash
+make bound-validation
+make synthetic-comparison
+make genomics-comparison
+```
 
-`make synthetic-clean` deletes every bundled synthetic result inside a fresh
-container before measurement, reruns all 45 theory experiments and all 88
-four-method comparison rows, renders the ten paper plots from those fresh
-numbers, and writes `results/reproduction/synthetic-receipt.json`. The command
-only promotes the fresh artifacts into the checkout after the numerical
-comparison passes.
+The genomics experiment first needs the processed datasets:
 
-## Genomics data
+```bash
+make datasets
+make validate
+make genomics-comparison
+```
 
-The public dataset artifact contains both original source files and processed
-count tables. Processed files use one transparent format:
+The four processed tables occupy about 500 MB. Allow roughly 10 GB of working
+space for downloaded assemblies, build products, and processed data.
+
+`make reproduce` runs all three experiments, verifies their outputs, and marks
+the repository's completion hook satisfied. The
+synthetic comparison uses one million keys and the genomics comparison includes
+rice with 198 million distinct 15-mers, so the complete run is not a quick
+smoke test. Use `make repro-small` for E. coli on all four methods plus the nine
+bound-validation plots and the synthetic-comparison plot.
+
+On Apple Silicon, the checked-in Dockerfile provides the required
+`linux/amd64` environment for VL-BuRR:
+
+```bash
+./scripts/docker_run.sh make repro-small
+```
+
+## 1. Bound validation
+
+Code: `experiments/bound_validation/`
+
+This experiment sweeps the dominating value fraction $\alpha$ and filter false
+positive rate $\varepsilon$ across three minority distributions and five filter
+configurations. It compares empirical bits/key savings with AutoCSF's lower and
+upper bounds.
+
+```bash
+make bound-validation
+```
+
+Outputs:
+
+- Numerical measurements: `results/bound_validation/data/`
+- Nine paper plots: `results/bound_validation/figures/paper/`
+- Individual diagnostic plots: `results/bound_validation/figures/alpha_sweep/`
+  and `results/bound_validation/figures/epsilon_sweep/`
+
+## 2. Synthetic method comparison
+
+Code: `experiments/synthetic_comparison/`
+
+This experiment compares the filter decisions made by HKP, BCSF, VL-BuRR,
+and AutoCSF on Uniform-100 and Zipfian values while sweeping $\alpha$. Its
+metric is bits/key saved relative to each method's own unfiltered CSF; negative
+values mean the selected filter made the index larger.
+
+```bash
+make synthetic-comparison
+```
+
+Outputs:
+
+- Measurements: `results/synthetic_comparison/data.csv`
+- Paper plot: `results/synthetic_comparison/method-comparison.png`
+
+## 3. Real-world genomics comparison
+
+Code: `experiments/genomics_comparison/`
+
+This runs the same four decision frameworks on E. coli Sakai, SRR10211353,
+C. elegans, and rice. The camera-ready result is the filter-versus-no-filter
+savings table.
+
+```bash
+make datasets
+make genomics-comparison
+```
+
+Outputs:
+
+- Raw records: `results/genomics_comparison/genomics.json`
+- Camera-ready table: `results/genomics_comparison/genomics-paper.tex`
+- Human-readable table: `results/genomics_comparison/genomics-paper.md`
+- Audit details: `results/genomics_comparison/genomics-audit.md`
+
+The primary comparison is bits/key saved relative to each method's own plain
+CSF. HKP, BCSF, and AutoCSF share the Caramel/GOV CSF and Bloom-filter
+implementation; only their decision rule differs. VL-BuRR uses its native
+Huffman CSF and filter, so absolute end-to-end sizes do not share a baseline.
+
+## Genomics data format
+
+Processed datasets are UTF-8, headerless, k-mer-sorted TSV compressed with
+Zstandard:
 
 ```text
 AAAAAAAAAAAAAAA\t3
 AAAAAAAAAAAAAAC\t1
 ```
 
-They are UTF-8 TSV files without a header, sorted by k-mer and compressed as
-`.tsv.zst`. Each row is a distinct forward-strand (non-canonical) 15-mer and
-its exact occurrence count. ASCII `acgt` is normalized to uppercase; windows
-containing other characters are omitted. See [`datasets/README.md`](datasets/README.md).
+Each row is a distinct forward-strand (non-canonical) 15-mer and its exact
+count. Lowercase bases are normalized to uppercase and windows containing other
+characters are omitted. See `datasets/README.md` for sources, checksums,
+generation, validation, and Hugging Face staging.
 
-By default, experiments download the processed files. Regenerating them from
-the original FASTA/FASTQ files is optional:
+## Implementations and reproducibility
 
-```bash
-python datasets/manage.py generate --dataset celegans
-python datasets/manage.py validate --dataset celegans
-```
+- `methods/decision_rules.py`: AutoCSF, HKP, and BCSF selection rules over the
+  same Caramel implementation.
+- `vlburr/`: pinned upstream commit, small correctness/memory patches, build,
+  and runners for VL-BuRR.
+- `deps/CaramelDB/`: the pinned CSF/filter implementation.
+- `reference/accepted-paper/`: immutable historical PNGs used as visual
+  references, protected by checksums.
+- `results/reproduction/`: bounded and full synthetic reproduction receipts.
 
-Set `AUTOCSF_DATASET_REPO` to the Hugging Face dataset repository identifier.
-Until the public repository is created, the default is the proposed
-`detorresramos/autocsf-genomics`.
+`make synthetic-clean` builds a fresh Linux container, removes bundled
+synthetic results inside it, recomputes all 45 bound-validation datasets and
+all 88 comparison rows, renders the ten plots, and validates the fresh numbers
+before promoting them.
 
-## Methods
-
-The camera-ready table compares four decision frameworks:
-
-VL-BuRR is built with a documented integer frequency-counter correction for
-classes larger than `2^24`. C. elegans and rice were rerun with that fix. Rice
-requires roughly 16 GB or more for the container; the recorded run used a
-21.2 GB Docker memory allocation.
-
-- **HKP** — idealized Bloom-filter cost model from Hreinsson et al.
-- **BCSF** — Shibuya et al.'s entropy-based heuristic.
-- **VL-BuRR** — generalized filter trick using its native implementation.
-- **AutoCSF** — the provably safe lower-bound criterion.
-
-HKP, BCSF, and AutoCSF use the same CaramelDB CSF and Bloom-filter
-implementation; only their parameter-selection rule differs. VL-BuRR is built
-from a pristine, commit-pinned LearnedStaticFunction/BuRR checkout by
-`vlburr/build.sh`. The separate `autocsf-bench` evaluation repository is not a
-dependency; only its small evaluation patch was vendored here.
-
-## Repository layout
-
-```text
-datasets/              download, generation, validation, and provenance
-shared/                AutoCSF, HKP, and BCSF decision rules
-theory_validation/     bound-validation experiments
-shibuya_comparison/    BCSF comparison experiments
-baselines/             end-to-end benchmark runner
-deps/CaramelDB/        pinned C++ implementation
-deps/LearnedStaticFunction/ upstream VL-BuRR/LSF implementation
-results/               generated raw results and tables (ignored)
-```
-
-## Development setup
-
-For a quick local build without installing system packages:
-
-```bash
-./setup.sh --no-system
-source .venv/bin/activate
-python -m unittest discover
-```
-
-The canonical performance environment is Ubuntu x86-64. The committed camera-
-ready table uses native Apple Silicon for the three Caramel methods and the
-linux/amd64 container for x86-only VL-BuRR. The primary comparison is bits per
-key saved relative to each method's own plain CSF: HKP, BCSF, and AutoCSF use
-the Caramel/GOV plain CSF, while VL-BuRR uses `Filtered-HuffmanCSF_No`. Absolute
-sizes from unlike CSF implementations do not share a baseline. Structure size
-is platform-independent; those mixed-host timings are diagnostic,
-not a fair cross-method speed comparison. The JSON records both environments.
-
-The generated genomics outputs separate these two questions:
-
-- `results/genomics-paper.md` reports bits/key saved relative to each method's
-  own plain CSF and isolates the filter-selection decision.
-- `results/genomics-total.md` reports final end-to-end bits/key, including the
-  different underlying CSF implementations.
-- `results/genomics-audit.md` shows plain size, filtered size, savings, and the
-  selected filter parameters for every dataset/method pair.
+`make verify` validates dataset checksums and profiles, checks the VL-BuRR
+integer-frequency regression, verifies the expected tables/figures/receipts,
+and marks the Codex stop hook complete.

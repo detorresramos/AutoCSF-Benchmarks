@@ -31,8 +31,8 @@ def main():
     )
     args = parser.parse_args()
 
-    accepted_data = ROOT / "theory_validation/figures/data"
-    fresh_data = args.fresh / "theory_figures/data"
+    accepted_data = ROOT / "results/bound_validation/data"
+    fresh_data = args.fresh / "bound_validation/data"
     accepted_files = sorted(accepted_data.glob("*.json"))
     fresh_files = sorted(fresh_data.glob("*.json"))
     errors = []
@@ -73,8 +73,8 @@ def main():
                 if delta > TOLERANCE_BPK:
                     errors.append(f"{accepted_path.name} result {index} parameter delta={delta:.6g}")
 
-    accepted_methods = method_rows(ROOT / "method_comparison/data.csv")
-    fresh_method_path = args.fresh / "method_comparison.csv"
+    accepted_methods = method_rows(ROOT / "results/synthetic_comparison/data.csv")
+    fresh_method_path = args.fresh / "synthetic_comparison/data.csv"
     fresh_methods = method_rows(fresh_method_path) if fresh_method_path.exists() else {}
     if accepted_methods.keys() != fresh_methods.keys():
         errors.append("fresh and accepted method-comparison row keys differ")
@@ -86,7 +86,8 @@ def main():
     if max_method_delta > TOLERANCE_BPK:
         errors.append(f"method-comparison maximum delta={max_method_delta:.6g}")
 
-    fresh_plots = list((args.fresh / "results_figures").glob("*.png"))
+    fresh_plots = list((args.fresh / "bound_validation/figures/paper").glob("*.png"))
+    fresh_plots += list((args.fresh / "synthetic_comparison").glob("method-comparison.png"))
     receipt = {
         "status": "passed" if not errors else "failed",
         "kind": "full-clean-synthetic-reproduction",

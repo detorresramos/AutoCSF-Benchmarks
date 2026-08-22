@@ -1,6 +1,3 @@
 [submodule "deps/CaramelDB"]
 	path = deps/CaramelDB
 	url = https://github.com/detorresramos/CaramelDB.git
-[submodule "deps/LearnedStaticFunction"]
-	path = deps/LearnedStaticFunction
-	url = https://github.com/gvinciguerra/LearnedStaticFunction.git

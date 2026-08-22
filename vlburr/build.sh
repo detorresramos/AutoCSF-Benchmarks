@@ -2,7 +2,7 @@
 # Build from pristine upstream sources; never trust or modify a dirty submodule checkout.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-commit="$(git -C "$ROOT/deps/LearnedStaticFunction" rev-parse HEAD 2>/dev/null || cat "$ROOT/vlburr/UPSTREAM_COMMIT")"
+commit="$(cat "$ROOT/vlburr/UPSTREAM_COMMIT")"
 source_dir="$ROOT/data/cache/lsf-source-$commit"
 if [[ ! -d "$source_dir/.git" ]]; then
   mkdir -p "$ROOT/data/cache"

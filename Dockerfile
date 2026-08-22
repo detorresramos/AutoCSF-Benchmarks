@@ -3,16 +3,16 @@ FROM ubuntu:24.04
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential cmake git patch python3 python3-dev python3-pip python3-venv \
-    openjdk-17-jdk maven zstd zlib1g-dev llvm-17 clang-17 libc++-17-dev \
+    zstd zlib1g-dev llvm-17 clang-17 libc++-17-dev \
     libc++abi-17-dev libtbb-dev ca-certificates curl && \
     rm -rf /var/lib/apt/lists/*
 WORKDIR /workspace
-COPY requirements.txt requirements-lsf.txt ./
+COPY requirements.txt ./
 RUN python3 -m venv .venv && .venv/bin/pip install --upgrade pip && \
-    .venv/bin/pip install -r requirements.txt -r requirements-lsf.txt
+    .venv/bin/pip install -r requirements.txt
 COPY . .
-RUN patch -d deps/CaramelDB -p0 < genomics/patches/cstdint.patch && \
-    patch -d deps/CaramelDB -p0 < genomics/patches/python-build-jobs.patch && \
+RUN patch -d deps/CaramelDB -p0 < patches/carameldb/cstdint.patch && \
+    patch -d deps/CaramelDB -p0 < patches/carameldb/python-build-jobs.patch && \
     CARAMEL_BUILD_JOBS=4 \
     CMAKE_ARGS="-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF" \
     .venv/bin/pip install ./deps/CaramelDB/pybind
