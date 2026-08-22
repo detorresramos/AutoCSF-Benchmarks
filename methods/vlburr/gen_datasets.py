@@ -98,12 +98,12 @@ def main() -> None:
             for seed in args.seeds:
                 # run_local uses the seed for s0. Importing the shared generator
                 # ensures both backends receive the exact same value sequence.
-                ds_seed = seed * 100 + int(alpha * 100)
+                ds_seed = seed * 100 + round(alpha * 100)
                 values = gen_alpha_values(args.n, alpha, ds_seed, dist)
                 labels, n_classes = remap_to_uint16(values)
                 # Single dummy feature: ModelFreq ignores features but the reader expects them.
                 features = np.random.default_rng(ds_seed).standard_normal((args.n, 1)).astype(np.float32)
-                name = f"acsf_{dist_token(dist)}_p{int(alpha*100):02d}_s{seed}"
+                name = f"acsf_{dist_token(dist)}_p{round(alpha*100):02d}_s{seed}"
                 write_dataset(args.out, name, labels, n_classes, features)
                 count += 1
     print(f"Wrote {count} datasets to {args.out} "
