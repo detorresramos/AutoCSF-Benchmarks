@@ -1,10 +1,10 @@
 {
   "status": "passed",
   "kind": "clean-synthetic-reproduction",
-  "checked_at": "2026-08-22T19:05:48.689866+00:00",
-  "container_image_id": "sha256:d154af97f24e403b1453ead4761dca5320a302b3092a45663436cb8fdce12d1b",
-  "started_at": "2026-08-22T17:40:21Z",
-  "completed_at": "2026-08-22T17:59:31Z",
+  "checked_at": "2026-08-22T20:19:53.301671+00:00",
+  "container_image_id": "sha256:e00e424afe3c3b48b842a6f514ad620e33538910ee0291aa9d7128819327e9cd",
+  "started_at": "2026-08-22T20:06:34Z",
+  "completed_at": "2026-08-22T20:19:52Z",
   "fresh_artifacts": {
     "data_files": 45,
     "method_rows": 88,
@@ -14,7 +14,7 @@
   "comparison": {
     "status": "passed",
     "bits_per_key_absolute_tolerance": 0.02,
-    "max_bound_validation_delta": 0.0,
+    "max_bound_validation_delta": 0.017999999999999794,
     "max_synthetic_comparison_delta": 0.0,
     "max_genomics_comparison_delta": 0.0,
     "errors": []

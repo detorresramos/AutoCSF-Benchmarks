@@ -65,27 +65,27 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.20376000000000083,
+      "theory_guided_bpk_saved": -0.20632000000000073,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.20376000000000083
+          "bpk_saved": -0.20632000000000073
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.4912000000000001
+          "bpk_saved": -0.4899200000000006
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.8837600000000005
+          "bpk_saved": -0.8844800000000008
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -1.3396000000000008
+          "bpk_saved": -1.3364000000000003
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.8292800000000007
+          "bpk_saved": -1.8305600000000002
         },
         {
           "fingerprint_bits": 6,
@@ -93,14 +93,14 @@
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -2.89536
+          "bpk_saved": -2.8940800000000007
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -3.45216
+          "bpk_saved": -3.4483200000000007
         }
       ],
-      "best_empirical_bpk_saved": -0.20376000000000083,
+      "best_empirical_bpk_saved": -0.20632000000000073,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -114,42 +114,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.20560000000000045,
+      "theory_guided_bpk_saved": -0.2075200000000006,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.20560000000000045
+          "bpk_saved": -0.2075200000000006
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.4789600000000007
+          "bpk_saved": -0.4757600000000002
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.8612800000000007
+          "bpk_saved": -0.8619200000000005
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -1.2984800000000005
+          "bpk_saved": -1.3004000000000007
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.78824
+          "bpk_saved": -1.7856800000000002
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -2.30016
+          "bpk_saved": -2.2976
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -2.8248800000000003
+          "bpk_saved": -2.828080000000001
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -3.3708
+          "bpk_saved": -3.3714400000000007
         }
       ],
-      "best_empirical_bpk_saved": -0.20560000000000045,
+      "best_empirical_bpk_saved": -0.2075200000000006,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -163,42 +163,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.19144000000000005,
+      "theory_guided_bpk_saved": -0.19784000000000024,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.19144000000000005
+          "bpk_saved": -0.19784000000000024
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.4500799999999998
+          "bpk_saved": -0.45711999999999975
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.8215200000000005
+          "bpk_saved": -0.8259999999999996
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -1.2568000000000001
+          "bpk_saved": -1.2555199999999997
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.7305599999999997
+          "bpk_saved": -1.7356800000000003
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -2.2328799999999998
+          "bpk_saved": -2.2290400000000004
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -2.75056
+          "bpk_saved": -2.7499200000000004
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -3.2842399999999996
+          "bpk_saved": -3.28552
         }
       ],
-      "best_empirical_bpk_saved": -0.19144000000000005,
+      "best_empirical_bpk_saved": -0.19784000000000024,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -212,31 +212,31 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.1830400000000001,
+      "theory_guided_bpk_saved": -0.18496000000000024,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.1830400000000001
+          "bpk_saved": -0.18496000000000024
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.4294400000000005
+          "bpk_saved": -0.4268800000000006
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.7878400000000001
+          "bpk_saved": -0.7776000000000005
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -1.20744
+          "bpk_saved": -1.2106399999999997
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.6767200000000004
+          "bpk_saved": -1.6748000000000003
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -2.16104
+          "bpk_saved": -2.1597600000000003
         },
         {
           "fingerprint_bits": 7,
@@ -244,10 +244,10 @@
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -3.19456
+          "bpk_saved": -3.1958400000000005
         }
       ],
-      "best_empirical_bpk_saved": -0.1830400000000001,
+      "best_empirical_bpk_saved": -0.18496000000000024,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -261,11 +261,11 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.1732800000000001,
+      "theory_guided_bpk_saved": -0.1912799999999999,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.1732800000000001
+          "bpk_saved": -0.1912799999999999
         },
         {
           "fingerprint_bits": 2,
@@ -273,30 +273,30 @@
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.7595200000000002
+          "bpk_saved": -0.7544000000000004
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -1.16824
+          "bpk_saved": -1.1688799999999997
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.6227999999999998
+          "bpk_saved": -1.62472
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -2.10656
+          "bpk_saved": -2.1008000000000004
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -2.60184
+          "bpk_saved": -2.6012000000000004
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -3.11256
+          "bpk_saved": -3.1144800000000004
         }
       ],
-      "best_empirical_bpk_saved": -0.1732800000000001,
+      "best_empirical_bpk_saved": -0.1912799999999999,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -310,42 +310,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.17383999999999933,
+      "theory_guided_bpk_saved": -0.17319999999999958,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.17383999999999933
+          "bpk_saved": -0.17319999999999958
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.3761599999999996
+          "bpk_saved": -0.37807999999999975
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.7165599999999994
+          "bpk_saved": -0.7107999999999999
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -1.1105599999999995
+          "bpk_saved": -1.11376
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.5433599999999998
+          "bpk_saved": -1.54976
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -2.0059999999999993
+          "bpk_saved": -2.00472
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -2.4961599999999997
+          "bpk_saved": -2.49104
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -2.9882399999999993
+          "bpk_saved": -2.99144
         }
       ],
-      "best_empirical_bpk_saved": -0.17383999999999933,
+      "best_empirical_bpk_saved": -0.17319999999999958,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -359,15 +359,15 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.1567999999999996,
+      "theory_guided_bpk_saved": -0.15615999999999985,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.1567999999999996
+          "bpk_saved": -0.15615999999999985
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.35487999999999964
+          "bpk_saved": -0.35360000000000014
         },
         {
           "fingerprint_bits": 3,
@@ -375,26 +375,26 @@
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -1.0682399999999994
+          "bpk_saved": -1.0675999999999997
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.4914399999999999
+          "bpk_saved": -1.4946399999999995
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -1.9431199999999995
+          "bpk_saved": -1.9437600000000002
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -2.4199199999999994
+          "bpk_saved": -2.418
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -2.90496
+          "bpk_saved": -2.90688
         }
       ],
-      "best_empirical_bpk_saved": -0.1567999999999996,
+      "best_empirical_bpk_saved": -0.15615999999999985,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -408,11 +408,11 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.14392000000000005,
+      "theory_guided_bpk_saved": -0.1445599999999998,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.14392000000000005
+          "bpk_saved": -0.1445599999999998
         },
         {
           "fingerprint_bits": 2,
@@ -420,30 +420,30 @@
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.6556000000000002
+          "bpk_saved": -0.6517599999999999
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -1.0291200000000003
+          "bpk_saved": -1.0272000000000001
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.4407999999999999
+          "bpk_saved": -1.4414400000000005
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -1.8803199999999998
+          "bpk_saved": -1.8835200000000003
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -2.34744
+          "bpk_saved": -2.35064
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -2.8204
+          "bpk_saved": -2.8229600000000006
         }
       ],
-      "best_empirical_bpk_saved": -0.14392000000000005,
+      "best_empirical_bpk_saved": -0.1445599999999998,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -457,42 +457,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.12136000000000058,
+      "theory_guided_bpk_saved": -0.11944000000000043,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.12136000000000058
+          "bpk_saved": -0.11944000000000043
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.30608000000000013
+          "bpk_saved": -0.31312000000000006
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.61896
+          "bpk_saved": -0.6183200000000002
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.9848000000000003
+          "bpk_saved": -0.9815999999999998
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.3916800000000005
+          "bpk_saved": -1.3830399999999998
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -1.8207200000000001
+          "bpk_saved": -1.8188
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -2.2673600000000005
+          "bpk_saved": -2.2718400000000005
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -2.74032
+          "bpk_saved": -2.74096
         }
       ],
-      "best_empirical_bpk_saved": -0.12136000000000058,
+      "best_empirical_bpk_saved": -0.11944000000000043,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -514,31 +514,31 @@
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.28935999999999984
+          "bpk_saved": -0.29191999999999974
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.5836799999999998
+          "bpk_saved": -0.58752
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.9373600000000004
+          "bpk_saved": -0.9354400000000003
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.3282399999999996
+          "bpk_saved": -1.3269600000000001
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -1.7559999999999998
+          "bpk_saved": -1.7515199999999997
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -2.1879199999999996
+          "bpk_saved": -2.1968799999999997
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -2.6512
+          "bpk_saved": -2.6473600000000004
         }
       ],
       "best_empirical_bpk_saved": -0.09759999999999991,
@@ -555,42 +555,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.08463999999999983,
+      "theory_guided_bpk_saved": -0.08272000000000013,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.08463999999999983
+          "bpk_saved": -0.08272000000000013
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.2655200000000004
+          "bpk_saved": -0.26168000000000013
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.5548000000000002
+          "bpk_saved": -0.5554399999999999
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.8918400000000002
+          "bpk_saved": -0.8950399999999998
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.2801600000000004
+          "bpk_saved": -1.2763200000000001
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -1.6892800000000001
+          "bpk_saved": -1.69184
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -2.12448
+          "bpk_saved": -2.12512
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -2.56792
+          "bpk_saved": -2.5672800000000002
         }
       ],
-      "best_empirical_bpk_saved": -0.08463999999999983,
+      "best_empirical_bpk_saved": -0.08272000000000013,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -604,42 +604,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.06728000000000023,
+      "theory_guided_bpk_saved": -0.06791999999999998,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.06728000000000023
+          "bpk_saved": -0.06791999999999998
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.24239999999999995
+          "bpk_saved": -0.2417600000000002
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.5131199999999998
+          "bpk_saved": -0.50664
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.8347199999999999
+          "bpk_saved": -0.8315200000000003
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.2031999999999998
+          "bpk_saved": -1.2000000000000002
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -1.60088
+          "bpk_saved": -1.6015199999999998
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -2.01488
+          "bpk_saved": -2.01424
         },
         {
           "fingerprint_bits": 8,
           "bpk_saved": -2.4507200000000005
         }
       ],
-      "best_empirical_bpk_saved": -0.06728000000000023,
+      "best_empirical_bpk_saved": -0.06791999999999998,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -653,19 +653,19 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.04096000000000011,
+      "theory_guided_bpk_saved": -0.04552000000000023,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.04096000000000011
+          "bpk_saved": -0.04552000000000023
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.21672000000000002
+          "bpk_saved": -0.21416000000000013
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.47487999999999975
+          "bpk_saved": -0.4755200000000004
         },
         {
           "fingerprint_bits": 4,
@@ -673,11 +673,11 @@
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.14872
+          "bpk_saved": -1.1429600000000004
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -1.5323200000000003
+          "bpk_saved": -1.5291199999999998
         },
         {
           "fingerprint_bits": 7,
@@ -685,10 +685,10 @@
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -2.3603199999999998
+          "bpk_saved": -2.3609600000000004
         }
       ],
-      "best_empirical_bpk_saved": -0.04096000000000011,
+      "best_empirical_bpk_saved": -0.04552000000000023,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -702,42 +702,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.034559999999999924,
+      "theory_guided_bpk_saved": -0.028160000000000185,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.034559999999999924
+          "bpk_saved": -0.028160000000000185
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.20063999999999993
+          "bpk_saved": -0.19351999999999991
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.4440800000000005
+          "bpk_saved": -0.4447200000000002
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.74688
+          "bpk_saved": -0.7392000000000003
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.0955200000000005
+          "bpk_saved": -1.0987200000000001
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -1.4700800000000003
+          "bpk_saved": -1.4713599999999998
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -1.8629600000000002
+          "bpk_saved": -1.8713600000000001
         },
         {
           "fingerprint_bits": 8,
           "bpk_saved": -2.2789599999999997
         }
       ],
-      "best_empirical_bpk_saved": -0.034559999999999924,
+      "best_empirical_bpk_saved": -0.028160000000000185,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -751,27 +751,27 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": -0.012159999999999727,
+      "theory_guided_bpk_saved": -0.008879999999999999,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": -0.012159999999999727
+          "bpk_saved": -0.008879999999999999
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.16527999999999965
+          "bpk_saved": -0.16847999999999974
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.40815999999999963
+          "bpk_saved": -0.4119999999999999
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.6916800000000003
+          "bpk_saved": -0.6980799999999996
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -1.0429599999999994
+          "bpk_saved": -1.0390399999999995
         },
         {
           "fingerprint_bits": 6,
@@ -779,14 +779,14 @@
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -1.7937600000000002
+          "bpk_saved": -1.7867199999999994
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -2.19504
+          "bpk_saved": -2.19312
         }
       ],
-      "best_empirical_bpk_saved": -0.012159999999999727,
+      "best_empirical_bpk_saved": -0.008879999999999999,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -800,42 +800,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.007759999999999767,
+      "theory_guided_bpk_saved": 0.0039199999999999235,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.007759999999999767
+          "bpk_saved": 0.0039199999999999235
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.1498400000000002
+          "bpk_saved": -0.1524000000000001
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.3708800000000001
+          "bpk_saved": -0.3657600000000003
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.6570400000000003
+          "bpk_saved": -0.6640800000000002
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.9845600000000001
+          "bpk_saved": -0.9877599999999997
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -1.3457600000000003
+          "bpk_saved": -1.3470399999999998
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -1.7181600000000001
+          "bpk_saved": -1.7213599999999998
         },
         {
           "fingerprint_bits": 8,
           "bpk_saved": -2.11048
         }
       ],
-      "best_empirical_bpk_saved": 0.007759999999999767,
+      "best_empirical_bpk_saved": 0.0039199999999999235,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -849,42 +849,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.026399999999999757,
+      "theory_guided_bpk_saved": 0.03151999999999999,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.026399999999999757
+          "bpk_saved": 0.03151999999999999
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.11904000000000003
+          "bpk_saved": -0.12031999999999998
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.32344000000000017
+          "bpk_saved": -0.32728
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.5971199999999999
+          "bpk_saved": -0.5926399999999998
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.91248
+          "bpk_saved": -0.9086399999999997
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -1.2538399999999998
+          "bpk_saved": -1.2467200000000003
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -1.6096
+          "bpk_saved": -1.6134400000000002
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -1.9829599999999998
+          "bpk_saved": -1.9836000000000005
         }
       ],
-      "best_empirical_bpk_saved": 0.026399999999999757,
+      "best_empirical_bpk_saved": 0.03151999999999999,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -898,23 +898,23 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.04687999999999981,
+      "theory_guided_bpk_saved": 0.044319999999999915,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.04687999999999981
+          "bpk_saved": 0.044319999999999915
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.09263999999999983
+          "bpk_saved": -0.09200000000000008
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.29136000000000006
+          "bpk_saved": -0.2875200000000002
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.5516000000000001
+          "bpk_saved": -0.5477599999999998
         },
         {
           "fingerprint_bits": 5,
@@ -922,18 +922,18 @@
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -1.18776
+          "bpk_saved": -1.1858399999999998
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -1.5342399999999996
+          "bpk_saved": -1.5348800000000002
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -1.8958399999999997
+          "bpk_saved": -1.9003199999999998
         }
       ],
-      "best_empirical_bpk_saved": 0.04687999999999981,
+      "best_empirical_bpk_saved": 0.044319999999999915,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -947,19 +947,19 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.06552000000000024,
+      "theory_guided_bpk_saved": 0.06224000000000007,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.06552000000000024
+          "bpk_saved": 0.06224000000000007
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.06695999999999991
+          "bpk_saved": -0.0695199999999998
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.25151999999999974
+          "bpk_saved": -0.2502399999999998
         },
         {
           "fingerprint_bits": 4,
@@ -967,22 +967,22 @@
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.7995999999999999
+          "bpk_saved": -0.7983199999999995
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -1.1262400000000001
+          "bpk_saved": -1.1192000000000002
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -1.45864
+          "bpk_saved": -1.4573599999999995
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -1.8106400000000002
+          "bpk_saved": -1.8125599999999995
         }
       ],
-      "best_empirical_bpk_saved": 0.06552000000000024,
+      "best_empirical_bpk_saved": 0.06224000000000007,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -1004,31 +1004,31 @@
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.052160000000000206
+          "bpk_saved": -0.05152000000000001
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.22072000000000003
+          "bpk_saved": -0.22007999999999983
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.45599999999999996
+          "bpk_saved": -0.46431999999999984
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.7534400000000003
+          "bpk_saved": -0.7508800000000004
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -1.0615199999999998
+          "bpk_saved": -1.06344
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -1.3932799999999999
+          "bpk_saved": -1.3920000000000003
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -1.73752
+          "bpk_saved": -1.7311199999999998
         }
       ],
       "best_empirical_bpk_saved": 0.07704000000000022,
@@ -1045,42 +1045,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.08863999999999983,
+      "theory_guided_bpk_saved": 0.0872799999999998,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.08863999999999983
+          "bpk_saved": 0.0872799999999998
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": -0.03288000000000002
+          "bpk_saved": -0.04056000000000015
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.18928000000000011
+          "bpk_saved": -0.19120000000000026
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.4239200000000003
+          "bpk_saved": -0.4264800000000002
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.6957599999999999
+          "bpk_saved": -0.70024
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.9983200000000001
+          "bpk_saved": -1.0002400000000002
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -1.3195999999999999
+          "bpk_saved": -1.3202400000000005
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -1.6510400000000005
+          "bpk_saved": -1.6497600000000001
         }
       ],
-      "best_empirical_bpk_saved": 0.08863999999999983,
+      "best_empirical_bpk_saved": 0.0872799999999998,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -1094,42 +1094,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.11680000000000001,
+      "theory_guided_bpk_saved": 0.11744000000000021,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.11680000000000001
+          "bpk_saved": 0.11744000000000021
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.0031200000000000117
+          "bpk_saved": -0.0016799999999999038
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.13344000000000023
+          "bpk_saved": -0.12832
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.3482400000000001
+          "bpk_saved": -0.35207999999999995
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.6227200000000002
+          "bpk_saved": -0.6124
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.9028800000000001
+          "bpk_saved": -0.90544
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -1.20424
+          "bpk_saved": -1.2048799999999997
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -1.5216800000000004
+          "bpk_saved": -1.5261600000000004
         }
       ],
-      "best_empirical_bpk_saved": 0.11680000000000001,
+      "best_empirical_bpk_saved": 0.11744000000000021,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -1143,31 +1143,31 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.13095999999999997,
+      "theory_guided_bpk_saved": 0.12959999999999994,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.13095999999999997
+          "bpk_saved": 0.12959999999999994
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.025920000000000165
+          "bpk_saved": 0.029120000000000257
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.09816000000000003
+          "bpk_saved": -0.10264000000000006
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.3104
+          "bpk_saved": -0.3212799999999998
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.56176
+          "bpk_saved": -0.5649600000000001
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.8420000000000001
+          "bpk_saved": -0.8464800000000001
         },
         {
           "fingerprint_bits": 7,
@@ -1175,10 +1175,10 @@
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -1.4427999999999996
+          "bpk_saved": -1.4434400000000003
         }
       ],
-      "best_empirical_bpk_saved": 0.13095999999999997,
+      "best_empirical_bpk_saved": 0.12959999999999994,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -1192,42 +1192,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.15271999999999997,
+      "theory_guided_bpk_saved": 0.15016000000000007,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.15271999999999997
+          "bpk_saved": 0.15016000000000007
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.0631999999999997
+          "bpk_saved": 0.05935999999999986
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.06288000000000027
+          "bpk_saved": -0.06416000000000022
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.2674400000000001
+          "bpk_saved": -0.2680800000000003
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.5060000000000002
+          "bpk_saved": -0.5092000000000003
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.7744
+          "bpk_saved": -0.7750400000000002
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -1.0543200000000001
+          "bpk_saved": -1.0562400000000003
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -1.3550400000000002
+          "bpk_saved": -1.3544000000000005
         }
       ],
-      "best_empirical_bpk_saved": 0.15271999999999997,
+      "best_empirical_bpk_saved": 0.15016000000000007,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -1241,42 +1241,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.15912000000000015,
+      "theory_guided_bpk_saved": 0.16367999999999983,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.15912000000000015
+          "bpk_saved": 0.16367999999999983
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.08823999999999987
+          "bpk_saved": 0.08951999999999982
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": -0.030079999999999885
+          "bpk_saved": -0.03135999999999983
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.22824
+          "bpk_saved": -0.22440000000000015
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.4559199999999999
+          "bpk_saved": -0.4565600000000001
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.71408
+          "bpk_saved": -0.7166399999999999
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -0.9869599999999998
+          "bpk_saved": -0.9850400000000001
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -1.2717600000000004
+          "bpk_saved": -1.2736799999999997
         }
       ],
-      "best_empirical_bpk_saved": 0.15912000000000015,
+      "best_empirical_bpk_saved": 0.16367999999999983,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -1290,15 +1290,15 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.1809599999999998,
+      "theory_guided_bpk_saved": 0.18352000000000013,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.1809599999999998
+          "bpk_saved": 0.18352000000000013
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.12744
+          "bpk_saved": 0.1306400000000001
         },
         {
           "fingerprint_bits": 3,
@@ -1306,7 +1306,7 @@
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.17567999999999984
+          "bpk_saved": -0.17311999999999994
         },
         {
           "fingerprint_bits": 5,
@@ -1314,18 +1314,18 @@
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.63272
+          "bpk_saved": -0.6339999999999999
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -0.8908800000000001
+          "bpk_saved": -0.8896000000000002
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -1.1667200000000002
+          "bpk_saved": -1.1653600000000002
         }
       ],
-      "best_empirical_bpk_saved": 0.1809599999999998,
+      "best_empirical_bpk_saved": 0.18352000000000013,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -1339,19 +1339,19 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.20152000000000037,
+      "theory_guided_bpk_saved": 0.20472,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.20152000000000037
+          "bpk_saved": 0.20472
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.16264000000000012
+          "bpk_saved": 0.15880000000000027
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.05455999999999994
+          "bpk_saved": 0.0481600000000002
         },
         {
           "fingerprint_bits": 4,
@@ -1359,22 +1359,22 @@
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.32071999999999967
+          "bpk_saved": -0.32328
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.5545599999999999
+          "bpk_saved": -0.552
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -0.8031199999999998
+          "bpk_saved": -0.7999199999999997
         },
         {
           "fingerprint_bits": 8,
           "bpk_saved": -1.0615999999999999
         }
       ],
-      "best_empirical_bpk_saved": 0.20152000000000037,
+      "best_empirical_bpk_saved": 0.20472,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -1396,31 +1396,31 @@
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.19087999999999994
+          "bpk_saved": 0.1915199999999997
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.08415999999999979
+          "bpk_saved": 0.08479999999999999
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": -0.07688000000000006
+          "bpk_saved": -0.07560000000000011
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.2729600000000003
+          "bpk_saved": -0.26648000000000005
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.4910399999999999
+          "bpk_saved": -0.4872000000000001
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -0.73
+          "bpk_saved": -0.7293600000000002
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -0.9834400000000003
+          "bpk_saved": -0.9840800000000001
         }
       ],
       "best_empirical_bpk_saved": 0.21944000000000008,
@@ -1437,19 +1437,19 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.23615999999999993,
+      "theory_guided_bpk_saved": 0.23552000000000017,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.23615999999999993
+          "bpk_saved": 0.23552000000000017
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.2191200000000002
+          "bpk_saved": 0.2210399999999999
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.12136000000000013
+          "bpk_saved": 0.12071999999999994
         },
         {
           "fingerprint_bits": 4,
@@ -1457,22 +1457,22 @@
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.21775999999999973
+          "bpk_saved": -0.2132799999999997
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.4250400000000001
+          "bpk_saved": -0.42632000000000003
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -0.6576
+          "bpk_saved": -0.6543999999999999
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -0.8975999999999997
+          "bpk_saved": -0.8963199999999998
         }
       ],
-      "best_empirical_bpk_saved": 0.23615999999999993,
+      "best_empirical_bpk_saved": 0.23552000000000017,
       "best_empirical_params": {
         "fingerprint_bits": 1
       }
@@ -1494,15 +1494,15 @@
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.2549600000000001
+          "bpk_saved": 0.2620800000000001
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.16048000000000018
+          "bpk_saved": 0.15983999999999998
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.030159999999999965
+          "bpk_saved": 0.025679999999999925
         },
         {
           "fingerprint_bits": 5,
@@ -1510,20 +1510,20 @@
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.34175999999999984
+          "bpk_saved": -0.34495999999999993
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -0.5602399999999998
+          "bpk_saved": -0.5628000000000002
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -0.7860800000000001
+          "bpk_saved": -0.7867199999999999
         }
       ],
-      "best_empirical_bpk_saved": 0.2560000000000002,
+      "best_empirical_bpk_saved": 0.2620800000000001,
       "best_empirical_params": {
-        "fingerprint_bits": 1
+        "fingerprint_bits": 2
       }
     },
     {
@@ -1535,42 +1535,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.2727200000000001,
+      "theory_guided_bpk_saved": 0.27527999999999997,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.2727200000000001
+          "bpk_saved": 0.27527999999999997
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.2864
+          "bpk_saved": 0.2870400000000002
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.19840000000000035
+          "bpk_saved": 0.2022400000000002
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.07320000000000038
+          "bpk_saved": 0.07576000000000027
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.08759999999999968
+          "bpk_saved": -0.08823999999999987
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.2769599999999999
+          "bpk_saved": -0.2782399999999998
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -0.48839999999999995
+          "bpk_saved": -0.4903999999999997
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -0.7066399999999997
+          "bpk_saved": -0.7040799999999998
         }
       ],
-      "best_empirical_bpk_saved": 0.2864,
+      "best_empirical_bpk_saved": 0.2870400000000002,
       "best_empirical_params": {
         "fingerprint_bits": 2
       }
@@ -1584,42 +1584,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 1
       },
-      "theory_guided_bpk_saved": 0.28935999999999984,
+      "theory_guided_bpk_saved": 0.29255999999999993,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.28935999999999984
+          "bpk_saved": 0.29255999999999993
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.3229599999999997
+          "bpk_saved": 0.3235999999999999
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.2381599999999997
+          "bpk_saved": 0.24519999999999964
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.12895999999999974
+          "bpk_saved": 0.13151999999999964
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": -0.021600000000000286
+          "bpk_saved": -0.02096000000000009
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.1988000000000003
+          "bpk_saved": -0.19752000000000036
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -0.39168000000000003
+          "bpk_saved": -0.39360000000000017
         },
         {
           "fingerprint_bits": 8,
           "bpk_saved": -0.5996800000000002
         }
       ],
-      "best_empirical_bpk_saved": 0.3229599999999997,
+      "best_empirical_bpk_saved": 0.3235999999999999,
       "best_empirical_params": {
         "fingerprint_bits": 2
       }
@@ -1633,42 +1633,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 2
       },
-      "theory_guided_bpk_saved": 0.3518399999999997,
+      "theory_guided_bpk_saved": 0.35375999999999985,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.3066399999999998
+          "bpk_saved": 0.30535999999999985
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.3518399999999997
+          "bpk_saved": 0.35375999999999985
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.27928
+          "bpk_saved": 0.2811999999999997
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.1783199999999998
+          "bpk_saved": 0.18032000000000004
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 0.03607999999999967
+          "bpk_saved": 0.03351999999999977
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.13535999999999992
+          "bpk_saved": -0.13344000000000023
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -0.32152000000000003
+          "bpk_saved": -0.32055999999999996
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -0.51248
+          "bpk_saved": -0.5150399999999999
         }
       ],
-      "best_empirical_bpk_saved": 0.3518399999999997,
+      "best_empirical_bpk_saved": 0.35375999999999985,
       "best_empirical_params": {
         "fingerprint_bits": 2
       }
@@ -1682,42 +1682,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 2
       },
-      "theory_guided_bpk_saved": 0.3909600000000002,
+      "theory_guided_bpk_saved": 0.39032,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.3284800000000003
+          "bpk_saved": 0.32464000000000004
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.3909600000000002
+          "bpk_saved": 0.39032
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.3184
+          "bpk_saved": 0.3216000000000001
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.23736000000000024
+          "bpk_saved": 0.23672000000000004
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 0.10440000000000005
+          "bpk_saved": 0.1005600000000002
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": -0.054240000000000066
+          "bpk_saved": -0.052959999999999674
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -0.22407999999999983
+          "bpk_saved": -0.22767999999999988
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -0.4071199999999999
+          "bpk_saved": -0.4096799999999998
         }
       ],
-      "best_empirical_bpk_saved": 0.3909600000000002,
+      "best_empirical_bpk_saved": 0.39032,
       "best_empirical_params": {
         "fingerprint_bits": 2
       }
@@ -1731,42 +1731,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 2
       },
-      "theory_guided_bpk_saved": 0.4172800000000001,
+      "theory_guided_bpk_saved": 0.4146400000000001,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.33552000000000026
+          "bpk_saved": 0.33808000000000016
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.4172800000000001
+          "bpk_saved": 0.4146400000000001
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.35464000000000007
+          "bpk_saved": 0.35528000000000004
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.27647999999999984
+          "bpk_saved": 0.27391999999999994
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 0.15056000000000003
+          "bpk_saved": 0.15183999999999997
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": 0.0047199999999998354
+          "bpk_saved": 0.0040800000000000836
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -0.15839999999999987
+          "bpk_saved": -0.15648000000000017
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -0.33184000000000013
+          "bpk_saved": -0.32864000000000004
         }
       ],
-      "best_empirical_bpk_saved": 0.4172800000000001,
+      "best_empirical_bpk_saved": 0.4146400000000001,
       "best_empirical_params": {
         "fingerprint_bits": 2
       }
@@ -1780,27 +1780,27 @@
       "theory_optimal_params": {
         "fingerprint_bits": 2
       },
-      "theory_guided_bpk_saved": 0.45311999999999975,
+      "theory_guided_bpk_saved": 0.45055999999999985,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.3592799999999998
+          "bpk_saved": 0.36119999999999974
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.45311999999999975
+          "bpk_saved": 0.45055999999999985
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.40791999999999984
+          "bpk_saved": 0.4066399999999999
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.3335999999999997
+          "bpk_saved": 0.3361599999999998
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 0.2210399999999999
+          "bpk_saved": 0.22167999999999966
         },
         {
           "fingerprint_bits": 6,
@@ -1808,14 +1808,14 @@
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": -0.0636000000000001
+          "bpk_saved": -0.0616800000000004
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -0.22160000000000002
+          "bpk_saved": -0.22352000000000016
         }
       ],
-      "best_empirical_bpk_saved": 0.45311999999999975,
+      "best_empirical_bpk_saved": 0.45055999999999985,
       "best_empirical_params": {
         "fingerprint_bits": 2
       }
@@ -1829,19 +1829,19 @@
       "theory_optimal_params": {
         "fingerprint_bits": 2
       },
-      "theory_guided_bpk_saved": 0.47943999999999987,
+      "theory_guided_bpk_saved": 0.4787999999999999,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.3688799999999999
+          "bpk_saved": 0.3779199999999998
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.47943999999999987
+          "bpk_saved": 0.4787999999999999
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.44767999999999986
+          "bpk_saved": 0.4495999999999998
         },
         {
           "fingerprint_bits": 4,
@@ -1849,7 +1849,7 @@
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 0.27559999999999985
+          "bpk_saved": 0.2736799999999999
         },
         {
           "fingerprint_bits": 6,
@@ -1857,14 +1857,14 @@
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": 0.007519999999999971
+          "bpk_saved": 0.008159999999999723
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -0.13832000000000022
+          "bpk_saved": -0.13960000000000017
         }
       ],
-      "best_empirical_bpk_saved": 0.47943999999999987,
+      "best_empirical_bpk_saved": 0.4787999999999999,
       "best_empirical_params": {
         "fingerprint_bits": 2
       }
@@ -1878,23 +1878,23 @@
       "theory_optimal_params": {
         "fingerprint_bits": 2
       },
-      "theory_guided_bpk_saved": 0.5217599999999998,
+      "theory_guided_bpk_saved": 0.5179199999999999,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.3977599999999999
+          "bpk_saved": 0.3951999999999998
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.5217599999999998
+          "bpk_saved": 0.5179199999999999
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.5008799999999998
+          "bpk_saved": 0.50152
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.4406399999999999
+          "bpk_saved": 0.44191999999999987
         },
         {
           "fingerprint_bits": 5,
@@ -1902,7 +1902,7 @@
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": 0.2347999999999999
+          "bpk_saved": 0.23415999999999992
         },
         {
           "fingerprint_bits": 7,
@@ -1910,10 +1910,10 @@
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": -0.03136000000000028
+          "bpk_saved": -0.033279999999999976
         }
       ],
-      "best_empirical_bpk_saved": 0.5217599999999998,
+      "best_empirical_bpk_saved": 0.5179199999999999,
       "best_empirical_params": {
         "fingerprint_bits": 2
       }
@@ -1927,42 +1927,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 2
       },
-      "theory_guided_bpk_saved": 0.55,
+      "theory_guided_bpk_saved": 0.55192,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.4170400000000001
+          "bpk_saved": 0.41568000000000005
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.55
+          "bpk_saved": 0.55192
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.5411999999999999
+          "bpk_saved": 0.54576
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.48751999999999995
+          "bpk_saved": 0.4881599999999999
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 0.4012
+          "bpk_saved": 0.4037599999999999
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": 0.29888000000000003
+          "bpk_saved": 0.30016
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": 0.18087999999999993
+          "bpk_saved": 0.1821600000000001
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": 0.051280000000000214
+          "bpk_saved": 0.05256000000000016
         }
       ],
-      "best_empirical_bpk_saved": 0.55,
+      "best_empirical_bpk_saved": 0.55192,
       "best_empirical_params": {
         "fingerprint_bits": 2
       }
@@ -1976,42 +1976,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 2
       },
-      "theory_guided_bpk_saved": 0.58328,
+      "theory_guided_bpk_saved": 0.58392,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.4323999999999999
+          "bpk_saved": 0.43111999999999995
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.58328
+          "bpk_saved": 0.58392
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.5931199999999999
+          "bpk_saved": 0.5918399999999999
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.5413600000000001
+          "bpk_saved": 0.5464799999999999
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 0.4730399999999999
+          "bpk_saved": 0.47496000000000005
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": 0.38128000000000006
+          "bpk_saved": 0.3799999999999999
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": 0.27248000000000006
+          "bpk_saved": 0.27183999999999986
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": 0.15927999999999987
+          "bpk_saved": 0.15799999999999992
         }
       ],
-      "best_empirical_bpk_saved": 0.5931199999999999,
+      "best_empirical_bpk_saved": 0.5918399999999999,
       "best_empirical_params": {
         "fingerprint_bits": 3
       }
@@ -2025,27 +2025,27 @@
       "theory_optimal_params": {
         "fingerprint_bits": 3
       },
-      "theory_guided_bpk_saved": 0.62904,
+      "theory_guided_bpk_saved": 0.6309600000000002,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.44520000000000004
+          "bpk_saved": 0.44720000000000004
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.6115200000000001
+          "bpk_saved": 0.61216
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.62904
+          "bpk_saved": 0.6309600000000002
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.5868800000000001
+          "bpk_saved": 0.5843200000000002
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 0.5281600000000002
+          "bpk_saved": 0.52752
         },
         {
           "fingerprint_bits": 6,
@@ -2053,14 +2053,14 @@
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": 0.3468800000000001
+          "bpk_saved": 0.34560000000000013
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": 0.23872000000000004
+          "bpk_saved": 0.24096000000000006
         }
       ],
-      "best_empirical_bpk_saved": 0.62904,
+      "best_empirical_bpk_saved": 0.6309600000000002,
       "best_empirical_params": {
         "fingerprint_bits": 3
       }
@@ -2074,27 +2074,27 @@
       "theory_optimal_params": {
         "fingerprint_bits": 3
       },
-      "theory_guided_bpk_saved": 0.68096,
+      "theory_guided_bpk_saved": 0.68224,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.4663999999999999
+          "bpk_saved": 0.4670399999999999
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.6461599999999998
+          "bpk_saved": 0.6455199999999999
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.68096
+          "bpk_saved": 0.68224
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.6436799999999998
+          "bpk_saved": 0.6404799999999999
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 0.5967199999999999
+          "bpk_saved": 0.5973599999999999
         },
         {
           "fingerprint_bits": 6,
@@ -2102,14 +2102,14 @@
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": 0.4410399999999999
+          "bpk_saved": 0.4403999999999999
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": 0.3443999999999998
+          "bpk_saved": 0.34631999999999996
         }
       ],
-      "best_empirical_bpk_saved": 0.68096,
+      "best_empirical_bpk_saved": 0.68224,
       "best_empirical_params": {
         "fingerprint_bits": 3
       }
@@ -2123,19 +2123,19 @@
       "theory_optimal_params": {
         "fingerprint_bits": 3
       },
-      "theory_guided_bpk_saved": 0.72712,
+      "theory_guided_bpk_saved": 0.7252000000000001,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.4863200000000001
+          "bpk_saved": 0.4856800000000001
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.6730400000000001
+          "bpk_saved": 0.6788000000000001
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.72712
+          "bpk_saved": 0.7252000000000001
         },
         {
           "fingerprint_bits": 4,
@@ -2143,22 +2143,22 @@
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 0.6602399999999999
+          "bpk_saved": 0.65896
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": 0.5982400000000001
+          "bpk_saved": 0.59632
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": 0.5208000000000002
+          "bpk_saved": 0.524
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": 0.43896
+          "bpk_saved": 0.44023999999999996
         }
       ],
-      "best_empirical_bpk_saved": 0.72712,
+      "best_empirical_bpk_saved": 0.7252000000000001,
       "best_empirical_params": {
         "fingerprint_bits": 3
       }
@@ -2172,42 +2172,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 3
       },
-      "theory_guided_bpk_saved": 0.77904,
+      "theory_guided_bpk_saved": 0.7816000000000001,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.50936
+          "bpk_saved": 0.5074399999999999
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.71472
+          "bpk_saved": 0.7179199999999999
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.77904
+          "bpk_saved": 0.7816000000000001
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.76736
+          "bpk_saved": 0.7667200000000001
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 0.7287999999999999
+          "bpk_saved": 0.73072
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": 0.6776800000000001
+          "bpk_saved": 0.67448
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": 0.6144000000000001
+          "bpk_saved": 0.6118399999999999
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": 0.5414399999999999
+          "bpk_saved": 0.54016
         }
       ],
-      "best_empirical_bpk_saved": 0.77904,
+      "best_empirical_bpk_saved": 0.7816000000000001,
       "best_empirical_params": {
         "fingerprint_bits": 3
       }
@@ -2221,19 +2221,19 @@
       "theory_optimal_params": {
         "fingerprint_bits": 3
       },
-      "theory_guided_bpk_saved": 0.8220000000000001,
+      "theory_guided_bpk_saved": 0.82264,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.5267200000000001
+          "bpk_saved": 0.5305600000000001
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.74872
+          "bpk_saved": 0.7468
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.8220000000000001
+          "bpk_saved": 0.82264
         },
         {
           "fingerprint_bits": 4,
@@ -2249,11 +2249,11 @@
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": 0.7005600000000001
+          "bpk_saved": 0.70184
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": 0.64232
+          "bpk_saved": 0.64296
         }
       ],
       "best_empirical_bpk_saved": 0.8244,
@@ -2270,31 +2270,31 @@
       "theory_optimal_params": {
         "fingerprint_bits": 4
       },
-      "theory_guided_bpk_saved": 0.8827200000000001,
+      "theory_guided_bpk_saved": 0.8820800000000001,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.5420800000000001
+          "bpk_saved": 0.5459200000000002
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.7820800000000001
+          "bpk_saved": 0.7788800000000001
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.8688000000000001
+          "bpk_saved": 0.8681600000000002
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.8827200000000001
+          "bpk_saved": 0.8820800000000001
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 0.8583200000000001
+          "bpk_saved": 0.8556800000000001
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": 0.8289600000000001
+          "bpk_saved": 0.8302400000000001
         },
         {
           "fingerprint_bits": 7,
@@ -2302,10 +2302,10 @@
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": 0.73784
+          "bpk_saved": 0.7384800000000001
         }
       ],
-      "best_empirical_bpk_saved": 0.8827200000000001,
+      "best_empirical_bpk_saved": 0.8820800000000001,
       "best_empirical_params": {
         "fingerprint_bits": 4
       }
@@ -2319,42 +2319,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 4
       },
-      "theory_guided_bpk_saved": 0.9384000000000001,
+      "theory_guided_bpk_saved": 0.9410400000000001,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.5607200000000001
+          "bpk_saved": 0.56776
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.8115200000000001
+          "bpk_saved": 0.8173600000000001
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.9129600000000001
+          "bpk_saved": 0.91424
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.9384000000000001
+          "bpk_saved": 0.9410400000000001
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 0.9284800000000001
+          "bpk_saved": 0.9278400000000001
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": 0.90712
+          "bpk_saved": 0.9039200000000001
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": 0.8720000000000001
+          "bpk_saved": 0.87392
         },
         {
           "fingerprint_bits": 8,
           "bpk_saved": 0.8336000000000001
         }
       ],
-      "best_empirical_bpk_saved": 0.9384000000000001,
+      "best_empirical_bpk_saved": 0.9410400000000001,
       "best_empirical_params": {
         "fingerprint_bits": 4
       }
@@ -2368,42 +2368,42 @@
       "theory_optimal_params": {
         "fingerprint_bits": 4
       },
-      "theory_guided_bpk_saved": 0.9992800000000001,
+      "theory_guided_bpk_saved": 1.0005600000000001,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.5780000000000001
+          "bpk_saved": 0.57352
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.8448800000000001
+          "bpk_saved": 0.8480800000000001
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 0.9623200000000001
+          "bpk_saved": 0.96296
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 0.9992800000000001
+          "bpk_saved": 1.0005600000000001
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 1.0008
+          "bpk_saved": 1.00144
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": 0.9872000000000001
+          "bpk_saved": 0.98784
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": 0.96616
+          "bpk_saved": 0.9674400000000001
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": 0.93832
+          "bpk_saved": 0.93896
         }
       ],
-      "best_empirical_bpk_saved": 1.0008,
+      "best_empirical_bpk_saved": 1.00144,
       "best_empirical_params": {
         "fingerprint_bits": 5
       }
@@ -2417,27 +2417,27 @@
       "theory_optimal_params": {
         "fingerprint_bits": 5
       },
-      "theory_guided_bpk_saved": 1.07512,
+      "theory_guided_bpk_saved": 1.0738400000000001,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.60112
+          "bpk_saved": 0.60048
         },
         {
           "fingerprint_bits": 2,
-          "bpk_saved": 0.88144
+          "bpk_saved": 0.87952
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 1.01104
+          "bpk_saved": 1.00912
         },
         {
           "fingerprint_bits": 4,
-          "bpk_saved": 1.06336
+          "bpk_saved": 1.06208
         },
         {
           "fingerprint_bits": 5,
-          "bpk_saved": 1.07512
+          "bpk_saved": 1.0738400000000001
         },
         {
           "fingerprint_bits": 6,
@@ -2445,14 +2445,14 @@
         },
         {
           "fingerprint_bits": 7,
-          "bpk_saved": 1.05968
+          "bpk_saved": 1.0584
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": 1.0392000000000001
+          "bpk_saved": 1.04176
         }
       ],
-      "best_empirical_bpk_saved": 1.07512,
+      "best_empirical_bpk_saved": 1.0738400000000001,
       "best_empirical_params": {
         "fingerprint_bits": 5
       }
@@ -2466,11 +2466,11 @@
       "theory_optimal_params": {
         "fingerprint_bits": 6
       },
-      "theory_guided_bpk_saved": 1.1534399999999998,
+      "theory_guided_bpk_saved": 1.1527999999999998,
       "empirical_per_param": [
         {
           "fingerprint_bits": 1,
-          "bpk_saved": 0.6132799999999999
+          "bpk_saved": 0.6100799999999998
         },
         {
           "fingerprint_bits": 2,
@@ -2478,7 +2478,7 @@
         },
         {
           "fingerprint_bits": 3,
-          "bpk_saved": 1.05592
+          "bpk_saved": 1.0552799999999998
         },
         {
           "fingerprint_bits": 4,
@@ -2490,7 +2490,7 @@
         },
         {
           "fingerprint_bits": 6,
-          "bpk_saved": 1.1534399999999998
+          "bpk_saved": 1.1527999999999998
         },
         {
           "fingerprint_bits": 7,
@@ -2498,10 +2498,10 @@
         },
         {
           "fingerprint_bits": 8,
-          "bpk_saved": 1.14296
+          "bpk_saved": 1.1423199999999998
         }
       ],
-      "best_empirical_bpk_saved": 1.1534399999999998,
+      "best_empirical_bpk_saved": 1.1527999999999998,
       "best_empirical_params": {
         "fingerprint_bits": 6
       }

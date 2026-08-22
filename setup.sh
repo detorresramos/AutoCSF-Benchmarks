@@ -60,25 +60,15 @@ if [ ! -d "$CARAMEL_DIR" ]; then
     exit 1
 fi
 
-echo "=== Patching CaramelDB ==="
-for patch_file in "$SCRIPT_DIR"/patches/carameldb/*.patch; do
-    [ -e "$patch_file" ] || continue
-    stamp="$CARAMEL_DIR/.autocsf-$(basename "$patch_file" .patch)"
-    if [ ! -f "$stamp" ]; then
-        patch -d "$CARAMEL_DIR" -p0 < "$patch_file"
-        touch "$stamp"
-    fi
-done
-
 echo "=== Building CaramelDB ==="
-cmake -S "$CARAMEL_DIR" -B "$CARAMEL_DIR/pybind/build" \
+cmake -S "$CARAMEL_DIR" -B "$CARAMEL_DIR/build" \
   -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5
-cmake --build "$CARAMEL_DIR/pybind/build" --target caramel_lib -j "${JOBS:-4}"
+cmake --build "$CARAMEL_DIR/build" --target caramel_lib -j "${JOBS:-4}"
 
 echo "=== Installing the carameldb Python module ==="
 CARAMEL_BUILD_JOBS="${JOBS:-4}" \
 CMAKE_ARGS="-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF" \
-  .venv/bin/pip install "$CARAMEL_DIR/pybind"
+  .venv/bin/pip install "$CARAMEL_DIR/cython"
 
 # ---------------------------------------------------------------------------
 # VL-BuRR from its pinned pristine upstream checkout.
