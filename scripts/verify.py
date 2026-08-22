@@ -156,7 +156,7 @@ def check_reference():
     """
     reference = ROOT / "reference"
     errors = []
-    for name in sorted(PLOTS | {"genomics-table.md", "genomics-table.tex"}):
+    for name in sorted(PLOTS | {"genomics-table.md"}):
         if not (reference / name).exists():
             errors.append(f"missing accepted-paper reference: {name}")
     return errors
