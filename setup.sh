@@ -2,8 +2,9 @@
 # Install all dependencies for AutoCSF-Benchmarks on Ubuntu 24.04 x86_64.
 #
 # Usage:
-#   sudo ./setup.sh          # install system packages + build everything
-#   ./setup.sh --no-system   # skip apt-get, only build deps (if packages already installed)
+#   sudo ./setup.sh           # install system packages + build everything
+#   ./setup.sh --no-system    # skip apt-get, only build deps (already installed)
+#   ./setup.sh --skip-vlburr  # skip VL-BuRR (it requires x86-64)
 
 set -euo pipefail
 
@@ -15,10 +16,12 @@ cd "$SCRIPT_DIR"
 # ---------------------------------------------------------------------------
 INSTALL_SYSTEM=true
 INSTALL_PYTHON=true
+BUILD_VLBURR=true
 for arg in "$@"; do
     case "$arg" in
         --no-system) INSTALL_SYSTEM=false ;;
         --skip-python) INSTALL_PYTHON=false ;;
+        --skip-vlburr) BUILD_VLBURR=false ;;
         *) echo "Unknown arg: $arg"; exit 1 ;;
     esac
 done
@@ -68,10 +71,31 @@ CMAKE_ARGS="-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF -DCMAKE_POLICY_VERSION_MINI
   .venv/bin/pip install "$CARAMEL_DIR/cython"
 
 # ---------------------------------------------------------------------------
-# VL-BuRR from its pinned pristine upstream checkout.
+# VL-BuRR from its pinned pristine upstream checkout. Upstream includes x86
+# SSE/AVX intrinsics (immintrin.h) and does not compile on ARM, so on Apple
+# Silicon this is skipped rather than failing the whole setup: everything
+# except the VL-BuRR arm of the synthetic comparison still works natively.
 # ---------------------------------------------------------------------------
-echo "=== Building LSF (ribbon_learned_bench) ==="
-./methods/vlburr/build.sh
+case "$(uname -m)" in
+    arm64|aarch64) SUPPORTS_VLBURR=false ;;
+    *) SUPPORTS_VLBURR=true ;;
+esac
+
+if ! $BUILD_VLBURR; then
+    echo "=== Skipping VL-BuRR (--skip-vlburr) ==="
+elif ! $SUPPORTS_VLBURR; then
+    echo ""
+    echo "=== Skipping VL-BuRR: $(uname -m) is not supported ==="
+    echo "  VL-BuRR uses x86 SSE/AVX intrinsics and cannot be built on ARM."
+    echo "  Everything else is set up and runs natively:"
+    echo "    make bound-validation"
+    echo "    .venv/bin/python experiments/synthetic_comparison/run.py --component local"
+    echo "  For VL-BuRR, and for the reference environment, use the container:"
+    echo "    ./scripts/docker_run.sh make synthetic-comparison"
+else
+    echo "=== Building LSF (ribbon_learned_bench) ==="
+    ./methods/vlburr/build.sh
+fi
 
 echo ""
 echo "=== Setup complete ==="
