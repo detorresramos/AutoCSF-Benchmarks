@@ -1,96 +1,27 @@
 {
   "status": "passed",
-  "dataset": "ecoli_sakai",
-  "dataset_evidence": {
-    "accession": "GCF_000008865.2",
-    "raw_sha256": "17bec26d56f9a188fa0c8aa2609be5a11ed7a0874450c9e02438f877907eb061",
-    "processed_sha256": "cd494e85a31a1e255e0743272787ceb20c4bd60b403bb52f147a578ce0682d08",
-    "content_sha256": "ff88dba800a13c84e2be4858b3975bf61f84d0391116b39b216974a7bb413a14",
-    "records": 5326526,
-    "alpha": 0.9696087093163537,
-    "modal_value": 1,
-    "distinct_values": 42,
-    "expected_profile_comparison": {
-      "records": "exact match to datasets/sources.json (5326526)",
-      "alpha": "matches expected approximately 0.9696",
-      "distinct_values": "exact match to datasets/sources.json (42)"
-    },
-    "validation": "passed full checksum, format, strict-sort, and profile validation"
-  },
-  "methods": [
-    {
-      "name": "hkp",
-      "serialized_bytes": 249223,
-      "bits_per_key": 0.3743122628144498,
-      "bits_saved_vs_plain": 0.9531826184646428,
-      "build_seconds": 0.668439,
-      "query_ns": 226.883,
-      "parameters": {"bloom_bits_per_element": 8, "bloom_num_hashes": 3}
-    },
-    {
-      "name": "bcsf",
-      "serialized_bytes": 232340,
-      "bits_per_key": 0.3489553979460534,
-      "bits_saved_vs_plain": 0.9785394833330392,
-      "build_seconds": 0.881248,
-      "query_ns": 254.008,
-      "parameters": {"bloom_bits_per_element": 7, "bloom_num_hashes": 5}
-    },
-    {
-      "name": "vlburr",
-      "serialized_bytes": 177422,
-      "bits_per_key": 0.266473,
-      "baseline_bits_per_key": 1.065766,
-      "bits_saved_vs_plain": 0.799293,
-      "build_seconds": 0.927751126,
-      "query_ns": 116.179359,
-      "parameters": {"implementation": "Filtered-HuffmanCSF_Opt", "baseline_implementation": "Filtered-HuffmanCSF_No", "reported_storage_bits": 0.266473, "baseline_storage_bits": 1.065766}
-    },
-    {
-      "name": "autocsf",
-      "serialized_bytes": 229466,
-      "bits_per_key": 0.34463888846125973,
-      "bits_saved_vs_plain": 0.9828559928178329,
-      "build_seconds": 0.783154,
-      "query_ns": 246.192,
-      "parameters": {"bloom_bits_per_element": 6, "bloom_num_hashes": 4}
-    }
-  ],
-  "plain_serialized_bytes": 883867,
-  "plots": [
-    "results/bound_validation/figures/paper/alpha_sweep_uniform_100.png",
-    "results/bound_validation/figures/paper/alpha_sweep_unique.png",
-    "results/bound_validation/figures/paper/alpha_sweep_zipfian.png",
-    "results/bound_validation/figures/paper/epsilon_sweep_uniform_100_alpha0.7.png",
-    "results/bound_validation/figures/paper/epsilon_sweep_uniform_100_alpha0.9.png",
-    "results/bound_validation/figures/paper/epsilon_sweep_unique_alpha0.7.png",
-    "results/bound_validation/figures/paper/epsilon_sweep_unique_alpha0.9.png",
-    "results/bound_validation/figures/paper/epsilon_sweep_zipfian_alpha0.7.png",
-    "results/bound_validation/figures/paper/epsilon_sweep_zipfian_alpha0.9.png",
-    "results/synthetic_comparison/method-comparison.png"
-  ],
-  "commands_evidence": [
-    "python datasets/manage.py fetch --dataset ecoli_sakai",
-    "python datasets/manage.py generate --dataset ecoli_sakai",
-    "python datasets/manage.py profile --dataset ecoli_sakai",
-    "python datasets/manage.py validate --dataset ecoli_sakai",
-    "python experiments/genomics_comparison/run.py --dataset ecoli_sakai --repetitions 1 --output results/reproduction/ecoli",
-    "python scripts/reproduce_plots.py",
-    "assert four CSV methods equal hkp,bcsf,vlburr,autocsf and exactly 10 PNG files; BOUNDED_CHECK_PASSED"
-  ],
+  "checked_at": "2026-08-23T21:36:19.214398+00:00",
   "environment": {
-    "base_image": "autocsf-bench:camera-ready",
-    "container_platform": "linux/amd64",
-    "runtime_platform": "Linux-6.12.54-linuxkit-x86_64-with-glibc2.39",
-    "python": "3.12.3",
-    "docker_description": "Docker Desktop linux/amd64",
-    "source": "/private/tmp/autocsf-repro.86HHlY copied over the image workspace before execution",
-    "git_commit": "unavailable in source snapshot"
+    "platform": "macOS-15.6.1-arm64-arm-64bit-Mach-O",
+    "python": "3.14.4",
+    "git_commit": "2274b3911d4c20815d4c79b8008d839817272768",
+    "carameldb_commit": "ea7de686e87d67772d775ee73e84acc49e53e1d9",
+    "docker": "not recorded"
   },
-  "caveats": [
-    "The initial clean run found that scripts/repro_small.sh omitted datasets/manage.py profile, although run_genomics.py requires the generated manifest histogram. The profile step was run and added to the snapshot script.",
-    "The prebuilt VL-BuRR executable dynamically requires libRibbonSorter.so. The image's matching clean-built library was restored, and the snapshot build/run scripts were updated to copy it beside the executable and set the platform library path.",
-    "Timing numbers are single-repetition diagnostics from an emulated linux/amd64 Docker environment; structure sizes are the primary comparison metric.",
-    "The ten plots were freshly rendered from the snapshot's checked-in accepted experiment data; the bounded request did not rerun the full synthetic experiment suite."
-  ]
+  "comparison": {
+    "bits_per_key_absolute_tolerance": 0.02,
+    "bound_validation": {
+      "files": 45,
+      "max_delta": 0.0
+    },
+    "synthetic_comparison": {
+      "rows": 322,
+      "max_delta": 0.0
+    },
+    "genomics_comparison": {
+      "rows": 16,
+      "max_delta": 0.0
+    }
+  },
+  "errors": []
 }

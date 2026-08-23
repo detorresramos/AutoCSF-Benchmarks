@@ -111,10 +111,9 @@ def plot_alpha_sweep(data, filter_label, ax=None):
         n_over_N = r["n_over_N"]
         n_filter = r.get("n_filter", int(N * (1 - alpha)))
 
-        # The lower bound is evaluated at the epsilon AutoCSF selects. The upper
-        # bound is shown twice: at that same epsilon, and at the epsilon that
-        # turned out to be empirically best, so the gap between the two says how
-        # much the bound moves under a different parameter choice.
+        # The lower bound is evaluated at the epsilon AutoCSF selects; the upper
+        # bound is drawn at that epsilon and at the empirically best one, so the
+        # gap between them shows how far the bound moves with the parameter.
         best_param, _ = compute_theory_best(filter_label, alpha, n_over_N, n_filter)
         b_eps, eps = compute_params(filter_label, best_param, n_filter)
         emp_param = r.get("best_empirical_params", {}).get(pk, best_param)

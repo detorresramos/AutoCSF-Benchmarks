@@ -1,7 +1,7 @@
 PYTHON := .venv/bin/python
 
 .PHONY: datasets bound-validation synthetic-comparison genomics-comparison \
-        verify reproduce repro-clean publish-datasets
+        reproduce verify baselines publish-datasets
 
 # Genomics inputs: ~500 MB processed, ~10 GB working space. Not needed by the
 # two synthetic experiments.
@@ -19,19 +19,19 @@ synthetic-comparison:
 
 genomics-comparison:
 	./experiments/genomics_comparison/run.sh
+	$(PYTHON) experiments/genomics_comparison/latency.py --dataset rice
 
-reproduce: bound-validation synthetic-comparison genomics-comparison verify
+reproduce: datasets bound-validation synthetic-comparison genomics-comparison verify
 
-# Is what is in results/ complete and self-consistent?
+# Compare everything in results/ against the accepted numbers in baselines/ and
+# write results/reproduction/receipt.json.
 verify:
 	$(PYTHON) datasets/manage.py validate
 	$(PYTHON) scripts/verify.py
 
-# Does it still come out the same? Recomputes everything in a clean container
-# that never sees results/, diffs the fresh numbers against the committed ones,
-# and only promotes them if they match. SCOPE=synthetic (default) or SCOPE=small.
-repro-clean:
-	./scripts/repro_clean.sh
+# Accept the numbers currently in results/ as the new baselines.
+baselines:
+	$(PYTHON) scripts/export_baseline.py
 
 # Stage the genomics tables into an upload folder and push them to the
 # Hugging Face dataset repo named in datasets/sources.json.

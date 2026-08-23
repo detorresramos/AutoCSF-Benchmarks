@@ -10,8 +10,7 @@ if [[ ! -x .venv/bin/python ]]; then
   exit 1
 fi
 
-# Benchmark startup checks manifests and file presence. Full byte-for-byte
-# validation remains available as `make verify` and is intentionally not
-# repeated before every timed subset run.
+# Manifests and file presence only; `make verify` does the full byte-for-byte
+# validation.
 .venv/bin/python datasets/manage.py validate --manifest-only
 .venv/bin/python experiments/genomics_comparison/run.py "$@"

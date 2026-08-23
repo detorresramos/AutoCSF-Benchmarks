@@ -21,8 +21,8 @@ double median(std::vector<double> values) {
 }
 
 int main(int argc, char** argv) {
-  if (argc != 6) {
-    std::cerr << "usage: caramel_bench TABLE none|bloom BPE HASHES REPEATS\n";
+  if (argc != 6 && argc != 7) {
+    std::cerr << "usage: caramel_bench TABLE none|bloom BPE HASHES BUILDS [QUERY_BATCHES]\n";
     return 2;
   }
   const std::string table = argv[1];
@@ -30,6 +30,8 @@ int main(int argc, char** argv) {
   const size_t bpe = std::stoull(argv[3]);
   const size_t hashes = std::stoull(argv[4]);
   const int repeats = std::stoi(argv[5]);
+  // Query batches repeat within a build: construction is slow, lookups are noisy.
+  const int query_batches = argc == 7 ? std::stoi(argv[6]) : 1;
   std::ifstream input(table);
   if (!input) {
     std::cerr << "cannot open " << table << '\n';
@@ -63,20 +65,25 @@ int main(int argc, char** argv) {
         return 5;
       }
     }
-    std::mt19937_64 generator(42 + repetition);
-    std::uniform_int_distribution<size_t> sample(0, keys.size() - 1);
-    std::vector<size_t> indexes(10000);
-    for (auto& index : indexes) index = sample(generator);
-    volatile uint64_t sink = 0;
-    for (size_t index = 0; index < 100; ++index) sink += structure->query(keys[indexes[index]]);
-    const auto query_start = Clock::now();
-    for (size_t index : indexes) sink += structure->query(keys[index]);
-    const auto elapsed = std::chrono::duration<double, std::nano>(Clock::now() - query_start).count();
-    queries.push_back(elapsed / indexes.size());
-    if (sink == 0xdeadbeef) std::cerr << sink;
+    for (int batch = 0; batch < query_batches; ++batch) {
+      std::mt19937_64 generator(42 + repetition * query_batches + batch);
+      std::uniform_int_distribution<size_t> sample(0, keys.size() - 1);
+      std::vector<size_t> indexes(10000);
+      for (auto& index : indexes) index = sample(generator);
+      volatile uint64_t sink = 0;
+      for (size_t index = 0; index < 100; ++index) sink += structure->query(keys[indexes[index]]);
+      const auto query_start = Clock::now();
+      for (size_t index : indexes) sink += structure->query(keys[index]);
+      const auto elapsed = std::chrono::duration<double, std::nano>(Clock::now() - query_start).count();
+      queries.push_back(elapsed / indexes.size());
+      if (sink == 0xdeadbeef) std::cerr << sink;
+    }
   }
   std::cout << "{\"serialized_bytes\":" << static_cast<uint64_t>(median(sizes))
             << ",\"build_seconds\":" << median(builds)
             << ",\"query_ns\":" << median(queries)
-            << ",\"repetitions\":" << repeats << "}\n";
+            << ",\"query_ns_min\":" << *std::min_element(queries.begin(), queries.end())
+            << ",\"query_ns_max\":" << *std::max_element(queries.begin(), queries.end())
+            << ",\"repetitions\":" << repeats
+            << ",\"query_batches\":" << query_batches << "}\n";
 }

@@ -1,26 +1,31 @@
 #!/usr/bin/env python3
-"""Single verification entry point for the AutoCSF artifact.
+"""Check what is in results/ against the accepted numbers in baselines/.
 
-    verify.py                 check that the committed results are complete and
-                              internally consistent
-    verify.py --fresh DIR     additionally compare a from-scratch run copied out
-                              of a clean container against the committed results,
-                              and write a reproduction receipt
+Verifies that every experiment produced a complete set of outputs, compares each
+measurement against its accepted value, and writes results/reproduction/receipt.json.
 
-Numeric comparison covers all three experiments. Two runs never agree bit for
-bit: binary-fuse CSF construction is randomized, so measured sizes move by a few
-thousandths of a bit per key between runs. TOLERANCE_BPK is what separates that
-from a real regression.
+Two runs never agree bit for bit: binary-fuse CSF construction is randomized, so
+measured sizes move by a few thousandths of a bit per key between runs.
+TOLERANCE_BPK is what separates that from a real regression.
+
+Run scripts/export_baseline.py to move results/ into baselines/ after a run that
+legitimately changes the accepted numbers.
 """
 
 import argparse
 import csv
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
+import platform
 import struct
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
+BASELINES = ROOT / "baselines"
+RESULTS = ROOT / "results"
+RECEIPT = RESULTS / "reproduction/receipt.json"
 TOLERANCE_BPK = 0.02
 
 DATASETS = {"ecoli_sakai", "srr10211353", "celegans", "rice"}
@@ -35,7 +40,21 @@ PLOTS = {
     "epsilon_sweep_zipfian_alpha0.7.png", "epsilon_sweep_zipfian_alpha0.9.png",
     "method-comparison.png",
 }
-RECEIPTS = {"synthetic": "synthetic-receipt.json", "small": "receipt.json"}
+
+
+def environment():
+    def output(command):
+        try:
+            return subprocess.check_output(command, text=True, stderr=subprocess.DEVNULL).strip()
+        except (OSError, subprocess.CalledProcessError):
+            return "unavailable"
+    return {
+        "platform": platform.platform(),
+        "python": platform.python_version(),
+        "git_commit": output(["git", "-C", str(ROOT), "rev-parse", "HEAD"]),
+        "carameldb_commit": output(["git", "-C", str(ROOT / "deps/CaramelDB"), "rev-parse", "HEAD"]),
+        "docker": os.environ.get("AUTOCSF_DOCKER_DESCRIPTION", "not recorded"),
+    }
 
 
 def theory_stems():
@@ -76,7 +95,7 @@ def frequency_counter_regression():
 # ---------------------------------------------------------------------------
 
 def check_bound_validation():
-    """The per-run JSON is not tracked; baseline.csv is the committed record."""
+    """The per-run JSON is not tracked; baselines/bound_validation.csv is."""
     errors = []
     alpha_dir = ROOT / "results/bound_validation/figures/alpha_sweep"
     epsilon_dir = ROOT / "results/bound_validation/figures/epsilon_sweep"
@@ -88,13 +107,13 @@ def check_bound_validation():
         if not (epsilon_dir / f"{stem}.png").exists():
             errors.append(f"missing epsilon-sweep figure: {stem}")
 
-    baseline_path = ROOT / "results/bound_validation/baseline.csv"
+    baseline_path = BASELINES / "bound_validation.csv"
     if not baseline_path.exists():
-        errors.append("missing results/bound_validation/baseline.csv")
+        errors.append("missing baselines/bound_validation.csv")
         return errors
     covered = {key[0] for key in baseline_measurements(baseline_path)}
     for stem in sorted((alpha_stems | epsilon_stems) - covered):
-        errors.append(f"baseline.csv has no measurements for {stem}")
+        errors.append(f"baselines/bound_validation.csv has no measurements for {stem}")
     return errors
 
 
@@ -180,26 +199,6 @@ def check_datasets():
     return errors
 
 
-def check_receipts():
-    errors = []
-    for scope, name in sorted(RECEIPTS.items()):
-        path = ROOT / "results/reproduction" / name
-        if not path.exists():
-            errors.append(f"missing {scope} reproduction receipt ({name})")
-            continue
-        try:
-            receipt = json.loads(path.read_text())
-        except (OSError, json.JSONDecodeError):
-            errors.append(f"{name} is invalid JSON")
-            continue
-        if receipt.get("status") != "passed":
-            errors.append(f"{name} did not pass")
-        comparison = receipt.get("comparison")
-        if comparison is not None and comparison.get("status") != "passed":
-            errors.append(f"{name} records an unvalidated comparison")
-    return errors
-
-
 def check_artifact(scope_datasets=True):
     errors = frequency_counter_regression()
     errors += check_bound_validation()
@@ -207,7 +206,6 @@ def check_artifact(scope_datasets=True):
     errors += check_genomics()
     errors += check_plots()
     errors += check_reference()
-    errors += check_receipts()
     if scope_datasets:
         errors += check_datasets()
     if (ROOT / "results/KNOWN_ISSUES.md").exists():
@@ -264,13 +262,13 @@ def fresh_measurements(data_dir):
     return out
 
 
-def compare_bound_validation(fresh_dir, errors):
-    fresh_data = fresh_dir / "bound_validation/data"
-    baseline_path = ROOT / "results/bound_validation/baseline.csv"
+def compare_bound_validation(errors):
+    fresh_data = RESULTS / "bound_validation/data"
+    baseline_path = BASELINES / "bound_validation.csv"
     if not fresh_data.is_dir():
         return 0.0, 0
     if not baseline_path.exists():
-        errors.append("missing results/bound_validation/baseline.csv")
+        errors.append("missing baselines/bound_validation.csv")
         return 0.0, 0
 
     accepted = baseline_measurements(baseline_path)
@@ -293,13 +291,8 @@ def compare_bound_validation(fresh_dir, errors):
     return max_delta, len(list(fresh_data.glob("*.json")))
 
 
-def compare_table(accepted_path, fresh_path, reader, label, errors, allow_subset=False):
-    """Compare one CSV of measurements, returning (max delta, fresh row count).
-
-    allow_subset is for bounded runs that deliberately cover only part of the
-    matrix: rows the fresh run did not produce are not an error, but a row it
-    produced that the accepted results do not contain always is.
-    """
+def compare_table(accepted_path, fresh_path, reader, label, errors):
+    """Compare one CSV of measurements, returning (max delta, fresh row count)."""
     if not fresh_path.exists():
         return 0.0, 0
     accepted = reader(accepted_path) if accepted_path.exists() else {}
@@ -308,7 +301,7 @@ def compare_table(accepted_path, fresh_path, reader, label, errors, allow_subset
     extra = sorted(fresh.keys() - accepted.keys())
     if extra:
         errors.append(f"{label} produced rows absent from the accepted results: {extra[:4]}")
-    if missing and not allow_subset:
+    if missing:
         errors.append(f"{label} is missing accepted rows: {missing[:4]}")
     max_delta = 0.0
     for key in accepted.keys() & fresh.keys():
@@ -322,49 +315,23 @@ def compare_table(accepted_path, fresh_path, reader, label, errors, allow_subset
     return max_delta, len(fresh)
 
 
-def compare(fresh_dir, scope, image_id):
-    errors = []
-    theory_delta, data_files = compare_bound_validation(fresh_dir, errors)
+def compare(errors):
+    theory_delta, data_files = compare_bound_validation(errors)
     method_delta, method_rows = compare_table(
-        ROOT / "results/synthetic_comparison/data.csv",
-        fresh_dir / "synthetic_comparison/data.csv",
+        BASELINES / "synthetic_comparison.csv",
+        RESULTS / "synthetic_comparison/data.csv",
         synthetic_rows, "synthetic comparison", errors,
     )
     genomics_delta, genomics_records = compare_table(
-        ROOT / "results/genomics_comparison/genomics.csv",
-        fresh_dir / "genomics_comparison/genomics.csv",
+        BASELINES / "genomics_comparison.csv",
+        RESULTS / "genomics_comparison/genomics.csv",
         genomics_rows, "genomics comparison", errors,
-        allow_subset=scope == "small",
     )
-
-    plots = list((fresh_dir / "bound_validation/figures/paper").glob("*.png"))
-    plots += list((fresh_dir / "synthetic_comparison").glob("method-comparison.png"))
-
-    def stamp(name):
-        path = fresh_dir / name
-        return path.read_text().strip() if path.exists() else "unknown"
-
     return {
-        "status": "passed" if not errors else "failed",
-        "kind": f"clean-{scope}-reproduction",
-        "checked_at": datetime.now(timezone.utc).isoformat(),
-        "container_image_id": image_id,
-        "started_at": stamp("started_at.txt"),
-        "completed_at": stamp("completed_at.txt"),
-        "fresh_artifacts": {
-            "data_files": data_files,
-            "method_rows": method_rows,
-            "genomics_records": genomics_records,
-            "plots": len(plots),
-        },
-        "comparison": {
-            "status": "passed" if not errors else "failed",
-            "bits_per_key_absolute_tolerance": TOLERANCE_BPK,
-            "max_bound_validation_delta": theory_delta,
-            "max_synthetic_comparison_delta": method_delta,
-            "max_genomics_comparison_delta": genomics_delta,
-            "errors": errors[:100],
-        },
+        "bits_per_key_absolute_tolerance": TOLERANCE_BPK,
+        "bound_validation": {"files": data_files, "max_delta": theory_delta},
+        "synthetic_comparison": {"rows": method_rows, "max_delta": method_delta},
+        "genomics_comparison": {"rows": genomics_records, "max_delta": genomics_delta},
     }
 
 
@@ -372,36 +339,31 @@ def compare(fresh_dir, scope, image_id):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--fresh", type=Path, help="directory copied out of a clean container")
-    parser.add_argument("--scope", choices=sorted(RECEIPTS), default="synthetic")
-    parser.add_argument("--image-id", default="unknown")
-    parser.add_argument(
-        "--receipt", type=Path,
-        help="write the receipt here instead of results/reproduction/ (for testing)",
-    )
     parser.add_argument(
         "--skip-datasets", action="store_true",
         help="do not require the processed genomics tables to be present locally",
     )
     args = parser.parse_args()
 
-    if args.fresh:
-        receipt = compare(args.fresh, args.scope, args.image_id)
-        output = args.receipt or ROOT / "results/reproduction" / RECEIPTS[args.scope]
-        output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(json.dumps(receipt, indent=2) + "\n")
-        print(json.dumps(receipt, indent=2))
-        if receipt["status"] != "passed":
-            raise SystemExit(1)
-        return
-
     errors = check_artifact(scope_datasets=not args.skip_datasets)
+    comparison = compare(errors)
+    receipt = {
+        "status": "passed" if not errors else "failed",
+        "checked_at": datetime.now(timezone.utc).isoformat(),
+        "environment": environment(),
+        "comparison": comparison,
+        "errors": errors[:100],
+    }
+    RECEIPT.parent.mkdir(parents=True, exist_ok=True)
+    RECEIPT.write_text(json.dumps(receipt, indent=2) + "\n")
+
     if errors:
         print("Verification failed:")
         for error in errors:
             print(f"- {error}")
         raise SystemExit(1)
-    print("All AutoCSF reproduction artifacts are complete and consistent.")
+    print(f"All results match baselines/ within {TOLERANCE_BPK} bits/key. "
+          f"Receipt: {RECEIPT.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

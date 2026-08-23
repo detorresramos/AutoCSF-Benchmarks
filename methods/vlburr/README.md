@@ -11,8 +11,8 @@ its own input format. That is why it gets a subtree rather than a module.
   `ribbon_learned_bench`. Upstream source is never vendored into this
   repository; only the patches are.
 - `gen_datasets.py`: writes the synthetic comparison's values as `.lrbin`, using
-  the same `common.data_generation.gen_alpha_values` and the same per-alpha seed
-  as the local methods, so every method sees an identical value sequence.
+  the same `common.data_generation.gen_alpha_values` and the same seed as the
+  local methods, so every method sees an identical value sequence.
 - `table_to_lrbin.py` / `run_genomics.sh` / `parse_genomics.py`: convert a
   processed k-mer table to `.lrbin`, run the benchmark, and parse its reported
   storage/build/query metrics.

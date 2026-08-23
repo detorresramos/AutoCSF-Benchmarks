@@ -10,8 +10,7 @@ data/
 results/*
 !results/bound_validation/
 !results/bound_validation/**
-# 39k lines of pretty-printed per-run detail; baseline.csv is the
-# committed record that verify.py compares fresh runs against.
+# Per-run detail, condensed into baselines/bound_validation.csv instead.
 results/bound_validation/data/
 !results/synthetic_comparison/
 !results/synthetic_comparison/**
@@ -20,7 +19,6 @@ results/bound_validation/data/
 !results/KNOWN_ISSUES.md
 !results/reproduction/
 !results/reproduction/receipt.json
-!results/reproduction/synthetic-receipt.json
 
 # Numerical inputs for accepted-paper plots are deliberately versioned. Fresh
 # experiment outputs belong under results/.

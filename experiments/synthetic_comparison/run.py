@@ -15,7 +15,11 @@ sys.path.insert(0, str(ROOT))
 from methods.decision_rules import CSFFilter
 from common.data_generation import gen_alpha_values, gen_keys
 
-ALPHAS = [0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 0.99]
+SEED = 0
+# VL-BuRR runs out of process and is far slower than the three local methods,
+# so it sweeps a coarser grid.
+ALPHAS = [round(0.50 + 0.01 * step, 2) for step in range(50)]
+VLBURR_ALPHAS = [0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 0.99]
 DISTS = ["uniform_100", "zipfian"]
 LOCAL = {
     "autocsf": lambda: CSFFilter("bloom", "optimal"),
@@ -35,11 +39,7 @@ def run_local(n):
     keys = gen_keys(n)
     for dist in DISTS:
         for alpha in ALPHAS:
-            # Keep this seed convention synchronized with gen_datasets.py so
-            # every method receives the exact same value sequence. round(), not
-            # int(): 0.57 * 100 is 56.999... so truncation collides 0.57 onto
-            # 0.56's seed and silently drops a row from the sweep.
-            values = gen_alpha_values(n, alpha, seed=round(alpha * 100), minority_dist=dist)
+            values = gen_alpha_values(n, alpha, seed=SEED, minority_dist=dist)
             baseline = CSFFilter("bloom", "hkp")
             baseline.construct = lambda k, v: __import__("carameldb").Caramel(k, v, prefilter=None, verbose=False)
             baseline_bpk = serialized_bpk(baseline, keys, values)
@@ -54,7 +54,7 @@ def run_vlburr(n, work):
     if not binary.exists():
         subprocess.run([str(ROOT / "methods" / "vlburr" / "build.sh")], check=True)
     lrdata = work / "lrdata"
-    subprocess.run([sys.executable, str(ROOT / "methods/vlburr/gen_datasets.py"), "--out", str(lrdata), "--n", str(n), "--minority-dist", *DISTS, "--p-max", *map(str, ALPHAS), "--seeds", "0"], check=True)
+    subprocess.run([sys.executable, str(ROOT / "methods/vlburr/gen_datasets.py"), "--out", str(lrdata), "--n", str(n), "--minority-dist", *DISTS, "--p-max", *map(str, VLBURR_ALPHAS), "--seeds", str(SEED)], check=True)
     records = []
     for labels in sorted(lrdata.glob("*_y.lrbin")):
         name = labels.name.removesuffix("_y.lrbin")
@@ -64,7 +64,7 @@ def run_vlburr(n, work):
             if line.startswith("RESULT"):
                 values = dict(KV.findall(line))
                 variants["opt" if "_Opt" in values["storage_name"] else "plain"] = float(values["storage_bits"])
-        match = re.match(r"acsf_(uniform100|zipfian)_p(\d+)_s0", name)
+        match = re.match(rf"acsf_(uniform100|zipfian)_p(\d+)_s{SEED}", name)
         if not match or set(variants) != {"plain", "opt"}:
             raise RuntimeError(f"incomplete VL-BuRR output for {name}")
         dist = "uniform_100" if match.group(1) == "uniform100" else "zipfian"
