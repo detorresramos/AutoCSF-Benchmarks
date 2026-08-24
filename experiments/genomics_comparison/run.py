@@ -20,7 +20,7 @@ sys.path.insert(0, str(ROOT))
 
 from methods.decision_rules import CSFFilter
 from common.bcsf import shibuya_bloom_params
-from common.theory import best_discrete_bloom_all_k
+from common.theory import best_discrete_bloom_all_k, nearest_bloom_config
 
 METHODS = ("hkp", "bcsf", "vlburr", "autocsf")
 DATASETS = ("ecoli_sakai", "srr10211353", "celegans", "rice")
@@ -115,14 +115,7 @@ def bloom_parameters(method, manifest, entropy):
     if method == "hkp":
         if alpha <= 0.63:
             return None
-        target = 1 - alpha
-        candidates = []
-        for bpe in range(1, 17):
-            for hashes in range(1, 9):
-                epsilon = (1 - math.exp(-hashes / bpe)) ** hashes
-                candidates.append((abs(math.log(epsilon) - math.log(target)), bpe, hashes))
-        _, bpe, hashes = min(candidates)
-        return bpe, hashes
+        return nearest_bloom_config(1 - alpha)
     if method == "bcsf":
         return shibuya_bloom_params(alpha, entropy)
     bpe, hashes, bound = best_discrete_bloom_all_k(
@@ -172,135 +165,44 @@ def environment():
 
 
 def write_tables(records, output):
+    """Write genomics.csv, which verify.py and export_baseline.py read, and genomics.md."""
     output.mkdir(parents=True, exist_ok=True)
     fields = ["dataset", "n", "alpha", "method", "bits_per_key", "bits_saved_vs_plain", "build_seconds", "query_ns"]
     with (output / "genomics.csv").open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         writer.writerows({key: row.get(key) for key in fields} for row in records)
+
     def number(row, key, digits):
         value = row.get(key)
         return f"{value:.{digits}f}" if value is not None else row.get("status", "N/A")
-    md = ["| Dataset | N | alpha | Method | bits/key | saved vs plain | build (s) | query (ns) |",
-          "|---|---:|---:|---|---:|---:|---:|---:|"]
-    for row in records:
-        md.append(f"| {row['dataset']} | {row['n']:,} | {row['alpha']:.4f} | {row['method']} | {number(row, 'bits_per_key', 4)} | {number(row, 'bits_saved_vs_plain', 4)} | {number(row, 'build_seconds', 4)} | {number(row, 'query_ns', 2)} |")
-    (output / "genomics.md").write_text("\n".join(md) + "\n")
-    latex = ["\\begin{tabular}{lrrlrrrr}", "Dataset & $N$ & $\\alpha$ & Method & bpk & saved & build (s) & query (ns) \\\\", "\\hline"]
-    for row in records:
-        dataset = row["dataset"].replace("_", "\\_")
-        if row.get("bits_per_key") is None:
-            status = row.get("status", "N/A").replace("_", "\\_")
-            latex.append(f"{dataset} & {row['n']} & {row['alpha']:.4f} & {row['method']} & {status} & {status} & {status} & {status} \\\\")
-            continue
-        latex.append(f"{dataset} & {row['n']} & {row['alpha']:.4f} & {row['method']} & {row['bits_per_key']:.4f} & {row['bits_saved_vs_plain']:.4f} & {row['build_seconds']:.4f} & {row['query_ns']:.2f} \\\\")
-    latex.append("\\end{tabular}")
-    (output / "genomics.tex").write_text("\n".join(latex) + "\n")
 
-    # Compact camera-ready table: savings relative to each method's own plain CSF.
-    method_labels = (("hkp", "HKP"), ("bcsf", "BCSF"),
-                     ("vlburr", "VL-BuRR"), ("autocsf", "AutoCSF"))
-    grouped = {}
-    for row in records:
-        grouped.setdefault(row["dataset"], {})[row["method"]] = row
-    paper_md = ["Bits saved per key relative to each method's own plain CSF.", "",
-                "| Dataset | N | alpha | HKP | BCSF | VL-BuRR | AutoCSF |",
-                "|---|---:|---:|---:|---:|---:|---:|"]
-    paper_tex = ["\\begin{tabular}{lrrrrrr}",
-                 "Dataset & $N$ & $\\alpha$ & HKP & BCSF & VL-BuRR & AutoCSF \\\\",
-                 "\\hline"]
-    for dataset, methods in grouped.items():
-        first = next(iter(methods.values()))
-        best = max(row["bits_saved_vs_plain"] for row in methods.values() if row.get("bits_saved_vs_plain") is not None)
-        md_values, tex_values = [], []
-        for method, _ in method_labels:
-            row = methods[method]
-            value = row.get("bits_saved_vs_plain")
-            if value is None:
-                md_values.append(row.get("status", "N/A"))
-                tex_values.append(row.get("status", "N/A").replace("_", "\\_"))
-            else:
-                md_values.append(f"**{value:.4f}**" if value == best else f"{value:.4f}")
-                tex_values.append(f"\\textbf{{{value:.4f}}}" if value == best else f"{value:.4f}")
-        paper_md.append(f"| {dataset} | {first['n']:,} | {first['alpha']:.3f} | " + " | ".join(md_values) + " |")
-        name = dataset.replace("_", "\\_")
-        paper_tex.append(f"{name} & {first['n']:,} & {first['alpha']:.3f} & " + " & ".join(tex_values) + " \\\\")
-    paper_tex.append("\\end{tabular}")
-    (output / "genomics-paper.md").write_text("\n".join(paper_md) + "\n")
-    (output / "genomics-paper.tex").write_text("\n".join(paper_tex) + "\n")
-
-    # Transparent audit table: baseline arithmetic and chosen filter.
-    def baseline_bpk(row):
-        return row.get("baseline_bits_per_key",
-                       row["bits_per_key"] + row["bits_saved_vs_plain"])
-
-    def parameters(row):
+    def selected_filter(row):
         params = row.get("parameters")
         if not params:
             return "no filter"
-        if row["method"] == "vlburr" and row["bits_saved_vs_plain"] == 0:
-            return "no filter (Opt chose empty)"
-        if "bloom_bits_per_element" in params:
-            return f"Bloom b={params['bloom_bits_per_element']}, k={params['bloom_num_hashes']}"
-        return "VL-BuRR optimized filter"
+        if row["method"] == "vlburr":
+            return "no filter (Opt chose empty)" if row["bits_saved_vs_plain"] == 0 else "VL-BuRR optimized filter"
+        return f"Bloom b={params['bloom_bits_per_element']}, k={params['bloom_num_hashes']}"
 
-    def baseline_name(row):
-        return "VL-BuRR Huffman CSF" if row["method"] == "vlburr" else "Caramel/GOV CSF"
-
-    audit_md = [
-        "| Dataset | Method | Plain CSF | Plain bpk | Filtered bpk | Saved bpk | Selected filter |",
-        "|---|---|---|---:|---:|---:|---|",
-    ]
-    audit_tex = [
-        "\\begin{tabular}{lllrrrl}",
-        "Dataset & Method & Plain CSF & Plain bpk & Filtered bpk & Saved bpk & Selected filter \\\\",
-        "\\hline",
+    md = [
+        "Bits per key saved by each method's selected filter, relative to that",
+        "method's own unfiltered CSF. VL-BuRR uses its Huffman CSF; the other",
+        "three share Caramel/GOV, so only their decision rule differs.",
+        "",
+        "| Dataset | N | alpha | Method | Plain bpk | Filtered bpk | Saved bpk | Selected filter | build (s) | query (ns) |",
+        "|---|---:|---:|---|---:|---:|---:|---|---:|---:|",
     ]
     for row in records:
-        plain = baseline_bpk(row)
-        backend = baseline_name(row)
-        selected = parameters(row)
-        audit_md.append(
-            f"| {row['dataset']} | {row['method']} | {backend} | {plain:.4f} | "
-            f"{row['bits_per_key']:.4f} | {row['bits_saved_vs_plain']:.4f} | {selected} |"
+        plain = row.get("baseline_bits_per_key")
+        if plain is None and row.get("bits_per_key") is not None:
+            plain = row["bits_per_key"] + row["bits_saved_vs_plain"]
+        md.append(
+            f"| {row['dataset']} | {row['n']:,} | {row['alpha']:.4f} | {row['method']} | "
+            f"{plain:.4f} | {number(row, 'bits_per_key', 4)} | {number(row, 'bits_saved_vs_plain', 4)} | "
+            f"{selected_filter(row)} | {number(row, 'build_seconds', 4)} | {number(row, 'query_ns', 2)} |"
         )
-        dataset = row["dataset"].replace("_", "\\_")
-        method = row["method"].replace("_", "\\_")
-        selected_tex = selected.replace("_", "\\_")
-        backend_tex = backend.replace("_", "\\_")
-        audit_tex.append(
-            f"{dataset} & {method} & {backend_tex} & {plain:.4f} & {row['bits_per_key']:.4f} & "
-            f"{row['bits_saved_vs_plain']:.4f} & {selected_tex} \\\\"
-        )
-    audit_tex.append("\\end{tabular}")
-    (output / "genomics-audit.md").write_text("\n".join(audit_md) + "\n")
-    (output / "genomics-audit.tex").write_text("\n".join(audit_tex) + "\n")
-
-    # End-to-end footprint, including each method's underlying CSF.
-    total_md = [
-        "Final end-to-end structure size in bits per key.",
-        "VL-BuRR uses its Huffman CSF; the other methods use Caramel/GOV.",
-        "",
-        "| Dataset | HKP | BCSF | VL-BuRR | AutoCSF |",
-        "|---|---:|---:|---:|---:|",
-    ]
-    total_tex = [
-        "\\begin{tabular}{lrrrr}",
-        "Dataset & HKP & BCSF & VL-BuRR & AutoCSF \\\\",
-        "\\hline",
-    ]
-    for dataset, methods in grouped.items():
-        best = min(row["bits_per_key"] for row in methods.values())
-        md_values, tex_values = [], []
-        for method, _ in method_labels:
-            value = methods[method]["bits_per_key"]
-            md_values.append(f"**{value:.4f}**" if value == best else f"{value:.4f}")
-            tex_values.append(f"\\textbf{{{value:.4f}}}" if value == best else f"{value:.4f}")
-        total_md.append(f"| {dataset} | " + " | ".join(md_values) + " |")
-        total_tex.append(dataset.replace("_", "\\_") + " & " + " & ".join(tex_values) + " \\\\")
-    total_tex.append("\\end{tabular}")
-    (output / "genomics-total.md").write_text("\n".join(total_md) + "\n")
-    (output / "genomics-total.tex").write_text("\n".join(total_tex) + "\n")
+    (output / "genomics.md").write_text("\n".join(md) + "\n")
 
 
 def main():

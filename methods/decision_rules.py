@@ -60,29 +60,19 @@ def _csf_stats_to_dict(stats):
 
 EPSILON_STRATEGIES = ("optimal", "shibuya", "hkp")
 
-# Hreinsson, Kroyer and Pagh, "Storing a compressed function with constant time
-# access" (2009), bound the redundancy of the filtered construction by
-#     r < min(alpha + 0.086, 1.82 * (1 - alpha))
-# where the first term is Gallager's Huffman bound (the no-filter regime) and the
-# second is the filtered regime. HKP's decision criterion is to filter beyond the
-# crossover of the two. Solving alpha + 0.086 == 1.82 * (1 - alpha) gives 0.6149;
-# the paper rounds this to "roughly 0.63".
-HKP_CROSSOVER_ALPHA = (1.82 - 0.086) / (1.0 + 1.82)
+# Hreinsson, Kroyer and Pagh (2009), Section 5.1. Not alpha + 0.086 = 1.82(1 - alpha):
+# Gallager's bound reduces to r <= alpha above 0.5, which is the only regime in which
+# the decision arises.
+HKP_CROSSOVER_ALPHA = 0.63
 
 
 def _find_hkp_params(keys, values):
-    """Realize HKP's epsilon=1-alpha rule with the nearest Bloom config."""
-    _, compute_actual_alpha, _, _, _ = _import_shared()
+    """Realize HKP's epsilon = 1 - alpha rule as a Bloom config."""
+    theory, compute_actual_alpha, _, _, _ = _import_shared()
     alpha = compute_actual_alpha(values)
     if alpha <= HKP_CROSSOVER_ALPHA:
         return None
-    target = max(1e-12, 1.0 - alpha)
-    candidates = []
-    for bits_per_element in range(1, 17):
-        for num_hashes in range(1, 9):
-            epsilon = (1.0 - np.exp(-num_hashes / bits_per_element)) ** num_hashes
-            candidates.append((abs(np.log(epsilon) - np.log(target)), bits_per_element, num_hashes))
-    _, bits_per_element, num_hashes = min(candidates)
+    bits_per_element, num_hashes = theory.nearest_bloom_config(1.0 - alpha)
     return {"bloom_bits_per_element": bits_per_element, "bloom_num_hashes": num_hashes}
 
 

@@ -69,10 +69,6 @@ def theory_stems():
     return alpha, epsilon
 
 
-# ---------------------------------------------------------------------------
-# Regression checks
-# ---------------------------------------------------------------------------
-
 def frequency_counter_regression():
     """VL-BuRR's float32 frequency model lost unit increments above 2^24."""
     def float32(value):
@@ -89,10 +85,6 @@ def frequency_counter_regression():
         errors.append("frequency-counter regression: post-fix probability changed")
     return errors
 
-
-# ---------------------------------------------------------------------------
-# Completeness of the committed artifact
-# ---------------------------------------------------------------------------
 
 def check_bound_validation():
     """The per-run JSON is not tracked; baselines/bound_validation.csv is."""
@@ -156,10 +148,7 @@ def check_genomics():
             baseline = row.get("baseline_bits_per_key")
             if baseline is None or abs((baseline - row["bits_per_key"]) - row["bits_saved_vs_plain"]) > 1e-9:
                 errors.append(f"VL-BuRR row uses an invalid baseline: {row.get('dataset')}")
-    for name in ("genomics.json", "genomics.md", "genomics.tex",
-                 "genomics-paper.md", "genomics-paper.tex",
-                 "genomics-audit.md", "genomics-audit.tex",
-                 "genomics-total.md", "genomics-total.tex"):
+    for name in ("genomics.json", "genomics.md"):
         if not (genomics_dir / name).exists():
             errors.append(f"missing results/genomics_comparison/{name}")
     return errors
@@ -212,10 +201,6 @@ def check_artifact(scope_datasets=True):
         errors.append("unresolved benchmark correctness issue; see results/KNOWN_ISSUES.md")
     return errors
 
-
-# ---------------------------------------------------------------------------
-# Numeric comparison of a fresh run against the committed results
-# ---------------------------------------------------------------------------
 
 def synthetic_rows(path):
     with path.open() as handle:
@@ -334,8 +319,6 @@ def compare(errors):
         "genomics_comparison": {"rows": genomics_records, "max_delta": genomics_delta},
     }
 
-
-# ---------------------------------------------------------------------------
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)

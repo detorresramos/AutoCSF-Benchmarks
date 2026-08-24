@@ -86,15 +86,10 @@ def main():
     md = [caption, "",
           "| | Construction (s) | Query (ns) |",
           "|---|---:|---:|"]
-    tex = ["\\begin{tabular}{lrr}",
-           " & Construction (s) & Query (ns) \\\\", "\\hline"]
     for label in ("no filter", "filter"):
         arm = arms[label]
         md.append(f"| {label} | {arm['build_seconds']:.2f} | {arm['query_ns']:.1f} |")
-        tex.append(f"{label} & {arm['build_seconds']:.2f} & {arm['query_ns']:.1f} \\\\")
-    tex += ["\\end{tabular}"]
     (args.output / f"latency-{args.dataset}.md").write_text("\n".join(md) + "\n")
-    (args.output / f"latency-{args.dataset}.tex").write_text("\n".join(tex) + "\n")
     print("\n".join(md))
     for label, arm in arms.items():
         print(f"  {label:10s} query range {arm['query_ns_min']:.1f}-{arm['query_ns_max']:.1f} ns, "

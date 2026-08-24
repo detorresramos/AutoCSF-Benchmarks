@@ -121,3 +121,35 @@ def best_discrete_bloom_all_k(alpha, n_over_N, max_bpe=8, max_k=8):
         if lb > best_lb:
             best_lb, best_bpe, best_k = lb, bpe, k
     return best_bpe, best_k, best_lb
+
+
+def bloom_frontier(max_bpe=16, max_k=8):
+    """Bloom configurations not beaten on both size and epsilon by another.
+
+    Leaves one per bit budget, at k ~ b*ln2: the construction
+    bcsf.shibuya_bloom_params derives in closed form.
+    """
+    grid = [(bpe, k, bloom_params(bpe, k)[1]) for bpe in range(1, max_bpe + 1) for k in range(1, max_k + 1)]
+    return [
+        candidate
+        for candidate in grid
+        if not any(
+            other[0] <= candidate[0] and other[2] <= candidate[2] and other[:2] != candidate[:2]
+            for other in grid
+        )
+    ]
+
+
+def nearest_bloom_config(target_eps, max_bpe=16, max_k=8):
+    """Frontier configuration whose epsilon is closest to target_eps in log space.
+
+    Over the full grid a badly tuned filter can win on proximity alone: at
+    target_eps = 0.07 the nearest is b=14, k=1, twice the size of b=6, k=4
+    and less accurate.
+    """
+    target = max(target_eps, 1e-12)
+    _, bpe, k = min(
+        (abs(math.log(eps) - math.log(target)), bpe, k)
+        for bpe, k, eps in bloom_frontier(max_bpe, max_k)
+    )
+    return bpe, k

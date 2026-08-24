@@ -119,9 +119,9 @@ make genomics-comparison
 Outputs:
 
 - Raw records: `results/genomics_comparison/genomics.json`
-- Camera-ready table: `results/genomics_comparison/genomics-paper.tex`
-- Human-readable table: `results/genomics_comparison/genomics-paper.md`
-- Audit details: `results/genomics_comparison/genomics-audit.md`
+- Measurements: `results/genomics_comparison/genomics.csv`
+- Readable table, with the plain-CSF baseline and the filter each method
+  selected: `results/genomics_comparison/genomics.md`
 
 The primary comparison is bits/key saved relative to each method's own plain
 CSF. HKP, BCSF, and AutoCSF share the Caramel/GOV CSF and Bloom-filter
@@ -161,7 +161,9 @@ All four methods live under `methods/`:
   checked against these.
 - `reference/`: the figures and genomics table as they appear in the accepted
   paper, for side-by-side comparison with a fresh run.
-- `results/reproduction/receipt.json`: what the last `make verify` found.
+- `results/`: everything a run produces. Not tracked in git -- `make reproduce`
+  regenerates it, and `results/reproduction/receipt.json` records what the last
+  `make verify` found.
 
 ### Checking a run against the accepted results
 
