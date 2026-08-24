@@ -61,14 +61,12 @@ def lower_bound(alpha, eps, b_eps, n_over_N):
     return DELTA * alpha * (1 - eps) - n_over_N - b_eps * (1 - alpha)
 
 
-def upper_bound(alpha, eps, b_eps, n_over_N):
-    """U = delta * (1 + H(alpha) - 2*alpha*eps*(1-alpha)/(3-alpha)) + n/N - b(eps)*(1-alpha)"""
-    return (
-        DELTA
-        * (1 + binary_entropy(alpha) - 2 * alpha * eps * (1 - alpha) / (3 - alpha))
-        + n_over_N
-        - b_eps * (1 - alpha)
-    )
+def upper_bound(alpha, eps, b_eps, n_over_N=None):
+    """U = 2*delta - (1-alpha) * (alpha*delta*eps + b(eps))
+
+    n_over_N is accepted but unused: this form of the bound has no n/N term.
+    """
+    return 2 * DELTA - (1 - alpha) * (alpha * DELTA * eps + b_eps)
 
 
 def optimal_epsilon_xor(alpha):
