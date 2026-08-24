@@ -101,11 +101,7 @@ def run_vlburr(dataset, repeats):
 
 
 def dataset_profile(dataset):
-    """Read the manifest and derive the statistics the decision rules need.
-
-    The tables are far too large to hold in memory here, so the profile comes
-    from the precomputed value histogram rather than from the values themselves.
-    """
+    """Profile a dataset from its manifest histogram rather than its values."""
     manifest = json.loads((ROOT / "data/manifests" / f"{dataset}_k15.json").read_text())
     histogram = {int(value): int(frequency) for value, frequency in manifest["histogram"].items()}
     n = manifest["records"]
@@ -185,8 +181,8 @@ def write_tables(records, output):
 
     md = [
         "Bits per key saved by each method's selected filter, relative to that",
-        "method's own unfiltered CSF. VL-BuRR uses its Huffman CSF; the other",
-        "three share Caramel/GOV, so only their decision rule differs.",
+        "method's own unfiltered CSF. GFT (VL-BuRR) uses its Huffman CSF; the",
+        "other three share Caramel/GOV, so only their decision rule differs.",
         "",
         "| Dataset | N | alpha | Method | Plain bpk | Filtered bpk | Saved bpk | Selected filter | build (s) | query (ns) |",
         "|---|---:|---:|---|---:|---:|---:|---|---:|---:|",

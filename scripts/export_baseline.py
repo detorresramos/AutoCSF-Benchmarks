@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
 """Promote the numbers in results/ to the accepted baselines in baselines/.
 
-verify.py compares every fresh run against these three files. Bound validation
-is condensed: its per-run JSON is not tracked, so this writes the subset that is
-actually compared -- every bits-per-key number, nothing else -- as one
-long-format CSV small enough to live in git and to read in a diff. The other two
+Bound validation is condensed to its bits-per-key numbers; the other two
 experiments are copied as they stand.
-
-Run this after any run that legitimately changes the accepted numbers.
 """
 
 import csv

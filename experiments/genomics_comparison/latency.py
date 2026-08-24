@@ -1,20 +1,10 @@
 #!/usr/bin/env python3
-"""AutoCSF filter-vs-no-filter cost table on one real genomics dataset.
-
-The camera-ready savings table reports space only. This reports the other two
-axes -- construction time and query latency -- for AutoCSF alone, so the
-comparison is between AutoCSF's filtered index and the plain CSF it was built
-from. Both sides use the same native harness and the same CSF implementation,
-so the numbers are directly comparable; nothing here crosses method boundaries.
-
-Construction is deterministic and expensive, so it is timed once. A query batch
-is 10k random lookups and is noisy at that scale, so it is repeated and reported
-as a median with the observed range.
-"""
+"""Construction and query cost of AutoCSF's filter against a plain CSF."""
 
 import argparse
 import json
 from pathlib import Path
+import statistics
 import subprocess
 import sys
 
@@ -29,72 +19,82 @@ from methods.decision_rules import select_filter
 BINARY = ROOT / "data/cache/bin/caramel_bench"
 
 
-def measure(dataset, kind, bpe, hashes, builds, batches):
+def run(args, dataset, bpe, hashes):
     if not BINARY.exists():
         subprocess.run([str(ROOT / "experiments/genomics_comparison/build_native.sh")], check=True)
     result = subprocess.run(
-        [str(BINARY), str(plain_table(dataset)), kind, str(bpe), str(hashes),
-         str(builds), str(batches)],
+        [str(BINARY), str(plain_table(dataset)), "compare", str(bpe), str(hashes),
+         str(args.rounds), str(args.batch)],
         capture_output=True, text=True, check=True,
     )
     return json.loads(result.stdout.strip().splitlines()[-1])
 
 
+def build_seconds(dataset, kind, bpe, hashes):
+    result = subprocess.run(
+        [str(BINARY), str(plain_table(dataset)), kind, str(bpe), str(hashes), "1", "1"],
+        capture_output=True, text=True, check=True,
+    )
+    return json.loads(result.stdout.strip().splitlines()[-1])["build_seconds"]
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", default="rice")
-    parser.add_argument("--builds", type=int, default=1)
-    parser.add_argument("--query-batches", type=int, default=11)
+    parser.add_argument("--dataset", nargs="+", default=["celegans", "rice"])
+    parser.add_argument("--rounds", type=int, default=31)
+    parser.add_argument("--batch", type=int, default=100_000)
     parser.add_argument("--output", type=Path, default=ROOT / "results/genomics_comparison")
     args = parser.parse_args()
 
-    manifest, stats = dataset_profile(args.dataset)
-    n = manifest["records"]
-    selected = select_filter("autocsf", stats)
-    if selected is None:
-        raise SystemExit(f"AutoCSF declines to filter on {args.dataset}; "
-                         "there is no filtered arm to time")
-    bpe, hashes = selected["bloom_bits_per_element"], selected["bloom_num_hashes"]
+    records = []
+    for dataset in args.dataset:
+        manifest, stats = dataset_profile(dataset)
+        selected = select_filter("autocsf", stats)
+        if selected is None:
+            raise SystemExit(f"AutoCSF declines to filter on {dataset}; nothing to compare")
+        bpe, hashes = selected["bloom_bits_per_element"], selected["bloom_num_hashes"]
+        n = manifest["records"]
+        paired = run(args, dataset, bpe, hashes)
+        records.append({
+            "dataset": dataset,
+            "n": n,
+            "alpha": manifest["alpha"],
+            "filter": {"bloom_bits_per_element": bpe, "bloom_num_hashes": hashes},
+            "plain_bits_per_key": paired["plain_serialized_bytes"] * 8 / n,
+            "filter_bits_per_key": paired["filter_serialized_bytes"] * 8 / n,
+            "plain_build_seconds": build_seconds(dataset, "none", 0, 0),
+            "filter_build_seconds": build_seconds(dataset, "bloom", bpe, hashes),
+            "query": paired,
+        })
 
-    arms = {
-        "no filter": measure(args.dataset, "none", 0, 0, args.builds, args.query_batches),
-        "filter": measure(args.dataset, "bloom", bpe, hashes, args.builds, args.query_batches),
-    }
-    for arm in arms.values():
-        arm["bits_per_key"] = arm["serialized_bytes"] * 8 / n
-
-    payload = {
-        "schema_version": 1,
-        "environment": environment(),
-        "dataset": args.dataset,
-        "n": n,
-        "alpha": manifest["alpha"],
-        "method": "autocsf",
-        "selected_filter": {"bloom_bits_per_element": bpe, "bloom_num_hashes": hashes},
-        "builds": args.builds,
-        "query_batches": args.query_batches,
-        "arms": arms,
-    }
     args.output.mkdir(parents=True, exist_ok=True)
-    (args.output / f"latency-{args.dataset}.json").write_text(json.dumps(payload, indent=2) + "\n")
+    (args.output / "latency.json").write_text(
+        json.dumps({"schema_version": 2, "environment": environment(), "records": records},
+                   indent=2) + "\n")
 
-    saved = arms["no filter"]["bits_per_key"] - arms["filter"]["bits_per_key"]
-    caption = (f"AutoCSF on {args.dataset} (N={n:,}, alpha={manifest['alpha']:.3f}), "
-               f"Bloom {bpe} bits/element, {hashes} hashes, saving {saved:.4f} bits/key. "
-               f"Construction timed once; query latency is the median of "
-               f"{args.query_batches} batches of 10,000 random lookups.")
-
-    md = [caption, "",
-          "| | Construction (s) | Query (ns) |",
-          "|---|---:|---:|"]
-    for label in ("no filter", "filter"):
-        arm = arms[label]
-        md.append(f"| {label} | {arm['build_seconds']:.2f} | {arm['query_ns']:.1f} |")
-    (args.output / f"latency-{args.dataset}.md").write_text("\n".join(md) + "\n")
+    md = [
+        "AutoCSF's selected filter against the plain CSF it is built from.",
+        "Query latency is a paired measurement: both indexes are built in one",
+        "process and answer the same key sample each round.",
+        "",
+        "| Dataset | N | Construction (s) | | Query (ns) | | Filter faster |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+        "| | | plain | filter | plain | filter | (of rounds) |",
+    ]
+    for row in records:
+        q = row["query"]
+        md.append(
+            f"| {row['dataset']} | {row['n']:,} | {row['plain_build_seconds']:.1f} | "
+            f"{row['filter_build_seconds']:.1f} | {q['plain_query_ns']:.1f} | "
+            f"{q['filter_query_ns']:.1f} | {q['filter_faster_rounds']}/{q['rounds']} |"
+        )
+    (args.output / "latency.md").write_text("\n".join(md) + "\n")
     print("\n".join(md))
-    for label, arm in arms.items():
-        print(f"  {label:10s} query range {arm['query_ns_min']:.1f}-{arm['query_ns_max']:.1f} ns, "
-              f"{arm['bits_per_key']:.4f} bits/key")
+    for row in records:
+        q = row["query"]
+        print(f"  {row['dataset']:10s} paired delta {q['paired_delta_ns']:+.2f} ns "
+              f"({100 * q['paired_delta_ns'] / q['plain_query_ns']:+.2f}%), "
+              f"{row['plain_bits_per_key']:.4f} -> {row['filter_bits_per_key']:.4f} bits/key")
 
 
 if __name__ == "__main__":

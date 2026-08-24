@@ -1,15 +1,8 @@
 #!/usr/bin/env python3
-"""Check what is in results/ against the accepted numbers in baselines/.
+"""Check results/ against the accepted numbers in baselines/.
 
-Verifies that every experiment produced a complete set of outputs, compares each
-measurement against its accepted value, and writes results/reproduction/receipt.json.
-
-Two runs never agree bit for bit: binary-fuse CSF construction is randomized, so
-measured sizes move by a few thousandths of a bit per key between runs.
-TOLERANCE_BPK is what separates that from a real regression.
-
-Run scripts/export_baseline.py to move results/ into baselines/ after a run that
-legitimately changes the accepted numbers.
+Binary-fuse construction is randomized, so repeated runs differ by a few
+thousandths of a bit per key; TOLERANCE_BPK separates that from a regression.
 """
 
 import argparse

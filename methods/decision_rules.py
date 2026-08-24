@@ -73,13 +73,7 @@ HKP_CROSSOVER_ALPHA = 0.63
 
 
 def profile(values):
-    """The summary statistics every decision rule needs.
-
-    The rules depend on the value distribution only through these four numbers,
-    which is what lets the synthetic experiments (which hold the values in
-    memory) and the genomics harness (which reads them from a dataset manifest)
-    share one implementation.
-    """
+    """The summary statistics the decision rules need, from a values array."""
     _, compute_actual_alpha, _, empirical_entropy, _ = _import_shared()
     alpha = compute_actual_alpha(values)
     n = len(values)
@@ -92,18 +86,12 @@ def profile(values):
 
 
 def select_filter(method, stats, filter_type="bloom"):
-    """Each method's filter choice, or None when it declines to filter.
-
-    This is the only place the three decision rules are implemented; the
-    genomics harness and the synthetic comparison both come through here.
-    """
+    """Each method's filter choice, or None when it declines to filter."""
     theory, _, _, _, shibuya_bloom_params = _import_shared()
 
     if method == "hkp":
-        # HKP fixes a false positive rate, not a filter; turning that rate into
-        # (bits, hashes) is ours to do. Searching the full grid picks
-        # configurations that are dominated -- larger *and* less accurate than
-        # an available alternative -- so restrict to the frontier.
+        # HKP fixes a false positive rate, not a filter. nearest_bloom_config
+        # searches only non-dominated configurations.
         if stats.alpha <= HKP_CROSSOVER_ALPHA:
             return None
         bpe, k = theory.nearest_bloom_config(1.0 - stats.alpha)
