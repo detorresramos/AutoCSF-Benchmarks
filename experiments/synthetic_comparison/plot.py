@@ -14,7 +14,7 @@ styles = {
     "autocsf": ("AutoCSF", "tab:blue", "-"),
     "bcsf": ("BCSF", "tab:orange", "--"),
     "hkp": ("HKP", "tab:green", "-."),
-    "vlburr": ("GFT (VL-BuRR)", "tab:red", ":o"),
+    "vlburr": ("GFT", "tab:red", ":o"),
 }
 fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
 for ax, dist, title in zip(axes, ("uniform_100", "zipfian"), ("Uniform-100", "Zipfian")):
