@@ -1,8 +1,11 @@
+from collections import namedtuple
 import os
 import sys
 import tempfile
 
 import numpy as np
+
+Profile = namedtuple("Profile", "alpha n_over_N entropy n_filter")
 
 _dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(_dir, ".."))
@@ -58,7 +61,10 @@ def _csf_stats_to_dict(stats):
     return d
 
 
-EPSILON_STRATEGIES = ("optimal", "shibuya", "hkp")
+# The experiments name the rules after their papers; CSFFilter kept the older
+# strategy names, so translate rather than rename the public argument.
+METHOD_FOR_STRATEGY = {"optimal": "autocsf", "shibuya": "bcsf", "hkp": "hkp"}
+EPSILON_STRATEGIES = tuple(METHOD_FOR_STRATEGY)
 
 # Hreinsson, Kroyer and Pagh (2009), Section 5.1. Not alpha + 0.086 = 1.82(1 - alpha):
 # Gallager's bound reduces to r <= alpha above 0.5, which is the only regime in which
@@ -66,45 +72,64 @@ EPSILON_STRATEGIES = ("optimal", "shibuya", "hkp")
 HKP_CROSSOVER_ALPHA = 0.63
 
 
-def _find_hkp_params(keys, values):
-    """Realize HKP's epsilon = 1 - alpha rule as a Bloom config."""
-    theory, compute_actual_alpha, _, _, _ = _import_shared()
+def profile(values):
+    """The summary statistics every decision rule needs.
+
+    The rules depend on the value distribution only through these four numbers,
+    which is what lets the synthetic experiments (which hold the values in
+    memory) and the genomics harness (which reads them from a dataset manifest)
+    share one implementation.
+    """
+    _, compute_actual_alpha, _, empirical_entropy, _ = _import_shared()
     alpha = compute_actual_alpha(values)
-    if alpha <= HKP_CROSSOVER_ALPHA:
-        return None
-    bits_per_element, num_hashes = theory.nearest_bloom_config(1.0 - alpha)
-    return {"bloom_bits_per_element": bits_per_element, "bloom_num_hashes": num_hashes}
+    n = len(values)
+    return Profile(
+        alpha=alpha,
+        n_over_N=len(np.unique(values)) / n,
+        entropy=empirical_entropy(values),
+        n_filter=int(n * (1 - alpha)),
+    )
 
 
-def _find_optimal_params(filter_type, keys, values):
-    theory, compute_actual_alpha, _, _, _ = _import_shared()
-    n = len(keys)
-    alpha = compute_actual_alpha(values)
-    n_over_N = len(np.unique(values)) / n
-    n_filter = int(n * (1 - alpha))
+def select_filter(method, stats, filter_type="bloom"):
+    """Each method's filter choice, or None when it declines to filter.
+
+    This is the only place the three decision rules are implemented; the
+    genomics harness and the synthetic comparison both come through here.
+    """
+    theory, _, _, _, shibuya_bloom_params = _import_shared()
+
+    if method == "hkp":
+        # HKP fixes a false positive rate, not a filter; turning that rate into
+        # (bits, hashes) is ours to do. Searching the full grid picks
+        # configurations that are dominated -- larger *and* less accurate than
+        # an available alternative -- so restrict to the frontier.
+        if stats.alpha <= HKP_CROSSOVER_ALPHA:
+            return None
+        bpe, k = theory.nearest_bloom_config(1.0 - stats.alpha)
+        return {"bloom_bits_per_element": bpe, "bloom_num_hashes": k}
+
+    if method == "bcsf":
+        chosen = shibuya_bloom_params(stats.alpha, stats.entropy)
+        if chosen is None:
+            return None
+        return {"bloom_bits_per_element": chosen[0], "bloom_num_hashes": chosen[1]}
+
+    if method != "autocsf":
+        raise ValueError(f"Unknown method: {method}")
 
     if filter_type == "xor":
-        bits, bound = theory.best_discrete_xor(alpha, n_over_N)
+        bits, bound = theory.best_discrete_xor(stats.alpha, stats.n_over_N)
         return {"fingerprint_bits": bits} if bound > 0 else None
-    elif filter_type == "binary_fuse":
-        bits, bound = theory.best_discrete_binary_fuse(alpha, n_over_N, n_filter)
+    if filter_type == "binary_fuse":
+        bits, bound = theory.best_discrete_binary_fuse(
+            stats.alpha, stats.n_over_N, stats.n_filter
+        )
         return {"fingerprint_bits": bits} if bound > 0 else None
-    elif filter_type == "bloom":
-        bpe, k, bound = theory.best_discrete_bloom_all_k(alpha, n_over_N)
+    if filter_type == "bloom":
+        bpe, k, bound = theory.best_discrete_bloom_all_k(stats.alpha, stats.n_over_N)
         return {"bloom_bits_per_element": bpe, "bloom_num_hashes": k} if bound > 0 else None
-    else:
-        raise ValueError(f"Unknown filter type: {filter_type}")
-
-
-def _find_shibuya_params(keys, values):
-    _, compute_actual_alpha, _, empirical_entropy, shibuya_bloom_params = _import_shared()
-    alpha = compute_actual_alpha(values)
-    H0 = empirical_entropy(values)
-    result = shibuya_bloom_params(alpha, H0)
-    if result is None:
-        return None
-    bits_per_element, num_hashes = result
-    return {"bloom_bits_per_element": bits_per_element, "bloom_num_hashes": num_hashes}
+    raise ValueError(f"Unknown filter type: {filter_type}")
 
 
 class CSFFilter:
@@ -125,12 +150,9 @@ class CSFFilter:
     def construct(self, keys, values):
         carameldb = _import_carameldb()
         _, _, create_filter_config, _, _ = _import_shared()
-        if self.epsilon_strategy == "optimal":
-            self._params = _find_optimal_params(self.filter_type, keys, values)
-        elif self.epsilon_strategy == "shibuya":
-            self._params = _find_shibuya_params(keys, values)
-        else:
-            self._params = _find_hkp_params(keys, values)
+        self._params = select_filter(
+            METHOD_FOR_STRATEGY[self.epsilon_strategy], profile(values), self.filter_type
+        )
         config = None if self._params is None else create_filter_config(self.filter_type, **self._params)
         return carameldb.Caramel(keys, values, prefilter=config, verbose=False)
 

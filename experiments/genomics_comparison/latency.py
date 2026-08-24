@@ -22,8 +22,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from experiments.genomics_comparison.run import (
-    bloom_parameters, dataset_profile, environment, plain_table,
+    dataset_profile, environment, plain_table,
 )
+from methods.decision_rules import select_filter
 
 BINARY = ROOT / "data/cache/bin/caramel_bench"
 
@@ -47,13 +48,13 @@ def main():
     parser.add_argument("--output", type=Path, default=ROOT / "results/genomics_comparison")
     args = parser.parse_args()
 
-    manifest, entropy = dataset_profile(args.dataset)
+    manifest, stats = dataset_profile(args.dataset)
     n = manifest["records"]
-    selected = bloom_parameters("autocsf", manifest, entropy)
+    selected = select_filter("autocsf", stats)
     if selected is None:
         raise SystemExit(f"AutoCSF declines to filter on {args.dataset}; "
                          "there is no filtered arm to time")
-    bpe, hashes = selected
+    bpe, hashes = selected["bloom_bits_per_element"], selected["bloom_num_hashes"]
 
     arms = {
         "no filter": measure(args.dataset, "none", 0, 0, args.builds, args.query_batches),

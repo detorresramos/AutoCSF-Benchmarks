@@ -18,9 +18,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from methods.decision_rules import CSFFilter
-from common.bcsf import shibuya_bloom_params
-from common.theory import best_discrete_bloom_all_k, nearest_bloom_config
+from methods.decision_rules import Profile, select_filter
 
 METHODS = ("hkp", "bcsf", "vlburr", "autocsf")
 DATASETS = ("ecoli_sakai", "srr10211353", "celegans", "rice")
@@ -103,25 +101,22 @@ def run_vlburr(dataset, repeats):
 
 
 def dataset_profile(dataset):
+    """Read the manifest and derive the statistics the decision rules need.
+
+    The tables are far too large to hold in memory here, so the profile comes
+    from the precomputed value histogram rather than from the values themselves.
+    """
     manifest = json.loads((ROOT / "data/manifests" / f"{dataset}_k15.json").read_text())
     histogram = {int(value): int(frequency) for value, frequency in manifest["histogram"].items()}
     n = manifest["records"]
     entropy = -sum((frequency / n) * math.log2(frequency / n) for frequency in histogram.values())
-    return manifest, entropy
-
-
-def bloom_parameters(method, manifest, entropy):
     alpha = manifest["alpha"]
-    if method == "hkp":
-        if alpha <= 0.63:
-            return None
-        return nearest_bloom_config(1 - alpha)
-    if method == "bcsf":
-        return shibuya_bloom_params(alpha, entropy)
-    bpe, hashes, bound = best_discrete_bloom_all_k(
-        alpha, manifest["distinct_values"] / manifest["records"]
+    return manifest, Profile(
+        alpha=alpha,
+        n_over_N=manifest["distinct_values"] / n,
+        entropy=entropy,
+        n_filter=int(n * (1 - alpha)),
     )
-    return (bpe, hashes) if bound > 0 else None
 
 
 def plain_table(dataset):
@@ -133,18 +128,21 @@ def plain_table(dataset):
     return output
 
 
-def run_native_caramel(dataset, method, repeats, manifest, entropy):
+def run_native_caramel(dataset, method, repeats, manifest, stats):
     binary = ROOT / "data/cache/bin/caramel_bench"
     if not binary.exists():
         subprocess.run([str(ROOT / "experiments/genomics_comparison/build_native.sh")], check=True)
-    params = None if method == "plain" else bloom_parameters(method, manifest, entropy)
-    kind, bpe, hashes = ("none", 0, 0) if params is None else ("bloom", *params)
+    params = None if method == "plain" else select_filter(method, stats)
+    kind, bpe, hashes = (
+        ("none", 0, 0) if params is None
+        else ("bloom", params["bloom_bits_per_element"], params["bloom_num_hashes"])
+    )
     result = subprocess.run(
         [str(binary), str(plain_table(dataset)), kind, str(bpe), str(hashes), str(repeats)],
         capture_output=True, text=True, check=True,
     )
     measured = json.loads(result.stdout.strip().splitlines()[-1])
-    measured["parameters"] = None if params is None else {"bloom_bits_per_element": bpe, "bloom_num_hashes": hashes}
+    measured["parameters"] = params
     return measured
 
 
@@ -224,14 +222,14 @@ def main():
         }
     records = []
     for dataset in args.dataset:
-        manifest, entropy = dataset_profile(dataset)
+        manifest, stats = dataset_profile(dataset)
         if dataset in reused_plain:
             plain_bytes = reused_plain[dataset]
         else:
-            plain = run_native_caramel(dataset, "plain", args.repetitions, manifest, entropy)
+            plain = run_native_caramel(dataset, "plain", args.repetitions, manifest, stats)
             plain_bytes = plain["serialized_bytes"]
         for method in args.method:
-            measured = run_vlburr(dataset, args.repetitions) if method == "vlburr" else run_native_caramel(dataset, method, args.repetitions, manifest, entropy)
+            measured = run_vlburr(dataset, args.repetitions) if method == "vlburr" else run_native_caramel(dataset, method, args.repetitions, manifest, stats)
             bpk = measured.get("bits_per_key", measured["serialized_bytes"] * 8 / manifest["records"])
             baseline_bytes = measured.get("plain_serialized_bytes", plain_bytes) if method == "vlburr" else plain_bytes
             savings = measured.get("bits_saved_vs_plain", (baseline_bytes - measured["serialized_bytes"]) * 8 / manifest["records"])
