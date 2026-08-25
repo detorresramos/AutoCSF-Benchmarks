@@ -10,17 +10,16 @@ numbers in `baselines/`.
 
 **The problem.** A compressed static function (CSF) maps a fixed key set to
 values in space proportional to the entropy of the value sequence, without
-storing the keys. It has a floor: no CSF uses less than one bit per key. When a
-single value dominates — 72.7% of rice's 198 million 15-mers share one count —
-that floor, not the entropy, is what binds, and the standard remedy is to put an
-approximate membership filter in front of the CSF. Only minority keys go into
-the filter, so a negative answer means "the dominating value" and never reaches
-the CSF, letting the index break the one-bit barrier.
+storing the keys. However, CSFs, by construction, must use at least 1 bit per key of space
+which can be highly suboptimal in the case where a single value dominates 
+(e.g. in kmer count storage in computational genomics where the majority of keys share the same count).
+The standard remedy for handling such heavily skewed value distributions is 
+to put an approximate membership prefilter in front of the CSF.
 
 The filter is not free. It occupies space of its own, and the keys it reports as
 false positives still have to be stored in the CSF. Whether the trade pays off
-depends on how skewed the values are, and the paper's starting observation is
-that every prior method decides using an idealized cost model — so each has a
+depends on how skewed the value distribution is, and the paper's starting observation is
+that every prior method decides using an idealized cost model so each has a
 **dead zone**, a band of dominating-value fractions $\alpha$ where it recommends
 a filter that makes the index larger.
 
