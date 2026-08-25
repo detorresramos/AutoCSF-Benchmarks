@@ -4,9 +4,8 @@
 
 This repository implements the experiments in [**AutoCSF: A Provably Safe
 Indexing Framework for Filter-Augmented Compressed Static
-Functions**][paper] (Lakshman, Torres Ramos, Luo, Kille, Treangen and Coleman,
-CIKM '26). Everything the paper's evaluation reports is produced here, and
-`make reproduce` regenerates it from source and checks it against the accepted
+Functions**][paper] (CIKM '26). The command `make reproduce` regenerates the
+experimental results from the paper from source and checks it against the published
 numbers in `baselines/`.
 
 **The problem.** A compressed static function (CSF) maps a fixed key set to
