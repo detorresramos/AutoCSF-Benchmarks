@@ -8,21 +8,6 @@ Functions**][paper] (CIKM '26). The command `make reproduce` regenerates the
 experimental results from the paper from source and checks it against the published
 numbers in `baselines/`.
 
-**The problem.** A compressed static function (CSF) maps a fixed key set to
-values in space proportional to the entropy of the value sequence, without
-storing the keys. However, CSFs, by construction, must use at least 1 bit per key of space
-which can be highly suboptimal in the case where a single value dominates 
-(e.g. in kmer count storage in computational genomics where the majority of keys share the same count).
-The standard remedy for handling such heavily skewed value distributions is 
-to put an approximate membership prefilter in front of the CSF.
-
-The filter is not free. It occupies space of its own, and the keys it reports as
-false positives still have to be stored in the CSF. Whether the trade pays off
-depends on how skewed the value distribution is, and the paper's starting observation is
-that every prior method decides using an idealized cost model so each has a
-**dead zone**, a band of dominating-value fractions $\alpha$ where it recommends
-a filter that makes the index larger.
-
 **What the experiments test.** AutoCSF (Algorithm 1) bounds the *difference* in
 space between the filtered and unfiltered designs instead of modelling either
 one, and filters only when that lower bound (Theorem 4.2) is positive. The
