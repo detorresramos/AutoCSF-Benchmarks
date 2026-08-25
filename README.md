@@ -5,8 +5,8 @@
 This repository implements the experiments in [**AutoCSF: A Provably Safe
 Indexing Framework for Filter-Augmented Compressed Static
 Functions**][paper] (CIKM '26). The command `make reproduce` regenerates the
-experimental results from the paper from source and checks it against the published
-numbers in `baselines/`.
+experimental results from the paper from source and checks them against the
+published numbers in `baselines/`.
 
 **What the experiments test.** AutoCSF (Algorithm 1) bounds the *difference* in
 space between the filtered and unfiltered designs instead of modelling either
@@ -37,30 +37,44 @@ sudo ./setup.sh          # builds CaramelDB, VL-BuRR, and the Python venv
 make reproduce           # runs all three experiments and checks the results
 ```
 
-That is the whole thing. `make reproduce` writes every number and figure the
-paper uses into `results/`, then verifies them and writes a reproduction
-receipt. Individual experiments:
+`setup.sh` needs root only for its `apt-get` step. If the system packages are
+already installed, `./setup.sh --no-system` skips that step and runs without
+`sudo`. Everything else it does — building the two C++ dependencies and
+creating the Python venv — stays inside the repository.
+
+**On Apple Silicon**, one of the four methods (VL-BuRR) cannot be built
+natively. Run `./scripts/docker_run.sh make reproduce` instead to get all four;
+see [Where it runs](#where-it-runs).
+
+`make reproduce` writes every number and figure the paper uses into `results/`,
+then runs `make verify` to check them against the accepted numbers (see
+[Checking a run](#checking-a-run-against-the-accepted-results)).
+
+A full `make reproduce` is not a quick smoke test: the synthetic comparison
+uses one million keys and the genomics comparison includes rice with 198
+million distinct 15-mers. The four processed genomics tables occupy about
+500 MB; allow roughly 10 GB of working space for downloaded assemblies and
+build products.
+
+### Individual targets
 
 ```bash
 make bound-validation      # experiment 1: the nine alpha/epsilon sweep plots
-make datasets              # download and validate the genomics tables
 make synthetic-comparison  # experiment 2: the four-method comparison plot
 make genomics-comparison   # experiment 3: the savings table
 ```
 
-`make datasets` is only needed for the genomics experiment. The four processed
-tables occupy about 500 MB; allow roughly 10 GB of working space for downloaded
-assemblies and build products. The synthetic comparison uses one million keys
-and the genomics comparison includes rice with 198 million distinct 15-mers, so
-a full `make reproduce` is not a quick smoke test.
+The genomics experiment additionally needs its inputs, which are downloaded and
+validated once with `make datasets`. The other two experiments generate their
+own data.
 
 ### Where it runs
 
 Everything above works natively on Ubuntu 24.04 x86-64 and on macOS arm64, with
 one exception: **VL-BuRR is x86-64 only**, because upstream uses SSE/AVX
 intrinsics that do not compile on ARM. `setup.sh` detects this and skips it
-rather than failing, so on a Mac you get bound validation, genomics, and three
-of the four methods in the synthetic comparison.
+rather than failing, so a native Mac run produces bound validation, genomics,
+and three of the four methods in the synthetic comparison.
 
 To get the VL-BuRR arm on a Mac, prefix any command with `docker_run.sh`:
 
@@ -74,18 +88,19 @@ receipts were produced, and the only place all four methods have run together �
 so `./scripts/docker_run.sh make reproduce` is the most faithful reproduction
 regardless of host.
 
-On macOS, `setup.sh` additionally needs `libomp` (`brew install libomp`), and
-`cmake` and `zstd` on `PATH`. Use `./setup.sh --no-system` to skip the
-`apt-get` step if the system packages are already installed.
+On macOS, `setup.sh` needs `libomp` (`brew install libomp`), and `cmake` and
+`zstd` on `PATH`.
 
 ## 1. Bound validation
 
 Code: `experiments/bound_validation/`
 
 This experiment sweeps the dominating value fraction $\alpha$ and filter false
-positive rate $\varepsilon$ across three minority distributions and five filter
-configurations. It compares empirical bits/key savings with AutoCSF's lower and
-upper bounds.
+positive rate $\varepsilon$ across three minority distributions (Unique,
+Zipfian, Uniform-100) and four filter configurations (XOR, binary fuse, Bloom
+with $k=1$, Bloom with $k=3$). It compares empirical bits/key savings with
+AutoCSF's lower and upper bounds. The nine paper plots are the panels of
+Figures 3 and 4.
 
 ```bash
 make bound-validation
@@ -114,7 +129,7 @@ make synthetic-comparison
 Outputs:
 
 - Measurements: `results/synthetic_comparison/data.csv`
-- Paper plot: `results/synthetic_comparison/method-comparison.png`
+- Paper plot (Figure 2): `results/synthetic_comparison/method-comparison.png`
 
 ## 3. Real-world genomics comparison
 
@@ -133,8 +148,8 @@ Outputs:
 
 - Raw records: `results/genomics_comparison/genomics.json`
 - Measurements: `results/genomics_comparison/genomics.csv`
-- Readable table, with the plain-CSF baseline and the filter each method
-  selected: `results/genomics_comparison/genomics.md`
+- Readable table (Table 1), with the plain-CSF baseline and the filter each
+  method selected: `results/genomics_comparison/genomics.md`
 
 The primary comparison is bits/key saved relative to each method's own plain
 CSF. HKP, BCSF, and AutoCSF share the Caramel/GOV CSF and Bloom-filter
@@ -156,9 +171,9 @@ and returns a Bloom configuration, or `None` when the rule declines to filter:
 
 - **HKP** (Hreinsson, Krøyer and Pagh, 2009) filters when $\alpha > 0.63$ and
   targets $\varepsilon = 1 - \alpha$. That is a false positive rate, not a
-  filter, so the harness realizes it as the Bloom configuration nearest to it in
-  log space — searching only configurations that no other beats on both size and
-  $\varepsilon$, so the rule cannot be charged for a wasteful filter.
+  filter, so the harness realizes it as the Pareto-optimal Bloom configuration
+  (no other is smaller *and* has lower $\varepsilon$) nearest to it in log
+  space, so the rule cannot be charged for a wasteful filter.
 - **BCSF** (Shibuya, Belazzougui and Kucherov, 2022) uses their
   $\varepsilon^* = C_{BF}(1-\alpha) / (C_{CSF}\,\alpha \ln 2)$, with
   $C_{BF} = 1.44$ and their piecewise data-driven fit for $C_{CSF}(H_0)$, both
@@ -193,7 +208,7 @@ of the code tree. The unfiltered arm it is measured against uses their own
 Four patches are applied, all listed in `methods/vlburr/README.md`. One is
 material to the reported numbers: upstream's frequency model accumulates class
 counts in a `float`, which stops incrementing above $2^{24}$. On C. elegans and
-rice this understates the dominating fraction badly enough to suppress filtering
+rice this understates the dominating fraction enough to suppress filtering
 altogether, so the counts are made exact before normalizing; `make verify`
 carries a regression check for it. The other three register the unfiltered arm
 as a benchmark, release a build buffer to lower peak memory, and fix a macOS
@@ -233,23 +248,24 @@ All four methods live under `methods/`, as described in
   checked against these.
 - `reference/`: the figures and genomics table as they appear in the accepted
   paper, for side-by-side comparison with a fresh run.
-- `results/`: everything a run produces. Not tracked in git -- `make reproduce`
-  regenerates it, and `results/reproduction/receipt.json` records what the last
-  `make verify` found.
+- `results/`: everything a run produces. Not tracked in git; `make reproduce`
+  regenerates it.
 
 ### Checking a run against the accepted results
 
 `make verify` runs at the end of `make reproduce`, and can be run on its own. It
-checks that each experiment produced a complete set of outputs -- dataset
+checks that each experiment produced a complete set of outputs — dataset
 checksums, the 45 bound-validation sweeps and their figures, the four-method
-synthetic table, the 4x4 genomics matrix, the ten paper plots -- then compares
-every measurement in `results/` against `baselines/` and writes
-`results/reproduction/receipt.json`.
+synthetic table, the 4×4 genomics matrix, and the ten paper plots (the nine
+bound-validation plots plus Figure 2) — then compares every measurement in
+`results/` against `baselines/` and writes what it found to
+`results/reproduction/receipt.json`. That receipt is the record of a
+reproduction; the committed one was produced in the Docker container.
 
 Comparison is numeric with a 0.02 bits/key tolerance rather than exact. Most
 measurements are bit-stable, but binary-fuse CSF construction is randomized:
 repeated builds of the same input differ by a few thousandths of a bit per key,
 which is why the nine `binary_fuse` datasets never reproduce exactly.
 
-If a run changes the accepted numbers on purpose, `make baselines` promotes what
+If a run changes the accepted numbers, `make baselines` promotes what
 is in `results/` to `baselines/`.
