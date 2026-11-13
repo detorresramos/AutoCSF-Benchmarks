@@ -91,6 +91,11 @@ regardless of host.
 On macOS, `setup.sh` needs `libomp` (`brew install libomp`), and `cmake` and
 `zstd` on `PATH`.
 
+VL-BuRR's upstream build needs CMake 3.25 or newer and TBB (`libtbb-dev`, which
+`setup.sh` installs). Ubuntu 24.04's CMake is new enough; on older systems such
+as Ubuntu 22.04 (CMake 3.22), put a newer CMake on `PATH` first, for example
+with `pip install cmake`.
+
 ## 1. Bound validation
 
 Code: `experiments/bound_validation/`
@@ -214,6 +219,27 @@ carries a regression check for it. The other three register the unfiltered arm
 as a benchmark, release a build buffer to lower peak memory, and fix a macOS
 include.
 
+#### Upstream fix after publication
+
+The CIKM '26 version of the paper was produced with upstream commit `1781876`.
+After publication, upstream commit `103e53d` updated its `lib/burr-vl`
+submodule to `e93e065`, which fixes a bug in one-bit VLR filters: a constant
+salt bit made a single-ribbon filter solve to zero, so every key absent from
+the filter read back as a false positive. Whenever GFT selected a one-bit
+filter, it paid for the filter and filtered nothing.
+
+`UPSTREAM_COMMIT` now pins `103e53d`; the patches above apply to it unchanged.
+This changes only the GFT results:
+
+- Figure 2: GFT at $\alpha$ = 0.70, 0.75, and 0.80 goes from about −0.30, −0.25,
+  and −0.20 bits/key to +0.05, +0.13, and +0.20 on both distributions. Every
+  other point moves by at most 0.0023.
+- Table 1: rice goes from −0.2772 to +0.0932 bits/key and C. elegans from
+  0.2761 to 0.2762; E. coli and SRR10211353 are unchanged.
+
+HKP, BCSF, and AutoCSF are unaffected. To reproduce the published numbers,
+set `UPSTREAM_COMMIT` back to `1781876d3aaaf532e5a732cd841ab966734d0c67`.
+
 The rest of `methods/vlburr/` is adapters. `gen_datasets.py` and
 `table_to_lrbin.py` convert the synthetic and genomics inputs to VL-BuRR's
 `.lrbin` format — the synthetic path uses the same generator and seed as the
@@ -246,8 +272,11 @@ All four methods live under `methods/`, as described in
   experiment imports, and builds VL-BuRR. The Dockerfile just calls it.
 - `baselines/`: the accepted numbers, one CSV per experiment. Every run is
   checked against these.
-- `reference/`: the figures and genomics table as they appear in the accepted
-  paper, for side-by-side comparison with a fresh run.
+- `reference/`: the figures and genomics table generated from `baselines/`,
+  for side-by-side comparison with a fresh run. Figure 2 and the genomics table
+  include the post-publication GFT fix, so their GFT results differ from the
+  CIKM '26 version (see [Upstream fix after
+  publication](#upstream-fix-after-publication)).
 - `results/`: everything a run produces. Not tracked in git; `make reproduce`
   regenerates it.
 
